@@ -1,24 +1,60 @@
 @import "tailwindcss";
 
+
 @theme {
+  /* Define only CSS variables inside @theme */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.vertical-timeline::before {
+  background: #343536 !important;  /* Change line color */
+  width: 1px !important; 
+  top: 0 !important; /* Adjust thickness (default is 2px) */
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+
+
+/* Dark Mode */
+.dark {
+  --bg-color: #070E1B;
+  --text-color: #ffffff;
+
+  --border-color: #374151;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
+/* Apply Theme Colors */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-sans), sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
 }
+
+/* Button Styling */
+
+
+
+/* Borders */
+.border {
+  border: 1px solid var(--border-color);
+}
+
+.project-wrapper{
+  display: flex;
+  list-style: none;
+  height: 350px;
+  overflow-x: scroll;
+  padding: 20px 0;
+  flex: 0 0 600px;
+}
+
