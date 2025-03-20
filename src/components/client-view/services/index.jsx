@@ -32,7 +32,7 @@ export default function ClientServicesView({ data }) {
         setMounted(true);
     }, []);
 
-    if (!mounted) return null; // Fixes hydration mismatch
+    if (!mounted) return null; // Prevent hydration errors
 
     // Function to dynamically get an icon component
     const getIconComponent = (iconName) => {
@@ -43,14 +43,53 @@ export default function ClientServicesView({ data }) {
             ...FiIcons, ...GrIcons, ...ImIcons, ...LuIcons,
             ...PiIcons, ...SiIcons, ...SlIcons, ...TfiIcons, ...VscIcons
         };
-
         return iconLibraries[iconName] || FaIcons.FaQuestionCircle; // Default icon
     };
 
+    // **Framer Motion Variants**
+    const sectionVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" } }
+    };
+
+    const gridVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { 
+            opacity: 1, 
+            y: 0, 
+            transition: { 
+                staggerChildren: 0.3, // Delays each child animation
+                delayChildren: 0.2, 
+                duration: 0.7, 
+                ease: "easeOut" 
+            } 
+        }
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+        hover: { scale: 1.05, transition: { duration: 0.3 } }
+    };
+
+    const iconVariants = {
+        hover: { rotate: 10 }
+    };
+
     return (
-        <div className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mx-auto mb-6 mt-24" id="services">
+        <motion.div
+            className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mx-auto mb-6 mt-24"
+            id="services"
+            initial="hidden"
+            whileInView="visible" // Triggers animation when section is in view
+            viewport={{ once: true, amount: 0.2 }} // Ensures smooth scrolling animation
+            variants={sectionVariants}
+        >
             {/* Section Header */}
-            <div className="relative text-center my-30">
+            <motion.div 
+                className="relative text-center my-30" 
+                variants={sectionVariants}
+            >
                 <h1 className="absolute inset-0 text-3xl lg:text-9xl font-bold text-gray-800 opacity-30 flex items-center justify-center">
                     SERVICES
                 </h1>
@@ -60,40 +99,56 @@ export default function ClientServicesView({ data }) {
                 <div className="w-16 h-1 bg-gray-400 mx-auto mt-2 relative">
                     <div className="absolute w-8 h-1 bg-amber-500"></div>
                 </div>
-            </div>
+            </motion.div>
 
-            {/* Projects Grid View */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
+            {/* Animated Grid Container */}
+            <motion.div 
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10"
+                variants={gridVariants}
+                initial="hidden"
+                whileInView="visible" // Animates on scroll
+                viewport={{ once: true, amount: 0.2 }} // Ensures smooth appearance
+            >
                 {data?.map((item, index) => {
                     const IconComponent = getIconComponent(item.fareacticon);
 
                     return (
                         <motion.div
                             key={index}
-                            className="bg-[#101624] border border-gray-700 shadow-md rounded-lg p-10 flex flex-col items-center text-center text-white w-full h-80 "
-                            whileHover={{}}
-                            transition={{}}
+                            className="bg-[#101624] border border-gray-700 shadow-md rounded-lg p-10 flex flex-col items-center text-center text-white w-full h-80"
+                            variants={cardVariants}
+                            whileHover="hover"
                         >
                             <div className="cursor-pointer w-full flex flex-col items-center">
-                                {/* Circular Icon */}
-                                <div className="w-20 h-20 flex items-center justify-center rounded-full border border-gray-500 bg-[#101624]">
+                                {/* Animated Circular Icon */}
+                                <motion.div 
+                                    className="w-20 h-20 flex items-center justify-center rounded-full border border-gray-500 bg-[#101624]"
+                                    variants={iconVariants}
+                                    whileHover="hover"
+                                >
                                     <IconComponent className="text-5xl text-[#7A8290]" />
-                                </div>
+                                </motion.div>
 
-                                {/* Project Title */}
-                                <h3 className="text-xl font-semibold mt-4">
+                                {/* Animated Project Title */}
+                                <motion.h3 
+                                    className="text-xl font-semibold mt-4"
+                                    whileHover={{ scale: 1.1 }}
+                                >
                                     {item.title}
-                                </h3>
+                                </motion.h3>
 
-                                {/* Project Description (Clamped to max 2 lines) */}
-                                <p className="text-gray-400 text-md mt-3 px-4 line-clamp-4">
+                                {/* Animated Project Description */}
+                                <motion.p 
+                                    className="text-gray-400 text-md mt-3 px-4 line-clamp-2"
+                                    whileHover={{ color: "#fbbf24" }}
+                                >
                                     {item.service}
-                                </p>
+                                </motion.p>
                             </div>
                         </motion.div>
                     );
                 })}
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 }

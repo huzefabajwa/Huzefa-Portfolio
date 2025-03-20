@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 export default function ClientProjectView({ data }) {
     const [mounted, setMounted] = useState(false);
-    const [hovered, setHovered] = useState(false); // Track hover state
 
     useEffect(() => {
         setMounted(true);
@@ -24,7 +22,7 @@ export default function ClientProjectView({ data }) {
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
-        arrows: hovered, // Show arrows only when hovered
+        arrows: false, // Completely remove arrows
         responsive: [
             { breakpoint: 1024, settings: { slidesToShow: 2 } },
             { breakpoint: 768, settings: { slidesToShow: 1 } }
@@ -38,7 +36,7 @@ export default function ClientProjectView({ data }) {
         return (
             <div className="flex mb-4">
                 {[...Array(totalStars)].map((_, i) => (
-                    <span key={i} className={`text-2xl mx-0.5 ${i < filledStars ? "text-amber-500" : "text-gray-500"}`}>
+                    <span key={i} className={`text-2xl mx-0.5 ${i < filledStars ? "text-[#FDC700]" : "text-gray-500"}`}>
                         ★
                     </span>
                 ))}
@@ -47,7 +45,6 @@ export default function ClientProjectView({ data }) {
     };
 
     return (
-        
         <div className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mx-auto mb-6 mt-24" id="reviews">
             {/* Section Header */}
             <div className="relative text-center my-30">
@@ -61,35 +58,30 @@ export default function ClientProjectView({ data }) {
             </div>
 
             {/* Carousel Slider */}
-            <div 
-                className="relative" 
-                onMouseEnter={() => setHovered(true)} 
-                onMouseLeave={() => setHovered(false)}
-            >
-                <Slider {...settings} className="gap-x-6">
-                    {data?.map((item, index) => (
-                        <div key={index} className="px-4">
-                            <div className="relative bg-gray-900 shadow-lg border border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-[550px]">
-                                {/* Star Rating */}
-                                {renderStars(item.rating)}
+            <Slider {...settings} className="gap-x-6">
+                {data?.map((item, index) => (
+                    <div key={index} className="px-4">
+                        <div className="relative bg-gray-900 shadow-lg border border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen">
+                            {/* Star Rating */}
+                            {renderStars(item.rating)}
 
-                                {/* Author Name */}
-                                <h3 className="text-lg text-white font-bold">{item.author}</h3>
+                            {/* Author Name */}
+                            <h3 className="text-lg text-white font-bold">{item.author}</h3>
 
-                                {/* Designation Placeholder */}
-                                <p className="text-gray-400 text-sm">Graphic Designer</p>
+                            {/* Designation Placeholder */}
+                            <p className="text-gray-400 text-sm">Graphic Designer</p>
 
-                                {/* Content */}
-                                <p className="text-gray-300 text-md mt-3 leading-relaxed">{item.content}</p>
-
-                                {/* Quote Icon */}
-                                <div className="absolute bottom-4 right-4 text-green-400 text-3xl">❝</div>
+                            {/* Content with Quote Icon */}
+                            <div className="flex items-center mt-3">
+                                <p className="text-gray-300 text-md leading-relaxed line-clamp-4 flex-1">
+                                    {item.content}
+                                </p>
+                                <span className="text-[#FDC700] text-6xl ml-2">❞</span>
                             </div>
                         </div>
-                    ))}
-                </Slider>
-            </div>
+                    </div>
+                ))}
+            </Slider>
         </div>
-        
     );
 }

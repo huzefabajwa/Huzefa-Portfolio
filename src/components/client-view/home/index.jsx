@@ -51,36 +51,42 @@ export default function ClientHomeView({ data }) {
       <motion.div className="relative w-full flex flex-col items-center sm:flex-row sm:justify-center min-h-screen" id="home">
         
         {/* Profile Image + Social Media Wrapper */}
-        <motion.div 
-          style={{ x }} 
-          className="absolute right-0 top-0 h-full w-full sm:w-[50%] lg:w-[40%] xl:w-[40%] flex items-center justify-end overflow-visible"
-        >
-          {/* Social Media Ribbon - Aligned to Bottom with Small Gap */}
-          <div className="absolute left-[-400px] bottom-10 flex items-start bg-gray-800 px-5 py-3 pr-100 rounded-2xl border border-white/30 shadow-lg z-0">
-            {/* Wrapper div to left-align icons */}
-            <div className="flex flex-row gap-3">
-              {socialIcons.map((item) => (
-                <motion.a
-                  key={item.id}
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 flex items-center justify-center rounded-full border border-white/30 bg-gray-900 text-white transition duration-200 
-                             hover:bg-[#FEC544] hover:text-black hover:scale-110"
-                  whileTap={{ scale: 0.9 }}
-                >
-                  {item.icon}
-                </motion.a>
-              ))}
-            </div>
-          </div>
+        <AnimationWrapper>
+          <motion.div 
+            style={{ x }} 
+            className="absolute right-0 top-0 h-full w-full sm:w-[50%] lg:w-[40%] xl:w-[40%] flex items-center justify-end overflow-visible"
+            variants={setVariants}
+          >
+            {/* Social Media Ribbon - Aligned to Bottom with Small Gap */}
+            <motion.div 
+              className="absolute left-[-400px] bottom-10 flex items-start bg-gray-800 px-5 py-3 pr-100 rounded-2xl border border-white/30 shadow-lg z-0"
+              variants={setVariants}
+            >
+              {/* Wrapper div to left-align icons */}
+              <div className="flex flex-row gap-3">
+                {socialIcons.map((item) => (
+                  <motion.a
+                    key={item.id}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 flex items-center justify-center rounded-full border border-white/30 bg-gray-900 text-white transition duration-200 
+                              hover:bg-[#FEC544] hover:text-black hover:scale-110"
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    {item.icon}
+                  </motion.a>
+                ))}
+              </div>
+            </motion.div>
 
-          {/* Image Container (Now Above the Ribbon) */}
-          <div className="relative h-full w-full z-10">
-            <Image src={talhabajwa} alt="Profile Picture" quality={100} fill className="object-contain object-center" />
-          </div>
+            {/* Image Container (Now Above the Ribbon) */}
+            <motion.div className="relative h-full w-full z-10" variants={setVariants}>
+              <Image src={talhabajwa} alt="Profile Picture" quality={100} fill className="object-contain object-center" />
+            </motion.div>
 
-        </motion.div>
+          </motion.div>
+        </AnimationWrapper>
 
         {/* Text Content */}
         <div className="mt-5 w-full max-w-screen-xl px-6 lg:px-8 xl:px-16 mx-auto relative z-10 flex flex-col justify-center min-h-screen">

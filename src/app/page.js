@@ -11,7 +11,7 @@ import ClientServicesView from "@/components/client-view/services";
 import ClientReviewsView from "@/components/client-view/reviews";
 
 async function extractAllDatas(currentSection) {
-  const res = await fetch(`https://talha-bajwa.vercel.app/api/${currentSection}/get`, {
+  const res = await fetch(`http://localhost:3000/api/${currentSection}/get`, {
     method: "GET",
     cache: "no-store",
   });
