@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import AnimationWrapper from "../animation-wrapper";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FaUpwork, FaLinkedin, FaGithub } from "react-icons/fa6";
@@ -24,9 +24,9 @@ function variants() {
 }
 
 const socialIcons = [
-  { id: "upwork", icon: <FaUpwork />, name: "Upwork", link: "#" },
-  { id: "linkedIn", icon: <FaLinkedin />, name: "LinkedIn", link: "#" },
-  { id: "github", icon: <FaGithub />, name: "GitHub", link: "#" },
+  { id: "upwork", icon: <FaUpwork />, name: "Upwork", link: "https://www.upwork.com/freelancers/~YOUR_PROFILE" },
+  { id: "linkedIn", icon: <FaLinkedin />, name: "LinkedIn", link: "https://www.linkedin.com/in/YOUR_PROFILE" },
+  { id: "github", icon: <FaGithub />, name: "GitHub", link: "https://github.com/YOUR_GITHUB" },
 ];
 
 export default function ClientHomeView({ data }) {
@@ -40,86 +40,88 @@ export default function ClientHomeView({ data }) {
   // Move image horizontally on scroll
   const x = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
+  // State to track hovered icon
+  const [hovered, setHovered] = useState(null);
+
   return (
     <div ref={containerRef} className="relative w-full h-screen overflow-hidden">
-     {/* Background with Animation */}
-     <motion.div 
+      {/* Background with Animation */}
+      <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0, scale: 1.05 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, ease: "easeOut" }}
       >
-        <Image 
-          src="/sti.jpg" 
+        <Image
+          src="/sti.jpg"
           alt="Background"
           layout="fill"
           objectFit="cover"
           priority
           quality={100}
           placeholder="blur"
-          blurDataURL="/sti.jpg" // Preload a low-res image
+          blurDataURL="/sti.jpg"
         />
-        {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[rgb(10,16,30)] to-[rgba(30,25,25,0)]"></div>
       </motion.div>
+
       {/* Content Wrapper */}
       <motion.div className="relative w-full flex flex-col items-center sm:flex-row sm:justify-center min-h-screen" id="home">
       <div className="flex flex-col items-center justify-center sm:hidden md:hidden mt-10">
-  {/* Profile Picture */}
-  <div className="mt-40 w-50 h-50 relative rounded-full overflow-hidden border-4 border-white shadow-lg">
-    <Image src={talhabajwa} alt="Profile Picture" quality={100} fill className="object-cover" />
-  </div>
+          {/* Profile Picture */}
+          <div className="mt-40 w-50 h-50 relative rounded-full overflow-hidden border-4 border-white shadow-lg">
+            <Image src={talhabajwa} alt="Profile Picture" quality={100} fill className="object-cover" />
+          </div>
 
-  {/* Social Media Icons - Below Profile Picture */}
-  <div className="mt-4 mb-[-100px] flex flex-row gap-4">
-    {socialIcons.map((item) => (
-      <a
-        key={item.id}
-        href={item.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="w-10 h-10 flex items-center justify-center rounded-full border border-white/30 bg-gray-900 text-white shadow-md transition-transform transform hover:scale-110 hover:bg-[#FEC544] hover:text-black"
-      >
-        {item.icon}
-      </a>
-    ))}
-  </div>
-</div>
-        {/* Profile Image + Social Media Wrapper */}
-        {/* Profile Image + Social Media Wrapper */}
-<motion.div 
-  style={{ x }} 
-  className="absolute right-0 top-0 h-full w-full sm:w-[50%] lg:w-[40%] xl:w-[40%] flex items-center justify-end overflow-visible"
->
-  {/* Social Media Ribbon - Hidden on sm and md */}
-  <div className="absolute left-[-400px] bottom-10 flex items-start bg-gray-800 px-5 py-3 pr-100 rounded-2xl border border-white/30 shadow-lg z-0 hidden sm:block md:block">
-    <div className="flex flex-row gap-3">
-      {socialIcons.map((item) => (
-        <motion.a
-          key={item.id}
-          href={item.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-12 h-12 flex items-center justify-center rounded-full border border-white/30 bg-gray-900 text-white"
-          whileHover={{ scale: 1.2, backgroundColor: "#FEC544", color: "#000" }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ type: "spring", stiffness: 200, damping: 10 }}
+          {/* Social Media Icons - Below Profile Picture */}
+          <div className="mt-4 mb-[-100px] flex flex-row gap-4">
+            {socialIcons.map((item) => (
+              <a
+                key={item.id}
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-white/30 bg-gray-900 text-white shadow-md transition-transform transform hover:scale-110 hover:bg-[#FEC544] hover:text-black"
+              >
+                {item.icon}
+              </a>
+            ))}
+          </div>
+        </div>
+        <motion.div
+          style={{ x }}
+          className="absolute right-0 top-0 h-full w-full sm:w-[60%] lg:w-[50%] xl:w-[50%] flex items-center justify-end overflow-visible"
         >
-          {item.icon}
-        </motion.a>
-      ))}
-    </div>
-  </div>
-  {/* Profile Image & Social Icons for sm & md */}
+          {/* Social Media Ribbon - Fixed Width */}
+          <div className="relative bottom-0 flex items-center bg-gray-800 px-5 py-3 rounded-l-full border border-white/30 shadow-lg z-11 hidden sm:flex xl:w-[314px]  pointer-events-auto">
+            <div className="flex gap-3">
+              {socialIcons.map((item) => (
+                <motion.a
+                  key={item.id}
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative flex items-center bg-gray-900 text-[#8A8795] text-3xl border border-white/30 rounded-full overflow-hidden transition-all duration-10 ease-in-out"
+                  onMouseEnter={() => setHovered(item.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  animate={{
+                    width: hovered === item.id ? 120 : 48, // Expand width on hover
+                  }}
+                >
+                  <span className="w-12 h-12 flex items-center justify-center">{item.icon}</span>
+                  {hovered === item.id && (
+                    <span className="ml-2 text-sm text-white font-medium">{item.name}</span>
+                  )}
+                </motion.a>
+              ))}
+            </div>
+          </div>
 
-
-
-  {/* Image Container - Hidden on sm and md */}
-  <div className="relative h-full w-full z-10 hidden sm:block md:block">
-    <Image src={talhabajwa} alt="Profile Picture" quality={100} fill className="object-contain object-center" />
-  </div>
-</motion.div>
-
+          {/* Profile Picture */}
+          <div className="relative h-full w-full z-10 hidden sm:block md:block pointer-events-none">
+            <Image src={talhabajwa} alt="Profile Picture" quality={100} fill className="object-cover" />
+          </div>
+        </motion.div>
 
         {/* Text Content */}
         <div className="mt-5 w-full max-w-screen-xl px-6 lg:px-8 xl:px-16 mx-auto relative z-10 flex flex-col justify-center min-h-screen">
@@ -152,7 +154,7 @@ export default function ClientHomeView({ data }) {
         </div>
       </motion.div>
 
-      {/* Next Section (For Smooth Scrolling) */}
+      {/* Next Section */}
       <div className="w-full min-h-screen flex items-center justify-center bg-gray-900 text-white">
         <h2 className="text-3xl font-bold">Next Section</h2>
       </div>

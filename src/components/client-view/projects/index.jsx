@@ -108,7 +108,7 @@ export default function ClientProjectView({ data }) {
                                         </div>
 
                                         {/* Project Content */}
-                                        <div className="p-7 py-10 bg-[#313552] text-white flex flex-col flex-grow">
+                                        <div className="p-7 py-10 bg-[#101624] border-b-1 border-[#FDC700] rounded-b-lg text-white flex flex-col flex-grow">
                                             <h3 className="text-lg text-[#FDC700]">{item.projecttype}</h3>
                                             <h3 className="text-2xl mt-3">{item.name}</h3>
                                             <p className="text-gray-300 text-xl mt-5 flex-grow overflow-hidden">
@@ -127,10 +127,7 @@ export default function ClientProjectView({ data }) {
                                                 ))}
                                             </div>
 
-                                            {/* Arrow Icon */}
-                                            <div className="mt-4 text-right text-yellow-400 text-2xl">
-                                                ➝
-                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </Link>
