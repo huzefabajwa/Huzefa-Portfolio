@@ -42,11 +42,26 @@ export default function ClientHomeView({ data }) {
 
   return (
     <div ref={containerRef} className="relative w-full h-screen overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-[url('/sti.jpg')] bg-cover bg-center">
+     {/* Background with Animation */}
+     <motion.div 
+        className="absolute inset-0"
+        initial={{ opacity: 0, scale: 1.05 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
+        <Image 
+          src="/sti.jpg" 
+          alt="Background"
+          layout="fill"
+          objectFit="cover"
+          priority
+          quality={100}
+          placeholder="blur"
+          blurDataURL="/sti.jpg" // Preload a low-res image
+        />
+        {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[rgb(10,16,30)] to-[rgba(30,25,25,0)]"></div>
-      </div>
-
+      </motion.div>
       {/* Content Wrapper */}
       <motion.div className="relative w-full flex flex-col items-center sm:flex-row sm:justify-center min-h-screen" id="home">
       <div className="flex flex-col items-center justify-center sm:hidden md:hidden mt-10">
