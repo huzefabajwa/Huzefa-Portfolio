@@ -1,14 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useTheme } from "next-themes";
-import ClientAboutView from "@/components/client-view/about";
-import ClientHomeView from "@/components/client-view/home";
-import ClientExperienceAndEducation from "@/components/client-view/experience";
-import ClientProjectView from "@/components/client-view/projects";
-import ClientContactView from "@/components/client-view/contact";
-import ClientServicesView from "@/components/client-view/services";
-import ClientReviewsView from "@/components/client-view/reviews";
+import dynamic from "next/dynamic";
+import { AnimatePresence } from "framer-motion";
+import LoadingScreen from "@/components/LoadingScreen";
+
+// Lazy load components
+const ClientHomeView = dynamic(() => import("@/components/client-view/home"), { ssr: false });
+const ClientAboutView = dynamic(() => import("@/components/client-view/about"), { ssr: false });
+const ClientExperienceAndEducation = dynamic(() => import("@/components/client-view/experience"), { ssr: false });
+const ClientProjectView = dynamic(() => import("@/components/client-view/projects"), { ssr: false });
+const ClientContactView = dynamic(() => import("@/components/client-view/contact"), { ssr: false });
+const ClientServicesView = dynamic(() => import("@/components/client-view/services"), { ssr: false });
+const ClientReviewsView = dynamic(() => import("@/components/client-view/reviews"), { ssr: false });
 
 async function extractAllDatas(currentSection) {
   const res = await fetch(`https://talha-bajwa.vercel.app/api/${currentSection}/get`, {
@@ -21,7 +26,9 @@ async function extractAllDatas(currentSection) {
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false); // Prevents hydration issues
+  const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isContentVisible, setIsContentVisible] = useState(false);
 
   // Store the fetched data in state
   const [homeSectioData, setHomeSectioData] = useState(null);
@@ -34,32 +41,73 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
-      setHomeSectioData(await extractAllDatas("home"));
-      setAboutSectioData(await extractAllDatas("about"));
-      setExperienceSectioData(await extractAllDatas("experience"));
-      setEducationSectioData(await extractAllDatas("education"));
-      setProjectsSectioData(await extractAllDatas("projects"));
-      setServicesSectioData(await extractAllDatas("services"));
-      setReviewsSectioData(await extractAllDatas("reviews"));
+      // Fetch home section first
+      const homeData = await extractAllDatas("home");
+      setHomeSectioData(homeData);
+
+      // Fetch other sections after a slight delay
+      const delay = 300;
+      setTimeout(async () => {
+        setAboutSectioData(await extractAllDatas("about"));
+        setExperienceSectioData(await extractAllDatas("experience"));
+        setEducationSectioData(await extractAllDatas("education"));
+        setProjectsSectioData(await extractAllDatas("projects"));
+        setServicesSectioData(await extractAllDatas("services"));
+        setReviewsSectioData(await extractAllDatas("reviews"));
+
+        setTimeout(() => {
+          setIsLoading(false);
+          setTimeout(() => setIsContentVisible(true), 200);
+        }, delay);
+      }, delay);
     }
+
     fetchData();
     setMounted(true);
   }, []);
 
-  if (!mounted) return null; // Fix for hydration mismatch
+  if (!mounted) return null; // Prevent hydration mismatch
 
   return (
-    <div className="bg-[#070E1B] max-w-screen w-full min-h-screen w-full bg-primary text-primary">
-     
+    <>
+      {/* Loading Screen */}
+      <AnimatePresence mode="wait">
+        {isLoading && <LoadingScreen isLoading={isLoading} />}
+      </AnimatePresence>
 
-      {/* Content Sections */}
-      <ClientHomeView data={homeSectioData} aboutData={aboutSectioData && aboutSectioData.length ? aboutSectioData[0] : []} />
-      <ClientAboutView data={aboutSectioData && aboutSectioData.length ? aboutSectioData[0] : []} />
-      <ClientServicesView data={servicesSectioData} />
-      { <ClientExperienceAndEducation educationData={educationSectioData} experienceData={experienceSectioData} /> }
-      <ClientProjectView data={projectsSectioData} />
-      <ClientReviewsView data={reviewsSectioData} />
-      <ClientContactView />
-    </div>
+      {/* Show ONLY Home First */}
+      {!isLoading && (
+        <div className="bg-[#070E1B] max-w-screen w-full min-h-screen bg-primary text-primary">
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientHomeView data={homeSectioData} aboutData={aboutSectioData?.[0] || []} />
+          </Suspense>
+
+          {/* Render Other Sections After Everything is Loaded */}
+          {isContentVisible && (
+            <>
+              <Suspense fallback={<LoadingScreen isLoading={true} />}>
+                <ClientAboutView data={aboutSectioData?.[0] || []} />
+              </Suspense>
+              <Suspense fallback={<LoadingScreen isLoading={true} />}>
+                <ClientServicesView data={servicesSectioData} />
+              </Suspense>
+              <Suspense fallback={<LoadingScreen isLoading={true} />}>
+                <ClientExperienceAndEducation
+                  educationData={educationSectioData}
+                  experienceData={experienceSectioData}
+                />
+              </Suspense>
+              <Suspense fallback={<LoadingScreen isLoading={true} />}>
+                <ClientProjectView data={projectsSectioData} />
+              </Suspense>
+              <Suspense fallback={<LoadingScreen isLoading={true} />}>
+                <ClientReviewsView data={reviewsSectioData} />
+              </Suspense>
+              <ClientContactView />
+            </>
+          )}
+        </div>
+      )}
+    </>
   );
 }
