@@ -233,7 +233,7 @@ function resetFormData() {
                     <button
                         key={item.id}
                         type="button"
-                        className="p-4 font-bold text-xl text-black"
+                        className="p-4 font-bold text-xl text-white"
                         onClick={() => {
                             setActiveTab(item.id);
                             resetFormData();
