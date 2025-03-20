@@ -93,29 +93,29 @@ export default function ClientHomeView({ data }) {
           className="absolute right-0 top-0 h-full w-full sm:w-[60%] lg:w-[50%] xl:w-[50%] flex items-center justify-end overflow-visible"
         >
           {/* Social Media Ribbon - Fixed Width */}
-          <div className="relative bottom-0 flex items-center bg-gray-800 px-5 py-3 rounded-l-full border border-white/30 shadow-lg z-11 hidden sm:flex xl:w-[314px]  pointer-events-auto">
-            <div className="flex gap-3">
-              {socialIcons.map((item) => (
-                <motion.a
-                  key={item.id}
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative flex items-center bg-gray-900 text-[#8A8795] text-3xl border border-white/30 rounded-full overflow-hidden transition-all duration-10 ease-in-out"
-                  onMouseEnter={() => setHovered(item.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  animate={{
-                    width: hovered === item.id ? 120 : 48, // Expand width on hover
-                  }}
-                >
-                  <span className="w-12 h-12 flex items-center justify-center">{item.icon}</span>
-                  {hovered === item.id && (
-                    <span className="ml-2 text-sm text-white font-medium">{item.name}</span>
-                  )}
-                </motion.a>
-              ))}
-            </div>
-          </div>
+          <div className="relative flex flex-col bottom-10 items-start mt-auto bg-gray-800 px-5 py-3 rounded-l-full border border-white/30 shadow-lg z-11 hidden sm:flex w-[515px] pointer-events-auto">
+  <div className="flex gap-3">
+    {socialIcons.map((item) => (
+      <motion.a
+        key={item.id}
+        href={item.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="relative flex items-center bg-gray-900 text-[#8A8795] text-4xl border border-white/30 rounded-full overflow-hidden transition-all duration-10 ease-in-out"
+        onMouseEnter={() => setHovered(item.id)}
+        onMouseLeave={() => setHovered(null)}
+        animate={{
+          width: hovered === item.id ? 150 : 58, // Expand width on hover
+        }}
+      >
+        <span className="w-16 h-14 flex items-center justify-center">{item.icon}</span>
+        {hovered === item.id && (
+          <span className="ml-1 text-lg text-amber-400 font-medium">{item.name}</span>
+        )}
+      </motion.a>
+    ))}
+  </div>
+</div>
 
           {/* Profile Picture */}
           <div className="relative h-full w-full z-10 hidden sm:block md:block pointer-events-none">
