@@ -107,17 +107,17 @@ export default function ClientHomeView({ data }) {
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative flex items-center bg-gray-900 text-[#8A8795] text-4xl border border-white/30 rounded-full overflow-hidden transition-all duration-200 ease-in-out"
+                  className="relative flex items-center bg-gray-900 text-[#8A8795] text-3xl border border-white/30 rounded-full overflow-hidden transition-all duration-10 ease-in-out"
                   onMouseEnter={() => setHovered(item.id)}
                   onMouseLeave={() => setHovered(null)}
                   layoutId={`social-${item.id}`}
                   animate={{
-                    width: hovered === item.id ? 150 : 58, // Expand width on hover
+                    width: hovered === item.id ? 150 : 51, // Expand width on hover
                   }}
                 >
-                  <span className="w-16 h-14 flex items-center justify-center">{item.icon}</span>
+                  <span className="w-16 h-12 flex items-center justify-center">{item.icon}</span>
                   {hovered === item.id && (
-                    <span className="ml-1 text-lg text-amber-400 font-medium">{item.name}</span>
+                    <span className="ml-1 text-lg text-white font-medium">{item.name}</span>
                   )}
                 </motion.a>
               ))}
