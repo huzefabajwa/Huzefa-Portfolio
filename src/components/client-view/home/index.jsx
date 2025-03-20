@@ -37,10 +37,13 @@ export default function ClientHomeView({ data }) {
     offset: ["start start", "end start"],
   });
 
-  // Move image horizontally on scroll
-  const x = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  // Move profile image horizontally on scroll
+  const x = useTransform(scrollYProgress, [0, 1], [0, 200]);
 
-  // State to track hovered icon
+  // Move social media ribbon slightly on scroll
+  const socialX = useTransform(scrollYProgress, [0, 1], [0, 200]);
+
+  // Track hovered icon
   const [hovered, setHovered] = useState(null);
 
   return (
@@ -67,13 +70,12 @@ export default function ClientHomeView({ data }) {
 
       {/* Content Wrapper */}
       <motion.div className="relative w-full flex flex-col items-center sm:flex-row sm:justify-center min-h-screen" id="home">
-      <div className="flex flex-col items-center justify-center sm:hidden md:hidden mt-10">
-          {/* Profile Picture */}
+      
+        {/* Mobile View: Profile Picture & Social Icons */}
+        <div className="flex flex-col items-center justify-center sm:hidden md:hidden mt-10">
           <div className="mt-40 w-50 h-50 relative rounded-full overflow-hidden border-4 border-white shadow-lg">
             <Image src={talhabajwa} alt="Profile Picture" quality={100} fill className="object-cover" />
           </div>
-
-          {/* Social Media Icons - Below Profile Picture */}
           <div className="mt-4 mb-[-100px] flex flex-row gap-4">
             {socialIcons.map((item) => (
               <a
@@ -88,39 +90,47 @@ export default function ClientHomeView({ data }) {
             ))}
           </div>
         </div>
+
+        {/* Social Media Ribbon & Profile Picture */}
         <motion.div
-          style={{ x }}
           className="absolute right-0 top-0 h-full w-full sm:w-[60%] lg:w-[50%] xl:w-[50%] flex items-center justify-end overflow-visible"
         >
-          {/* Social Media Ribbon - Fixed Width */}
-          <div className="relative flex flex-col bottom-10 items-start mt-auto bg-gray-800 px-5 py-3 rounded-l-full border border-white/30 shadow-lg z-11 hidden sm:flex w-[515px] pointer-events-auto">
-  <div className="flex gap-3">
-    {socialIcons.map((item) => (
-      <motion.a
-        key={item.id}
-        href={item.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="relative flex items-center bg-gray-900 text-[#8A8795] text-4xl border border-white/30 rounded-full overflow-hidden transition-all duration-10 ease-in-out"
-        onMouseEnter={() => setHovered(item.id)}
-        onMouseLeave={() => setHovered(null)}
-        animate={{
-          width: hovered === item.id ? 150 : 58, // Expand width on hover
-        }}
-      >
-        <span className="w-16 h-14 flex items-center justify-center">{item.icon}</span>
-        {hovered === item.id && (
-          <span className="ml-1 text-lg text-amber-400 font-medium">{item.name}</span>
-        )}
-      </motion.a>
-    ))}
-  </div>
-</div>
+          {/* Social Media Ribbon */}
+          <motion.div
+            style={{ x: socialX }} // Social media bar moves slightly on scroll
+            className="relative flex flex-col bottom-10 items-start mt-auto bg-gray-800 px-5 py-3 rounded-l-full border border-white/30 shadow-lg z-100 hidden sm:flex w-[515px]"
+          >
+            <div className="flex gap-3">
+              {socialIcons.map((item) => (
+                <motion.a
+                  key={item.id}
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative flex items-center bg-gray-900 text-[#8A8795] text-4xl border border-white/30 rounded-full overflow-hidden transition-all duration-200 ease-in-out"
+                  onMouseEnter={() => setHovered(item.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  layoutId={`social-${item.id}`}
+                  animate={{
+                    width: hovered === item.id ? 150 : 58, // Expand width on hover
+                  }}
+                >
+                  <span className="w-16 h-14 flex items-center justify-center">{item.icon}</span>
+                  {hovered === item.id && (
+                    <span className="ml-1 text-lg text-amber-400 font-medium">{item.name}</span>
+                  )}
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
 
           {/* Profile Picture */}
-          <div className="relative h-full w-full z-10 hidden sm:block md:block pointer-events-none">
+          <motion.div
+            style={{ x }} // Profile picture moves more noticeably on scroll
+            className="relative h-full w-full z-10 hidden sm:block md:block"
+          >
             <Image src={talhabajwa} alt="Profile Picture" quality={100} fill className="object-cover" />
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* Text Content */}
@@ -141,7 +151,6 @@ export default function ClientHomeView({ data }) {
                 <h2 className="mt-4 lg:mt-6 mb-6 text-gray-400 text-lg sm:text-xl lg:text-2xl xl:text-3xl leading-snug text-center sm:text-left">
                   {data && data.length ? data[0]?.summary : null}
                 </h2>
-                {/* Hire Me Button */}
                 <div className="mt-4 lg:mt-6">
                   <Button className="inline-flex items-center gap-2 rounded-full bg-[#FEC544] px-6 py-3 text-lg font-bold text-black shadow-md hover:bg-[#e0b841] transition duration-200">
                     Hire Me
@@ -153,11 +162,6 @@ export default function ClientHomeView({ data }) {
           </AnimationWrapper>
         </div>
       </motion.div>
-
-      {/* Next Section */}
-      <div className="w-full min-h-screen flex items-center justify-center bg-gray-900 text-white">
-        <h2 className="text-3xl font-bold">Next Section</h2>
-      </div>
     </div>
   );
 }
