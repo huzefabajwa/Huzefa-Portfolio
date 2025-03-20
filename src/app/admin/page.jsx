@@ -15,7 +15,11 @@ import { Passero_One } from "next/font/google"
 
 const initialHomeFormData = {
     heading:"",
-    summary:""
+    summary:"",
+    hireme:"",
+    upwork:"",
+    slack:"",
+    github:""
 };
 const initialServicesFormData = {
     title:"",

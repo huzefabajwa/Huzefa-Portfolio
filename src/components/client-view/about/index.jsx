@@ -65,21 +65,7 @@ export default function ClientAboutView({ data }) {
     return (
         <div className="bg-[#0A101E] mt-[-56px]">
             <div className="max-w-screen-xl mb-6 sm:mt-14 sm:mb-14 px-6 sm:px-8 lg:px-16 mx-auto flex flex-col items-center justify-center mt-[30px]" id="about">
-                <AnimationWrapper className="w-full flex flex-col items-center mt-30">
-                    
-                    {/* ABOUT ME HEADER */}
-                    <div className="relative text-center my-10">
-                        <h1 className="absolute inset-0 text-3xl lg:text-9xl font-bold text-gray-800 opacity-30 flex items-center justify-center">
-                            ABOUTME
-                        </h1>
-                        <h2 className="relative text-xl lg:text-5xl text-yellow-400">
-                            ABOUT ME
-                        </h2>
-                        <div className="w-16 h-1 bg-gray-400 mx-auto mt-2 relative">
-                            <div className="absolute w-8 h-1 bg-amber-500"></div>
-                        </div>
-                    </div>
-
+                <AnimationWrapper className="w-full flex flex-col items-center ">
                     {/* Stats Section */}
                     <div className="relative w-full z-10 mt-30">
                         <div className="relative">

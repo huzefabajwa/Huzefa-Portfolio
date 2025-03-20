@@ -15,6 +15,30 @@ const controls = [
         type:'text',
         label:'Enter Career Summarys'
     },
+    {
+        name: 'hireme',
+        placeholder:'Enter Link for Hire Me',
+        type:'text',
+        label:'Enter Hire Me Link'
+    },
+    {
+        name: 'slack',
+        placeholder:'Enter Slack Link',
+        type:'text',
+        label:'Enter Slack Link'
+    },
+    {
+        name: 'github',
+        placeholder:'Enter Github Link',
+        type:'text',
+        label:'Enter Github Link'
+    },
+    {
+        name: 'upwork',
+        placeholder:'Enter Upwork Link',
+        type:'text',
+        label:'Enter Upwork Link'
+    },
 ]
 export default function AdminHomeView({formData,setFormData,handleSaveData}) {
     console.log(formData);

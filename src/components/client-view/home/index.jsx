@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import AnimationWrapper from "../animation-wrapper";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FaUpwork, FaLinkedin, FaGithub } from "react-icons/fa6";
+import { FaSlack } from "react-icons/fa";
 import Image from "next/image";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { Button } from "@headlessui/react";
@@ -23,12 +24,6 @@ function variants() {
   };
 }
 
-const socialIcons = [
-  { id: "upwork", icon: <FaUpwork />, name: "Upwork", link: "https://www.upwork.com/freelancers/~YOUR_PROFILE" },
-  { id: "linkedIn", icon: <FaLinkedin />, name: "LinkedIn", link: "https://www.linkedin.com/in/YOUR_PROFILE" },
-  { id: "github", icon: <FaGithub />, name: "GitHub", link: "https://github.com/YOUR_GITHUB" },
-];
-
 export default function ClientHomeView({ data }) {
   const setVariants = useMemo(() => variants(), []);
   const containerRef = useRef(null);
@@ -45,6 +40,18 @@ export default function ClientHomeView({ data }) {
 
   // Track hovered icon
   const [hovered, setHovered] = useState(null);
+
+  // Extract dynamic links from `data`
+  const hireMeLink = data?.[0]?.hireme || "#";
+  const upworkLink = data?.[0]?.upwork || "#";
+  const slackLink = data?.[0]?.slack || "#";
+  const githubLink = data?.[0]?.github || "#";
+
+  const socialIcons = [
+    { id: "upwork", icon: <FaUpwork />, name: "Upwork", link: upworkLink },
+    { id: "slack", icon: <FaSlack />, name: "Slack", link: slackLink },
+    { id: "github", icon: <FaGithub />, name: "GitHub", link: githubLink },
+  ];
 
   return (
     <div ref={containerRef} className="relative w-full h-screen overflow-hidden">
@@ -93,7 +100,7 @@ export default function ClientHomeView({ data }) {
 
         {/* Social Media Ribbon & Profile Picture */}
         <motion.div
-          className="absolute right-0 top-0 h-full w-full sm:w-[60%] lg:w-[50%] xl:w-[50%] flex items-center justify-end overflow-visible"
+          className="absolute right-0 top-0 h-full w-full sm:w-[50%] lg:w-[60%] xl:w-[65%] flex items-center justify-end overflow-visible"
         >
           {/* Social Media Ribbon */}
           <motion.div
@@ -152,10 +159,11 @@ export default function ClientHomeView({ data }) {
                   {data && data.length ? data[0]?.summary : null}
                 </h2>
                 <div className="mt-4 lg:mt-6">
-                  <Button className="inline-flex items-center gap-2 rounded-full bg-[#FEC544] px-6 py-3 text-lg font-bold text-black shadow-md hover:bg-[#e0b841] transition duration-200">
-                    Hire Me
-                    <ArrowRightIcon className="w-5 h-5" />
-                  </Button>
+                  <a href={hireMeLink} target="_blank" rel="noopener noreferrer">
+                    <Button className="inline-flex items-center gap-2 rounded-full bg-[#FEC544] px-10 py-3 text-lg text-black shadow-md hover:bg-[#e0b841] transition duration-200">
+                      Hire Me
+                    </Button>
+                  </a>
                 </div>
               </div>
             </motion.div>
