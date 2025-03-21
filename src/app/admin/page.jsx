@@ -100,6 +100,8 @@ export default function AdminView(){
             formData = {servicesViewFormData}
             setFormData = {setServicesViewFormData}
             handleSaveData = {handleSaveData}
+            data={allData?.services}
+            setAllData={setAllData}
             />
         },
         {
@@ -109,6 +111,8 @@ export default function AdminView(){
             formData = {reviewsViewFormData}
             setFormData = {setReviewsViewFormData}
             handleSaveData = {handleSaveData}
+            data={allData?.reviews}
+            setAllData={setAllData}
             />
         },
         {
@@ -133,6 +137,7 @@ export default function AdminView(){
             setFormData = {setEducationViewFormData}
             handleSaveData = {handleSaveData}
             data={allData?.education}
+            setAllData={setAllData}
             />
         },
         {
@@ -143,6 +148,7 @@ export default function AdminView(){
             setFormData = {setExperienceViewFormData}
             handleSaveData = {handleSaveData}
             data={allData?.experience}
+            setAllData={setAllData}
             />
         },
         {

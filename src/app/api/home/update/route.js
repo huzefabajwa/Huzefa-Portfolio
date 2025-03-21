@@ -8,12 +8,12 @@ export async function PUT(req) {
     try {
         await connectToDb();
         const extractData = await req.json();
-        const{_id,heading,summary} = extractData;
+        const{_id,heading,summary,hireme,upwork,slack,github} = extractData;
         const updateData = await Home.findByIdAndUpdate(
             {
                 _id: _id
             },
-            {heading,summary},
+            {heading,summary,hireme,upwork,slack,github },
             {new: true}
         );
         if (updateData) {

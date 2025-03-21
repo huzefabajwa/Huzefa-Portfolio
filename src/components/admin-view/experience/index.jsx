@@ -1,4 +1,5 @@
 "use client"
+import { ExperienceDelete } from "@/services";
 import FormControls from "../form-controls"
 
 const controls = [
@@ -33,7 +34,22 @@ const controls = [
         label:'jobprofile'
     },
 ]
-export default function AdminExperienceView({formData,setFormData,handleSaveData,data}) {
+export default function AdminExperienceView({formData,setFormData,handleSaveData,data,setAllData}) {
+     const handleDeleteItem = async (id) => {
+                    const response = await ExperienceDelete(id);
+                    if (response.success) {
+                        const updatedData  = data.filter((item) => item._id !== id);
+                        setAllData((prevData) => ({
+                            ...prevData,
+                            experience: updatedData
+                        }));
+                        console.log("Item deleted successfully");
+                    }
+                    else {
+                        console.log("Failed to delete item", response.message);
+                    }
+                
+        };
     console.log(formData);
       return (
           <div className="w-full">
@@ -58,12 +74,19 @@ export default function AdminExperienceView({formData,setFormData,handleSaveData
                                     <p className="text-lg font-semibold text-gray-700">
                                       Job Profile : {item.jobprofile}  
                                     </p>
+                                    <div className="flex gap-2">
+                                        <button onClick={() => handleDeleteItem(item._id)} className="bg-red-500 text-white p-2 rounded">
+                                            Delete
+                                        </button>
+                                        </div>
                                     </div>
                             ))
                         )
                         :(
                             <p className="text-center text-gray-600">No data found</p>
+                            
                         )}
+                        
                     </div>
                   <FormControls controls={controls} 
                   formData={formData} 

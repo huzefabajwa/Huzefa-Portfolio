@@ -45,16 +45,16 @@ export default function ClientHomeView({ data }) {
 
   // Extract dynamic links from `data`
   const hireMeLink = data?.[0]?.hireme || "#";
-  const upworkLink = data?.[0]?.upwork || "#";
-  const slackLink = data?.[0]?.slack || "#";
-  const githubLink = data?.[0]?.github || "#";
+  const upworkLink = data?.[0]?.upwork?.trim() || "";
+  const slackLink = data?.[0]?.slack?.trim() || "";
+  const githubLink = data?.[0]?.github?.trim() || "";
 
-  const socialIcons = [
+   // Social media icons with validation
+   const socialIcons = [
     { id: "upwork", icon: <FaUpwork />, name: "Upwork", link: upworkLink },
     { id: "slack", icon: <FaSlack />, name: "Slack", link: slackLink },
     { id: "github", icon: <FaGithub />, name: "GitHub", link: githubLink },
-  ];
-
+  ].filter((item) => item.link.trim() !== "");
   return (
     <div ref={containerRef} className="relative w-full h-screen overflow-hidden">
         <div className="stars"></div>
@@ -185,7 +185,7 @@ export default function ClientHomeView({ data }) {
                   {data?.[0]?.summary}
                 </h2>
                 <a href={hireMeLink} target="_blank" rel="noopener noreferrer">
-                  <Button className="bg-[#FEC544] px-10 py-3 text-lg text-black shadow-md hover:bg-[#e0b841] transition duration-200">
+                  <Button className="mt-5 bg-[#FEC544] px-12 py-3 text-lg rounded-full text-black shadow-md hover:bg-[#e0b841] transition duration-200">
                     Hire Me
                   </Button>
                 </a>

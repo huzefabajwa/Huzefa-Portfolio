@@ -66,44 +66,12 @@ export default function ProjectDetails() {
                 
                 {/* Left Section - Project Details */}
                 <div className="flex-1">
-                    <h1 className="text-4xl md:text-5xl font-bold text-amber-300">{project.name}</h1>
+                    <h1 className="text-4xl md:text-5xl font-semibold text-amber-300">{project.name}</h1>
 
                     {/* Project Description with New Line, Bullet Point, and Bold Handling */}
                     <div className="mt-6 text-gray-300">{processText(project.description)}</div>
 
-                    {/* Buttons Section (GitHub + Store Badges) */}
-                    <div className="mt-6 flex flex-wrap gap-4 items-center">
-                        {/* GitHub Button */}
-                        <a 
-                            href={project.github} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-4 border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
-                        >
-                            <FaGithub size={30} />
-                            View on GitHub
-                        </a>
-
-                        {/* Google Play & App Store Buttons */}
-                        {project.playstore && (
-                            <a href={project.playstore} target="_blank" rel="noopener noreferrer">
-                                <img 
-                                    src="/googleplaybadge.png" 
-                                    alt="Get it on Google Play"
-                                    className="w-50 md:w-53 h-16 transition-transform duration-200 hover:scale-105"
-                                />
-                            </a>
-                        )}
-                        {project.ios && (
-                            <a href={project.ios} target="_blank" rel="noopener noreferrer">
-                                <img 
-                                    src="/appstore.png" 
-                                    alt="Download on the App Store"
-                                    className="w-50 md:w-48 h-16 transition-transform duration-200 hover:scale-105"
-                                />
-                            </a>
-                        )}
-                    </div>
+                    
 
                     {/* Tech Stack Section */}
                     <div className="mt-8">
@@ -115,9 +83,42 @@ export default function ProjectDetails() {
                                 </span>
                             ))}
                         </div>
+                        {/* Buttons Section (GitHub + Store Badges) */}
+                    <div className="mt-20 flex flex-wrap gap-4 items-center">
+                        {/* GitHub Button */}
+                        <a 
+                            href={project.github} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
+                        >
+                            <FaGithub size={30} />
+                            View on GitHub
+                        </a>
+
+                        {/* Google Play & App Store Buttons */}
+                        {project.playstore && (
+                            <a href={project.playstore} target="_blank" rel="noopener noreferrer">
+                                <img 
+                                    src="/googleplaybadge.png" 
+                                    alt="Get it on Google Play"
+                                    className="w-40 md:w-43 h-13 transition-transform duration-200 hover:scale-105"
+                                />
+                            </a>
+                        )}
+                        {project.ios && (
+                            <a href={project.ios} target="_blank" rel="noopener noreferrer">
+                                <img 
+                                    src="/appstore.png" 
+                                    alt="Download on the App Store"
+                                    className="w-40 md:w-40 h-13 transition-transform duration-200 hover:scale-105"
+                                />
+                            </a>
+                        )}
+                    </div>
                     </div>
                 </div>
-
+                
                 {/* Right Section - Project Images (Fixed for Larger Screens) */}
                 <div className="w-full lg:w-2/5 relative hidden lg:block">
                     <div className="sticky top-20 space-y-6">
@@ -135,7 +136,10 @@ export default function ProjectDetails() {
                     <img src={project.imageUrl2} alt={project.name} className="w-full h-auto object-cover rounded-lg shadow-lg" />
                     <img src={project.imageUrl3} alt={project.name} className="w-full h-auto object-cover rounded-lg shadow-lg" />
                 </div>
+                
             </div>
+            
         </div>
+        
     );
 }

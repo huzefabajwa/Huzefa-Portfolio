@@ -5,11 +5,10 @@ import { X, Menu } from "lucide-react";
 
 const menuItems = [
     { id: "home", label: "Home" },
-    { id: "about", label: "About" },
     { id: "experience", label: "Experience" },
     { id: "project", label: "Project" },
     { id: "services", label: "Services" },
-    { id: "contact", label: "Contact" },
+    { id: "reviews", label: "Testimonials" },
     
 ];
 

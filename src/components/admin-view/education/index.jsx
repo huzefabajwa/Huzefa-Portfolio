@@ -1,4 +1,5 @@
 "use client"
+import { handleDelete } from "@/services"
 import FormControls from "../form-controls"
 
 const controls = [
@@ -22,7 +23,23 @@ const controls = [
     },
 ]
 
-export default function AdminEducationView({formData,setFormData,handleSaveData,data}) {
+export default function AdminEducationView({formData,setFormData,handleSaveData,data,setAllData}) {
+
+    const handleDeleteItem = async (id) => {
+                const response = await handleDelete(id);
+                if (response.success) {
+                    const updatedData  = data.filter((item) => item._id !== id);
+                    setAllData((prevData) => ({
+                        ...prevData,
+                        education: updatedData
+                    }));
+                    console.log("Item deleted successfully");
+                }
+                else {
+                    console.log("Failed to delete item", response.message);
+                }
+            
+    };
       console.log(formData);
          return (
              <div className="w-full">
@@ -41,6 +58,11 @@ export default function AdminEducationView({formData,setFormData,handleSaveData,
                                     <p className="text-lg font-semibold text-gray-700">
                                       College : {item.college}  
                                     </p>
+                                    <div className="flex gap-2">
+                                        <button onClick={() => handleDeleteItem(item._id)} className="bg-red-500 text-white p-2 rounded">
+                                            Delete
+                                        </button>
+                                        </div>
                                     </div>
                             ))
                         )
