@@ -12,7 +12,7 @@ import { loadFull } from "tsparticles";
 import Particles from "react-tsparticles";
 import TextTransition, { presets } from "react-text-transition";
 import talhabajwa from "../../../app/assets/Talhabajwa.jpg";
-import "@fontsource/jetbrains-mono"; // Load JetBrains Mono Font
+
 
 function variants() {
   return {
