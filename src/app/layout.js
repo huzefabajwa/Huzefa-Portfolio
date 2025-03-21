@@ -14,11 +14,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${roboto.className} ${pathname === "/" ? "home-page" : ""}`}>
-        <ThemeProvider attribute="class" defaultTheme="dark">
+      
           <CommonLayout>
             {children}
           </CommonLayout>
-        </ThemeProvider>
+        
       </body>
     </html>
   );

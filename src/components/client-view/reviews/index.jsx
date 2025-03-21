@@ -69,12 +69,12 @@ export default function ClientProjectView({ data }) {
                             <h3 className="text-lg text-white font-bold">{item.author}</h3>
 
                             {/* Designation Placeholder */}
-                            <p className="text-gray-400 text-sm">Graphic Designer</p>
+                            <p className="text-gray-400 text-sm">{item.company}</p>
 
                             {/* Content with Quote Icon */}
                             <div className="flex items-center mt-3">
-                                <p className="text-gray-300 text-md leading-relaxed line-clamp-4 flex-1">
-                                    {item.content}
+                                <p className="text-gray-300 text-md italic leading-relaxed line-clamp-4 flex-1">
+                                    "{item.content}"
                                 </p>
                                 <span className="text-[#FDC700] text-6xl ml-2">❞</span>
                             </div>

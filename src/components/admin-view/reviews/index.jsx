@@ -23,6 +23,12 @@ const controls = [
         type:'number',
         label:'Enter Rating'
     },
+    {
+        name: 'company',
+        placeholder:'Enter company name',
+        type:'text',
+        label:'Enter company name'
+    },
 ]
 export default function AdminReviewsView({formData,setFormData,handleSaveData,data,setAllData}) {
     const handleDeleteItem = async (id) => {

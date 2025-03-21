@@ -29,6 +29,7 @@ const initialServicesFormData = {
 const initialReviewsFormData = {
     author:"",
     content:"",
+    company:"",
     rating:0,
 };
 const initialAboutFormData = {
@@ -237,7 +238,7 @@ function resetFormData() {
         );
     }
     return(
-        <div className="border-b border-gray-200 items-center">
+        <div className="border-b border-gray-200 bg-[#0A101E] items-center">
             <nav className="-mb-0.5 flex justify-center space-x-6" role="tablist">
                 {menuItem.map((item) => (
                     <button

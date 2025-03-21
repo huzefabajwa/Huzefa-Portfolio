@@ -16,7 +16,7 @@ const ClientServicesView = dynamic(() => import("@/components/client-view/servic
 const ClientReviewsView = dynamic(() => import("@/components/client-view/reviews"), { ssr: false });
 
 async function extractAllDatas(currentSection) {
-  const res = await fetch(`https://talha-bajwa.vercel.app/api/${currentSection}/get`, {
+  const res = await fetch(`http://localhost:3000/api/${currentSection}/get`, {
     method: "GET",
     cache: "no-store",
   });
@@ -25,7 +25,6 @@ async function extractAllDatas(currentSection) {
 }
 
 export default function Home() {
-  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isContentVisible, setIsContentVisible] = useState(false);
