@@ -95,7 +95,7 @@ useEffect(() => {
   });
 
   const starVertices = [];
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 2000; i++) {
     const x = (Math.random() - 0.5) * 2000;
     const y = (Math.random() - 0.5) * 2000;
     const z = (Math.random() - 0.5) * 2000;
@@ -202,15 +202,16 @@ useEffect(() => {
               </h1>
 
               <h2 className="mt-4 lg:mt-6 mb-6 text-gray-400 text-lg sm:text-xl lg:text-2xl xl:text-3xl leading-snug text-center sm:text-left">
-                <span className={`font-mono text-[#FEC544] ${jetbrainsMono.className}`}>
+              <span className="font-mono text-white" style={{ fontFamily: 'var(--font-jetbrains)' }}>
+
                   <Typewriter
                     words={summaryParts}
                     loop={Infinity}
                     cursor
-                    cursorStyle="_"
+                    cursorStyle="|"
                     typeSpeed={70}
                     deleteSpeed={50}
-                    delaySpeed={1000}
+                    delaySpeed={500}
                   />
                 </span>
               </h2>

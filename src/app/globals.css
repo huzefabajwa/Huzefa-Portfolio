@@ -65,4 +65,6 @@ body {
 .animate-twinkle {
   animation: twinkle infinite alternate ease-in-out;
 }
-
+:root {
+  --font-jetbrains: 'JetBrains Mono', monospace;
+}
