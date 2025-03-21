@@ -80,8 +80,6 @@ useEffect(() => {
   );
 
   const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, alpha: true });
-
-  // FIX: Restrict canvas size to container width
   renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
   containerRef.current.appendChild(renderer.domElement);
 
@@ -89,31 +87,55 @@ useEffect(() => {
   const starGeometry = new THREE.BufferGeometry();
   const starMaterial = new THREE.PointsMaterial({
     color: 0xffffff,
-    size: 1.2,
+    size: 0.8, // Smaller size for uniform stars
     transparent: true,
-    opacity: 0.8,
+    depthWrite: false
   });
 
   const starVertices = [];
-  for (let i = 0; i < 2000; i++) {
-    const x = (Math.random() - 0.5) * 2000;
-    const y = (Math.random() - 0.5) * 2000;
-    const z = (Math.random() - 0.5) * 2000;
+  const starOpacities = new Float32Array(2000);
+  const starFlickerSpeeds = [];
+
+  for (let i = 0; i < 3000; i++) {
+    const radius = Math.random() * 1000 + 500; // Stars distributed naturally in a sphere
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    
+    const x = radius * Math.sin(phi) * Math.cos(theta);
+    const y = radius * Math.sin(phi) * Math.sin(theta);
+    const z = radius * Math.cos(phi);
+    
     starVertices.push(x, y, z);
+    starFlickerSpeeds.push(0.002 + Math.random() * 0.00); // Flicker speed
+    starOpacities[i] = Math.random(); // Initial random brightness
   }
 
   starGeometry.setAttribute("position", new THREE.Float32BufferAttribute(starVertices, 3));
+  starGeometry.setAttribute("alpha", new THREE.Float32BufferAttribute(starOpacities, 1));
+
   const stars = new THREE.Points(starGeometry, starMaterial);
   scene.add(stars);
 
   camera.position.z = 500;
 
-  // Animate stars
+  // Animate stars with independent twinkling
   const animate = () => {
     requestAnimationFrame(animate);
+
+    // Rotate stars for a subtle motion
     stars.rotation.x += 0.0001;
     stars.rotation.y += 0.0001;
-    starMaterial.opacity = 0.6 + 0.4 * Math.sin(Date.now() * 0.001); // Dimming and lighting effect
+
+    // Update each star's opacity for the twinkling effect
+    const positions = starGeometry.attributes.position.array;
+    const alphas = starGeometry.attributes.alpha.array;
+
+    for (let i = 0; i < alphas.length; i++) {
+      alphas[i] = 0.4 + 0.6 * Math.sin(Date.now() * starFlickerSpeeds[i]); // Smooth dimming and lighting
+    }
+
+    starGeometry.attributes.alpha.needsUpdate = true; // Update changes
+
     renderer.render(scene, camera);
   };
 
@@ -121,9 +143,11 @@ useEffect(() => {
 
   return () => {
     renderer.dispose();
-    containerRef.current.removeChild(renderer.domElement); // FIX: Prevent multiple canvas elements
+    containerRef.current.removeChild(renderer.domElement);
   };
 }, [mounted]);
+
+
   return (
     <div ref={containerRef} className="relative w-full h-screen overflow-hidden">
          {mounted && <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />}
@@ -211,7 +235,7 @@ useEffect(() => {
                     cursorStyle="|"
                     typeSpeed={70}
                     deleteSpeed={50}
-                    delaySpeed={500}
+                    delaySpeed={2000}
                   />
                 </span>
               </h2>
