@@ -57,4 +57,12 @@ body {
   padding: 20px 0;
   flex: 0 0 600px;
 }
+@keyframes twinkle {
+  0% { opacity: 0.3; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+.animate-twinkle {
+  animation: twinkle infinite alternate ease-in-out;
+}
 
