@@ -72,7 +72,7 @@ export default function Navbar() {
 
             {/* 📱 Mobile Navbar (Fixed & Transparent when closed) */}
             <div
-                className={`lg:hidden fixed top-0 left-0 w-full px-4 py-3 flex items-center justify-between z-50 transition-all duration-500 ${
+                className={`lg:hidden fixed z-100 top-0 left-0 w-full px-4 py-3 flex items-center justify-between z-50 transition-all duration-500 ${
                     isDropdownOpen ? "bg-black bg-opacity-90" : "bg-transparent"
                 }`}
             >
@@ -80,7 +80,7 @@ export default function Navbar() {
 
                 {/* 📱 Mobile Menu Button (Fixed) */}
                 <button
-                    className="rounded-full border p-2 text-white hover:bg-gray-900 transition-all"
+                    className="rounded-full border z-100 p-2 text-white hover:bg-gray-900 transition-all"
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                     {isDropdownOpen ? <X size={24} /> : <Menu size={24} />}
@@ -89,8 +89,8 @@ export default function Navbar() {
 
             {/* 📱 Mobile Dropdown Menu (Expands smoothly to half-screen, items fade in) */}
             <div
-                className={`fixed top-0 left-0 w-full transition-all duration-500 z-40 flex flex-col items-center ${
-                    isDropdownOpen ? "h-[50vh] opacity-100 visible bg-black bg-opacity-90 pt-20" : "h-0 opacity-0 invisible"
+                className={`fixed top-0 left-0 z-80 w-full transition-all duration-500 flex flex-col items-center ${
+                    isDropdownOpen ? "h-[60vh]  opacity-100 visible bg-black bg-opacity-90 pt-20" : "h-0 opacity-0 invisible"
                 }`}
             >
                 <nav
