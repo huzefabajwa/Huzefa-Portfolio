@@ -23,7 +23,7 @@ function CreateMenus({ activeLink, setActiveLink, closeDropdown }) {
                 setActiveLink(item.id);
                 closeDropdown && closeDropdown();
             }}
-            className={`px-7 py-3 cursor-pointer inline-block transition-all duration-300 uppercase text-lg tracking-wide rounded-full ${
+            className={`px-7 py-3 cursor-pointer block transition-all duration-300 uppercase text-lg tracking-wide rounded-full ${
                 activeLink === item.id
                     ? "text-white shadow-lg"
                     : "text-gray-300 hover:text-white"
@@ -72,29 +72,32 @@ export default function Navbar() {
 
             {/* 📱 Mobile Navbar (Fixed & Transparent when closed) */}
             <div
-                className={`lg:hidden fixed z-100 top-0 left-0 w-full px-4 py-3 flex items-center justify-between z-50 transition-all duration-500 ${
-                    isDropdownOpen ? "bg-black bg-opacity-90" : "bg-transparent"
+                className={`lg:hidden fixed top-0 left-0 w-full px-4 py-3 flex items-center justify-between z-50 transition-all duration-500 ${
+                    isDropdownOpen ? "bg-[#0A101E] bg-opacity-90" : "bg-transparent"
                 }`}
             >
-               
+                {/* 📌 Brand Name (Fixed)
+                <div className="text-3xl font-bold text-[#FEC544] tracking-wide uppercase">
+                    T<span className="text-white">alha</span>
+                </div> */}
 
                 {/* 📱 Mobile Menu Button (Fixed) */}
                 <button
-                    className="rounded-full border z-100 p-2 text-white hover:bg-gray-900 transition-all"
+                    className="rounded-full border p-2 text-white hover:bg-gray-900 transition-all"
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                     {isDropdownOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
             </div>
 
-            {/* 📱 Mobile Dropdown Menu (Expands smoothly to half-screen, items fade in) */}
+            {/* 📱 Mobile Dropdown Menu (Expands smoothly to half-screen, items fade in from left) */}
             <div
-                className={`fixed top-0 left-0 z-80 w-full transition-all duration-500 flex flex-col items-center ${
-                    isDropdownOpen ? "h-[60vh]  opacity-100 visible bg-black bg-opacity-90 pt-20" : "h-0 opacity-0 invisible"
+                className={`fixed top-0 left-0 w-full transition-all duration-500 z-40 flex flex-col items-start ${
+                    isDropdownOpen ? "h-[60vh] opacity-100 visible bg-[#0A101E] bg-opacity-90 pt-20 pl-1" : "h-0 opacity-0 invisible"
                 }`}
             >
                 <nav
-                    className={`flex flex-col items-center space-y-6 transition-all duration-500 ${
+                    className={`flex flex-col space-y-6 transition-all duration-500 ${
                         isDropdownOpen ? "opacity-100 visible" : "opacity-0 invisible"
                     }`}
                 >

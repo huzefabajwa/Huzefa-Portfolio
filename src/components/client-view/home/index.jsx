@@ -155,10 +155,10 @@ useEffect(() => {
     
       <div className="flex flex-col items-center justify-center sm:hidden md:hidden mt-10">
       
-        <div className="mt-10 w-50 h-50 relative z-50 rounded-full overflow-hidden border-4 border-white shadow-lg">
+        <div className="mt-10 w-50 h-50 relative z-20 rounded-full overflow-hidden border-4 border-white shadow-lg">
           <Image src={talhabajwa} alt="Profile Picture" quality={100} fill className="object-cover" />
         </div>
-        <div className="mt-4 mb-[-100px] z-60 flex flex-row gap-4">
+        <div className="mt-4 mb-[-100px] z-20 flex flex-row gap-4">
           {socialIcons.map((item) => (
             <a
               key={item.id}
