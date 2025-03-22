@@ -4,71 +4,52 @@ export default function LoadingScreen({ isLoading }) {
   return (
     isLoading && (
       <motion.div
-        className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-[#070E1B] text-white z-50 overflow-hidden"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.5 } }}
-        transition={{ duration: 0.7, ease: "easeInOut" }}
+        className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-[#070E1B] text-white z-50"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, transition: { duration: 0.5 } }}
       >
-        {/* Expanding Light Pulse */}
+        {/* Outer Pulsating Glow */}
         <motion.div
-          className="absolute w-60 h-60 bg-[#FF0080] opacity-10 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.4, 1], opacity: [0.2, 0.5, 0.2] }}
-          transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+          className="absolute w-40 h-40 bg-[#FF0080] opacity-10 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
         />
 
-        {/* Rotating Loader with Neon Flicker */}
+        {/* Rotating Loader with 3D Effect */}
         <motion.div
           className="relative flex items-center justify-center"
-          animate={{
-            rotate: 360,
-            scale: [1, 1.1, 1],
-            perspective: 1000,
-          }}
+          animate={{ rotate: 360, scale: [1, 1.1, 1] }}
           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+          style={{ perspective: 1000 }}
         >
-          {/* Outer Ring with Flicker Effect */}
-          <motion.div
-            className="w-20 h-20 rounded-full border-4 border-transparent border-t-[#FF0080] border-r-[#6A0DAD] border-b-[#00FFFF] border-l-[#FFD700] animate-spin"
-            animate={{
-              opacity: [1, 0.8, 1],
-              filter: ["brightness(1)", "brightness(1.5)", "brightness(1)"],
-            }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-          />
+          {/* Outer Ring */}
+          <div className="w-20 h-20 rounded-full border-4 border-transparent border-t-[#FF0080] border-r-[#6A0DAD] border-b-[#00FFFF] border-l-[#FFD700] animate-spin"></div>
 
-          {/* Inner Glow with Depth Animation */}
+          {/* Inner Glow */}
           <motion.div
             className="absolute w-12 h-12 rounded-full bg-gradient-to-r from-[#FF0080] to-[#00FFFF] opacity-50 blur-lg"
-            animate={{
-              scale: [1, 1.3, 1],
-              y: [-5, 5, -5],
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 1.5,
-              ease: "easeInOut",
-            }}
+            animate={{ scale: [1, 1.3, 1] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
           />
         </motion.div>
 
-        {/* Particle Effect with More Randomization */}
+        {/* Particle Effect */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {Array.from({ length: 40 }).map((_, i) => (
+          {Array.from({ length: 30 }).map((_, i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-[#FFD700] rounded-full"
-              initial={{ opacity: 0, x: 0, y: 0, scale: 0.5 }}
+              initial={{ opacity: 0, x: 0, y: 0 }}
               animate={{
                 opacity: [0.8, 0],
-                x: Math.random() * 300 - 150,
-                y: Math.random() * 300 - 150,
-                scale: [0.5, 1, 0.5],
+                x: Math.random() * 200 - 100,
+                y: Math.random() * 200 - 100,
               }}
               transition={{
-                duration: 2 + Math.random(),
+                duration: 1.5 + Math.random(),
                 repeat: Infinity,
-                delay: Math.random() * 1.5,
+                delay: Math.random(),
               }}
               style={{
                 top: "50%",
@@ -78,7 +59,7 @@ export default function LoadingScreen({ isLoading }) {
           ))}
         </div>
 
-        {/* Animated Loading Text with Wave Effect */}
+        {/* Animated Loading Text */}
         <motion.p
           className="mt-4 text-lg font-semibold text-gray-300"
           initial={{ opacity: 0 }}
@@ -89,14 +70,11 @@ export default function LoadingScreen({ isLoading }) {
             <motion.span
               key={index}
               className="inline-block"
-              animate={{
-                y: [0, -5, 0],
-                opacity: [0.5, 1, 0.5],
-              }}
+              animate={{ opacity: [0, 1, 0] }}
               transition={{
                 repeat: Infinity,
-                duration: 1.5,
-                delay: index * 0.15,
+                duration: 2,
+                delay: index * 0.2,
               }}
             >
               {letter}
