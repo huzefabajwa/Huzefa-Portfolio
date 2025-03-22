@@ -81,6 +81,7 @@ export default function ClientAboutView({ data }) {
                                         viewport={{ once: true, amount: 0.5 }}
                                     >
                                         <AnimatedNumber value={infoItem.value} duration={2 + index} />
+            
                                         <p className="text-[25px] font-semibold text-white uppercase tracking-wider">
                                             {infoItem.label}
                                         </p>

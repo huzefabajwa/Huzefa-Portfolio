@@ -83,7 +83,7 @@ export default function Navbar() {
 
                 {/* 📱 Mobile Menu Button (Fixed) */}
                 <button
-                    className="rounded-full border p-2 text-white hover:bg-gray-900 transition-all"
+                    className="rounded-full border p-2 text-[#FEC544] hover:bg-gray-900 transition-all"
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                     {isDropdownOpen ? <X size={24} /> : <Menu size={24} />}
