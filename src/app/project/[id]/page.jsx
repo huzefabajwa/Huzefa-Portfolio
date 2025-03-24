@@ -2,11 +2,14 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaGooglePlay, FaApple, FaGithub } from "react-icons/fa"; // Importing Icons
+import { FaGooglePlay, FaApple, FaGithub } from "react-icons/fa";
 import LoadingScreen from "@/components/LoadingScreen";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"; // Importing arrow icons for carousel
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IoIosGlobe } from "react-icons/io";
-import { MdAndroid } from "react-icons/md"; // Android logo
+import { MdAndroid } from "react-icons/md";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+import Navbar from "@/components/client-view/navbar";
 
 export default function ProjectDetails() {
     const params = useParams();
@@ -14,7 +17,8 @@ export default function ProjectDetails() {
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedImageIndex, setSelectedImageIndex] = useState(null); // State for carousel index
+    const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
     useEffect(() => {
         if (params?.id) {
@@ -52,7 +56,6 @@ export default function ProjectDetails() {
     if (error) return <div className="text-red-500 text-center mt-10">🚨 {error}</div>;
     if (!project) return <div className="text-white text-center mt-10">🚨 Project Not Found</div>;
 
-    // Function to process text with new lines, bullet points, and bold formatting
     const processText = (text) => {
         return text.replace(/\\n/g, "\n").split("\n").map((line, index) => {
             if (line.startsWith("- ")) {
@@ -67,18 +70,16 @@ export default function ProjectDetails() {
         });
     };
 
-    // Function to detect /*content*/ and make it bold
     const formatBoldText = (text) => {
         return text.replace(/\/\*(.*?)\*\//g, "<strong>$1</strong>");
     };
 
     const images = [project.imageUrl, project.imageUrl1, project.imageUrl2, project.imageUrl3].filter(Boolean);
+    const lightboxImages = images.map((img) => ({ src: img }));
 
     return (
-        
         <div className="w-full min-h-screen bg-gray-900 text-white px-6 md:px-16 lg:px-32 py-12">
-            <div className="container mx-auto flex flex-col lg:flex-row gap-16 items-start max-w-7xl">
-                 
+            <div className="container mx-auto flex flex-col lg:flex-row gap-16 items-start max-w-screen-xl mt-20">
                 <div className="flex-1">
                     <h1 className="text-4xl md:text-5xl font-semibold text-amber-300">{project.name}</h1>
                     <div className="mt-6 text-gray-300">{processText(project.description)}</div>
@@ -91,108 +92,88 @@ export default function ProjectDetails() {
                                 </span>
                             ))}
                         </div>
-                             {/* Buttons Section (GitHub + Store Badges) */}
-                    <div className="mt-20 flex flex-wrap gap-4 items-center">
-                        {/* GitHub Button */}
-                        <a 
-                            href={project.github} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
-                        >
-                            <FaGithub size={30} />
-                            View on GitHub
-                        </a>
-
-                        {/* Google Play & App Store Buttons */}
-                        {project.playstore && (
-                            <a href={project.playstore} target="_blank" rel="noopener noreferrer">
-                                <img 
-                                    src="/googleplaybadge.png" 
-                                    alt="Get it on Google Play"
-                                    className="w-40 md:w-43 h-13 transition-transform duration-200 hover:scale-105"
-                                />
+                        <div className="mt-20 flex flex-wrap gap-4 items-center">
+                            <a 
+                                href={project.github} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
+                            >
+                                <FaGithub size={30} />
+                                View on GitHub
                             </a>
-                        )}
-                        {project.ios && (
-                            <a href={project.ios} target="_blank" rel="noopener noreferrer">
-                                <img 
-                                    src="/appstore.png" 
-                                    alt="Download on the App Store"
-                                    className="w-40 md:w-40 h-13 transition-transform duration-200 hover:scale-105"
-                                />
+                            {project.playstore && (
+                                <a href={project.playstore} target="_blank" rel="noopener noreferrer">
+                                    <img 
+                                        src="/googleplaybadge.png" 
+                                        alt="Get it on Google Play"
+                                        className="w-40 md:w-43 h-13 transition-transform duration-200 hover:scale-105"
+                                    />
+                                </a>
+                            )}
+                            {project.ios && (
+                                <a href={project.ios} target="_blank" rel="noopener noreferrer">
+                                    <img 
+                                        src="/appstore.png" 
+                                        alt="Download on the App Store"
+                                        className="w-40 md:w-40 h-13 transition-transform duration-200 hover:scale-105"
+                                    />
+                                </a>
+                            )}
+                            <a 
+                                href={project.application} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
+                            >
+                                <MdAndroid size={30} />
+                                Download APK
                             </a>
-                        )
-                        }
-                        {/* GitHub Button */}
-                        <a 
-                            href={project.application} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
-                        >
-                            <MdAndroid size={30} />
-                            Download APK
-                        </a>
-                        {/* GitHub Button */}
-                        <a 
-                            href={project.weburl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
-                        >
-                            <IoIosGlobe size={30} />
-                            View Website
-                        </a>
-                        
-                    </div>
+                            <a 
+                                href={project.weburl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
+                            >
+                                <IoIosGlobe size={30} />
+                                View Website
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <div className="w-full lg:w-2/5 relative hidden lg:block">
-                    <div className="sticky top-20 space-y-6">
+                {/* Updated: Made images visible on all screens */}
+                <div className="w-full lg:w-2/5 relative">
+                    <div className="space-y-6 flex flex-wrap justify-center lg:block">
                         {images.map((img, index) => (
                             <img
                                 key={index}
                                 src={img}
                                 alt={project.name}
-                                className="w-full h-auto max-h-[500px] object-cover rounded-lg shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105"
-                                onClick={() => setSelectedImageIndex(index)}
+                                className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-full h-auto object-cover rounded-lg shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105"
+                                onClick={() => {
+                                    setSelectedImageIndex(index);
+                                    setLightboxOpen(true);
+                                }}
                             />
                         ))}
                     </div>
                 </div>
             </div>
 
-            {selectedImageIndex !== null && (
-                <div className="fixed inset-0 flex items-center justify-center backdrop-blur-xl  bg-opacity-80 z-50">
-                    <div className="relative w-full max-w-[90vw] h-[90vh] flex items-center justify-center">
-                        <button
-                            className="absolute left-4 text-white text-4xl"
-                            onClick={() => setSelectedImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1))}
-                        >
-                            <IoIosArrowBack />
-                        </button>
-                        <img
-                            src={images[selectedImageIndex]}
-                            alt="Full View"
-                            className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-lg"
-                        />
-                        <button
-                            className="absolute right-4 text-white text-4xl"
-                            onClick={() => setSelectedImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0))}
-                        >
-                            <IoIosArrowForward />
-                        </button>
-                        <button
-                            className="absolute top-3 right-3 text-white text-4xl font-bold bg-black bg-opacity-50 rounded-full px-3 py-1"
-                            onClick={() => setSelectedImageIndex(null)}
-                        >
-                            ✖
-                        </button>
-                    </div>
-                </div>
-            )}
+            <Lightbox
+                open={lightboxOpen}
+                close={() => setLightboxOpen(false)}
+                slides={lightboxImages}
+                index={selectedImageIndex}
+                on={{ view: ({ index }) => setSelectedImageIndex(index) }}
+                styles={{
+                    container: {
+                        backdropFilter: "blur(10px)",  // Adds a blur effect to the background
+                        backgroundColor: "rgba(0, 0, 0, 0.2)" // Light transparent black
+                    }
+                }}
+            />
         </div>
     );
 }

@@ -8,7 +8,7 @@ export default function CommonLayout({ children }) {
 
     return (
         <div className="bg-custom">
-            {!(pathName === "/admin" || pathName.startsWith("/project/")) && <Navbar />}
+            {!(pathName === "/admin" ) && <Navbar />}
             {children}
         </div>
     );

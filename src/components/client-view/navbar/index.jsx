@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Link as LinkScroll } from "react-scroll";
+import { usePathname } from "next/navigation"; // ✅ Detect dynamic routes
+import { Link as LinkScroll, scroller } from "react-scroll";
 import { X, Menu } from "lucide-react";
 
 const menuItems = [
@@ -12,14 +13,19 @@ const menuItems = [
 ];
 
 function CreateMenus({ activeLink, setActiveLink, closeDropdown }) {
+    const pathname = usePathname(); // Detects the current route
+
     return menuItems.map((item) => (
-        <LinkScroll
+        <button
             key={item.id}
-            to={item.id}
-            spy={true}
-            smooth={true}
-            duration={500}
             onClick={() => {
+                if (pathname === "/") {
+                    // ✅ Scroll smoothly if on the homepage
+                    scroller.scrollTo(item.id, { smooth: true, duration: 500 });
+                } else {
+                    // ✅ Navigate to the homepage first, then scroll
+                    window.location.href = `/#${item.id}`;
+                }
                 setActiveLink(item.id);
                 closeDropdown && closeDropdown();
             }}
@@ -30,7 +36,7 @@ function CreateMenus({ activeLink, setActiveLink, closeDropdown }) {
             }`}
         >
             {item.label}
-        </LinkScroll>
+        </button>
     ));
 }
 
@@ -76,11 +82,6 @@ export default function Navbar() {
                     isDropdownOpen ? "bg-[#0A101E] bg-opacity-90" : "bg-transparent"
                 }`}
             >
-                {/* 📌 Brand Name (Fixed)
-                <div className="text-3xl font-bold text-[#FEC544] tracking-wide uppercase">
-                    T<span className="text-white">alha</span>
-                </div> */}
-
                 {/* 📱 Mobile Menu Button (Fixed) */}
                 <button
                     className="rounded-full border p-2 text-[#FEC544] hover:bg-gray-900 transition-all"

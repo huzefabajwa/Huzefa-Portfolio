@@ -45,7 +45,7 @@ export default function ClientProjectView({ data }) {
     };
 
     return (
-        <div className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mx-auto mb-6 mt-24" id="reviews">
+        <div className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mb-6 mx-auto mt-24" id="reviews">
             {/* Section Header */}
             <div className="relative text-center my-30">
                 <h1 className="absolute inset-0 text-3xl lg:text-9xl font-bold text-gray-800 opacity-30 flex items-center justify-center">
@@ -58,12 +58,12 @@ export default function ClientProjectView({ data }) {
             </div>
 
             {/* Carousel Slider */}
-            <Slider {...settings} className="gap-x-6">
+            <Slider {...settings} className="gap-x-6 mb-10">
                 {data?.map((item, index) => (
                     <div key={index} className="px-4">
                         {/* Clickable Box */}
                         <a href={item.link} target="_blank" rel="noopener noreferrer" className="block">
-                            <div className="relative bg-gray-900 shadow-lg border border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 hover:scale-105 cursor-pointer">
+                            <div className="relative bg-gray-900 shadow-lg border-2 mb-10 border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 hover:scale-105 cursor-pointer">
                                 {/* Star Rating */}
                                 {renderStars(item.rating)}
 

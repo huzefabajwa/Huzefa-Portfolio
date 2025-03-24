@@ -43,7 +43,7 @@ const AnimatedNumber = ({ value, duration = 2 }) => {
             onUpdate={(latest) => setDisplayValue(Math.floor(latest.value))}
             className="text-[50px] text-amber-300 font-semibold tracking-wider"
         >
-            {displayValue}
+            {displayValue}+
         </motion.span>
     );
 };
@@ -53,11 +53,11 @@ export default function ClientAboutView({ data }) {
 
     const setVariants = useMemo(() => variants(), []);
 
-    // Convert data fields to numbers
+    // Convert data fields to numbers and append "Years" for experience
     const aboutDataInfo = [
         { label: "Clients", value: Number(data?.noofclients) || 0 },
         { label: "Projects", value: Number(data?.noofprojects) || 0 },
-        { label: "Experience", value: Number(data?.yearsofexperience) || 0 },
+        { label: "Experience", value: (Number(data?.yearsofexperience) || 0) + "+ Years" },
     ];
 
     const headingText = "Why Hire Me For Your Next Project?";
@@ -80,8 +80,14 @@ export default function ClientAboutView({ data }) {
                                         whileInView="onscreen"
                                         viewport={{ once: true, amount: 0.5 }}
                                     >
-                                        <AnimatedNumber value={infoItem.value} duration={2 + index} />
-            
+                                        {infoItem.label === "Experience" ? (
+                                            <span className="text-[50px] text-amber-300 font-semibold tracking-wider">
+                                                {infoItem.value}
+                                            </span>
+                                        ) : (
+                                            <AnimatedNumber value={infoItem.value} duration={2 + index} />
+                                        )}
+
                                         <p className="text-[25px] font-semibold text-white uppercase tracking-wider">
                                             {infoItem.label}
                                         </p>
@@ -91,24 +97,21 @@ export default function ClientAboutView({ data }) {
                         </div>
                     </div>
                     <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
-  {/* Background Large Text (Always Centered) */}
-  <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
-    MY SKILLS
-  </h1>
+                        {/* Background Large Text (Always Centered) */}
+                        <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
+                            MY SKILLS
+                        </h1>
 
-  {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
-  <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
-    MY SKILLS
-  </h2>
+                        {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
+                        <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
+                            MY SKILLS
+                        </h2>
 
-  {/* Underline Effect */}
-  <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
-    <div className="absolute w-8 h-1 bg-amber-500"></div>
-  </div>
-</div>
-
-
-
+                        {/* Underline Effect */}
+                        <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
+                            <div className="absolute w-8 h-1 bg-amber-500"></div>
+                        </div>
+                    </div>
 
                     {/* About Me & Skills Section */}
                     <div className="w-full flex flex-col lg:flex-row mt-16">
@@ -135,13 +138,10 @@ export default function ClientAboutView({ data }) {
                             >
                                 {data?.aboutme || "I am passionate about delivering high-quality solutions with a strong focus on innovation and efficiency."}
                             </motion.p>
-                         
                         </motion.div>
                         
                         {/* Right Section - Skills */}
                         <div className="w-full lg:w-1/2 mt-10 lg:mt-0">
-                            
-
                             {/* Skills List */}
                             <div className="w-full mt-6">
                                 <AnimationWrapper className="w-full p-4">
