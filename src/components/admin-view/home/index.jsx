@@ -39,6 +39,18 @@ const controls = [
         type:'text',
         label:'Enter Upwork Link'
     },
+    {
+        name: 'linkedin',
+        placeholder:'Enter Linkedin Link',
+        type:'text',
+        label:'Enter Linkedin Link'
+    },
+    {
+        name: 'stack',
+        placeholder:'Enter stackoverflow Link',
+        type:'text',
+        label:'Enter stackoverflow Link'
+    },
 ]
 export default function AdminHomeView({formData,setFormData,handleSaveData}) {
     console.log(formData);

@@ -6,6 +6,7 @@ const ReviewSchema = new mongoose.Schema(
         author: String,
         content: String,
         company: String,  
+        link: String, 
         rating: { type: Number, required: true },
     },
     {timestamps:true}

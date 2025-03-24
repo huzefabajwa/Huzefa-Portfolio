@@ -61,24 +61,27 @@ export default function ClientProjectView({ data }) {
             <Slider {...settings} className="gap-x-6">
                 {data?.map((item, index) => (
                     <div key={index} className="px-4">
-                        <div className="relative bg-gray-900 shadow-lg border border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen">
-                            {/* Star Rating */}
-                            {renderStars(item.rating)}
+                        {/* Clickable Box */}
+                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="block">
+                            <div className="relative bg-gray-900 shadow-lg border border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 hover:scale-105 cursor-pointer">
+                                {/* Star Rating */}
+                                {renderStars(item.rating)}
 
-                            {/* Author Name */}
-                            <h3 className="text-lg text-white font-bold">{item.author}</h3>
+                                {/* Author Name */}
+                                <h3 className="text-lg text-white font-bold">{item.author}</h3>
 
-                            {/* Designation Placeholder */}
-                            <p className="text-gray-400 text-sm">{item.company}</p>
+                                {/* Designation Placeholder */}
+                                <p className="text-gray-400 text-sm">{item.company}</p>
 
-                            {/* Content with Quote Icon */}
-                            <div className="flex items-center mt-3">
-                                <p className="text-gray-300 text-md italic leading-relaxed line-clamp-4 flex-1">
-                                    "{item.content}"
-                                </p>
-                                <span className="text-[#FDC700] text-6xl ml-2">❞</span>
+                                {/* Content with Quote Icon */}
+                                <div className="flex items-center mt-3">
+                                    <p className="text-gray-300 text-md italic leading-relaxed line-clamp-4 flex-1">
+                                        "{item.content}"
+                                    </p>
+                                    <span className="text-[#FDC700] text-6xl ml-2">❞</span>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 ))}
             </Slider>

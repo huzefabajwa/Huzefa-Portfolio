@@ -3,8 +3,8 @@
 import { useMemo, useRef, useState, useEffect } from "react";
 import AnimationWrapper from "../animation-wrapper";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { FaUpwork, FaGithub } from "react-icons/fa6";
-import { FaSlack } from "react-icons/fa";
+import { FaUpwork, FaGithub, FaLinkedin } from "react-icons/fa6";
+import { FaSlack,FaStackOverflow } from "react-icons/fa";
 import Image from "next/image";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { Button } from "@headlessui/react";
@@ -52,6 +52,8 @@ export default function ClientHomeView({ data }) {
   const upworkLink = data?.[0]?.upwork?.trim() || "";
   const slackLink = data?.[0]?.slack?.trim() || "";
   const githubLink = data?.[0]?.github?.trim() || "";
+  const stackoverflow = data?.[0]?.stack?.trim() || "";
+  const linkedin = data?.[0]?.linkedin?.trim() || "";
   const rawSummary = data?.[0]?.summary || "Passionate Developer, Problem Solver";
   const summaryParts = rawSummary.split(",");
 
@@ -59,6 +61,8 @@ export default function ClientHomeView({ data }) {
     { id: "upwork", icon: <FaUpwork />, name: "Upwork", link: upworkLink },
     { id: "slack", icon: <FaSlack />, name: "Slack", link: slackLink },
     { id: "github", icon: <FaGithub />, name: "GitHub", link: githubLink },
+    { id: "stack", icon: <FaStackOverflow />, name: "StackOverflow", link: stackoverflow},
+    { id: "linkedin", icon: <FaLinkedin />, name: "LinkedIn", link: linkedin},
   ].filter((item) => item.link.trim() !== "");
 
 // Ensure Three.js initializes only after mounting
@@ -141,10 +145,6 @@ useEffect(() => {
 
   animate();
 
-  return () => {
-    renderer.dispose();
-    containerRef.current.removeChild(renderer.domElement);
-  };
 }, [mounted]);
 
 
@@ -175,6 +175,10 @@ useEffect(() => {
 
       <motion.div className="absolute right-0 top-0 h-full w-full sm:w-[50%] lg:w-[60%] xl:w-[60%] flex items-center justify-end overflow-visible">
         <motion.div
+        layout // Enables smooth resizing animations
+        animate={{
+          width: socialIcons.length * 150 + 40, // Adjust dynamically based on the number of icons
+        }}
           style={{ x: socialX }}
           className="relative flex flex-col bottom-10 items-start mt-auto bg-gray-800 px-5 py-3 rounded-l-full border border-white/30 shadow-lg z-100 hidden sm:flex w-[515px]"
         >
@@ -185,17 +189,18 @@ useEffect(() => {
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative flex items-center bg-gray-900 text-[#8A8795] text-3xl border border-white/30 rounded-full overflow-hidden transition-all duration-10 ease-in-out"
+                className="relative flex items-center bg-gray-900 text-[#8A8795] text-3xl border-1 border-white/30 rounded-full overflow-hidden transition-all duration-10 ease-in-out"
                 onMouseEnter={() => setHovered(item.id)}
                 onMouseLeave={() => setHovered(null)}
                 layoutId={`social-${item.id}`}
                 animate={{
-                  width: hovered === item.id ? 150 : 51,
+                  width: hovered === item.id ? 51 + item.name.length * 10 + 20 : 51, // Use 'auto' for dynamic expansion
+    
                 }}
               >
                 <span className="w-16 h-12 flex items-center justify-center">{item.icon}</span>
                 {hovered === item.id && (
-                  <span className="ml-1 text-lg text-white font-medium">{item.name}</span>
+                  <span className="mr-2 text-lg text-white font-medium">{item.name}</span>
                 )}
               </motion.a>
             ))}

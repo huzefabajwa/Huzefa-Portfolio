@@ -29,6 +29,12 @@ const controls = [
         type:'text',
         label:'Enter company name'
     },
+    {
+        name: 'link',
+        placeholder:'Enter link',
+        type:'text',
+        label:'Enter link'
+    },
 ]
 export default function AdminReviewsView({formData,setFormData,handleSaveData,data,setAllData}) {
     const handleDeleteItem = async (id) => {
@@ -63,6 +69,9 @@ export default function AdminReviewsView({formData,setFormData,handleSaveData,da
                                     </p>
                                     <p className="text-lg font-semibold text-gray-700">
                                       Rating : {item.rating}  
+                                    </p>
+                                    <p className="text-lg font-semibold text-gray-700">
+                                      link : {item.link}  
                                     </p>
                                     <div className="flex gap-2">
                                         <button onClick={() => handleDeleteItem(item._id)} className="bg-red-500 text-white p-2 rounded">

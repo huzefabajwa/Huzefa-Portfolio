@@ -19,7 +19,9 @@ const initialHomeFormData = {
     hireme:"",
     upwork:"",
     slack:"",
-    github:""
+    github:"",
+    linkedin:"",
+    stack:"",
 };
 const initialServicesFormData = {
     title:"",

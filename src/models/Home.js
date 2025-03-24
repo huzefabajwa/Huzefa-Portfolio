@@ -9,6 +9,8 @@ const HomeSchema = new mongoose.Schema(
         upwork:String,
         slack:String,
         github:String,
+        linkedin:String,
+        stack:String,
     },
     {timestamps:true}
 );
