@@ -4,6 +4,9 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaGooglePlay, FaApple, FaGithub } from "react-icons/fa"; // Importing Icons
 import LoadingScreen from "@/components/LoadingScreen";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"; // Importing arrow icons for carousel
+import { IoIosGlobe } from "react-icons/io";
+import { MdAndroid } from "react-icons/md"; // Android logo
 
 export default function ProjectDetails() {
     const params = useParams();
@@ -11,7 +14,7 @@ export default function ProjectDetails() {
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedImage, setSelectedImage] = useState(null); // State for full image popup
+    const [selectedImageIndex, setSelectedImageIndex] = useState(null); // State for carousel index
 
     useEffect(() => {
         if (params?.id) {
@@ -69,18 +72,16 @@ export default function ProjectDetails() {
         return text.replace(/\/\*(.*?)\*\//g, "<strong>$1</strong>");
     };
 
+    const images = [project.imageUrl, project.imageUrl1, project.imageUrl2, project.imageUrl3].filter(Boolean);
+
     return (
+        
         <div className="w-full min-h-screen bg-gray-900 text-white px-6 md:px-16 lg:px-32 py-12">
             <div className="container mx-auto flex flex-col lg:flex-row gap-16 items-start max-w-7xl">
-                
-                {/* Left Section - Project Details */}
+                 
                 <div className="flex-1">
                     <h1 className="text-4xl md:text-5xl font-semibold text-amber-300">{project.name}</h1>
-
-                    {/* Project Description with New Line, Bullet Point, and Bold Handling */}
                     <div className="mt-6 text-gray-300">{processText(project.description)}</div>
-
-                    {/* Tech Stack Section */}
                     <div className="mt-8">
                         <h2 className="text-2xl font-semibold mb-3">Tech Stack</h2>
                         <div className="flex flex-wrap gap-3">
@@ -90,7 +91,7 @@ export default function ProjectDetails() {
                                 </span>
                             ))}
                         </div>
-                        {/* Buttons Section (GitHub + Store Badges) */}
+                             {/* Buttons Section (GitHub + Store Badges) */}
                     <div className="mt-20 flex flex-wrap gap-4 items-center">
                         {/* GitHub Button */}
                         <a 
@@ -121,70 +122,71 @@ export default function ProjectDetails() {
                                     className="w-40 md:w-40 h-13 transition-transform duration-200 hover:scale-105"
                                 />
                             </a>
-                        )}
+                        )
+                        }
+                        {/* GitHub Button */}
+                        <a 
+                            href={project.application} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
+                        >
+                            <MdAndroid size={30} />
+                            Download APK
+                        </a>
+                        {/* GitHub Button */}
+                        <a 
+                            href={project.weburl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
+                        >
+                            <IoIosGlobe size={30} />
+                            View Website
+                        </a>
+                        
                     </div>
-                    </div>
-                </div>
-                
-                {/* Right Section - Project Images (Fixed for Larger Screens) */}
-                <div className="w-full lg:w-2/5 relative hidden lg:block">
-                    <div className="sticky top-20 space-y-6">
-                        {[project.imageUrl, project.imageUrl1, project.imageUrl2, project.imageUrl3].map((img, index) =>
-                            img ? (
-                                <div key={index} className="relative group">
-                                    <img
-                                        src={img}
-                                        alt={project.name}
-                                        className="w-full h-auto max-h-[500px] object-cover rounded-lg shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105"
-                                        onClick={() => setSelectedImage(img)} // Open image in popup
-                                    />
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <span className="text-white text-lg font-semibold">View Full Image</span>
-                                    </div>
-                                </div>
-                            ) : null
-                        )}
                     </div>
                 </div>
 
-                {/* Mobile View - Scrollable Images */}
-                <div className="w-full lg:hidden flex flex-col gap-6">
-                    {[project.imageUrl, project.imageUrl1, project.imageUrl2, project.imageUrl3].map((img, index) =>
-                        img ? (
-                            <div key={index} className="relative group">
-                                <img
-                                    src={img}
-                                    alt={project.name}
-                                    className="w-full h-auto object-cover rounded-lg shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105"
-                                    onClick={() => setSelectedImage(img)} // Open image in popup
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <span className="text-white text-lg font-semibold">View Full Image</span>
-                                </div>
-                            </div>
-                        ) : null
-                    )}
+                <div className="w-full lg:w-2/5 relative hidden lg:block">
+                    <div className="sticky top-20 space-y-6">
+                        {images.map((img, index) => (
+                            <img
+                                key={index}
+                                src={img}
+                                alt={project.name}
+                                className="w-full h-auto max-h-[500px] object-cover rounded-lg shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105"
+                                onClick={() => setSelectedImageIndex(index)}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
-  {/* Full Image Popup */}
-  {selectedImage && (
-                <div 
-                    className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50"
-                    onClick={() => setSelectedImage(null)} // Clicking outside the image closes the popup
-                >
-                    <div className="relative">
-                        <img 
-                            src={selectedImage} 
-                            alt="Full View" 
+
+            {selectedImageIndex !== null && (
+                <div className="fixed inset-0 flex items-center justify-center backdrop-blur-xl  bg-opacity-80 z-50">
+                    <div className="relative w-full max-w-[90vw] h-[90vh] flex items-center justify-center">
+                        <button
+                            className="absolute left-4 text-white text-4xl"
+                            onClick={() => setSelectedImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1))}
+                        >
+                            <IoIosArrowBack />
+                        </button>
+                        <img
+                            src={images[selectedImageIndex]}
+                            alt="Full View"
                             className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-lg"
                         />
-                        {/* Close Button */}
-                        <button 
+                        <button
+                            className="absolute right-4 text-white text-4xl"
+                            onClick={() => setSelectedImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0))}
+                        >
+                            <IoIosArrowForward />
+                        </button>
+                        <button
                             className="absolute top-3 right-3 text-white text-4xl font-bold bg-black bg-opacity-50 rounded-full px-3 py-1"
-                            onClick={(e) => {
-                                e.stopPropagation(); // Prevent closing when clicking the button
-                                setSelectedImage(null);
-                            }}
+                            onClick={() => setSelectedImageIndex(null)}
                         >
                             ✖
                         </button>
