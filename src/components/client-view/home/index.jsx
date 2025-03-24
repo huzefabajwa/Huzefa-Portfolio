@@ -177,7 +177,7 @@ useEffect(() => {
         <motion.div
         layout // Enables smooth resizing animations
         animate={{
-          width: socialIcons.length * 150 + 40, // Adjust dynamically based on the number of icons
+          width: socialIcons.length * 185 + 40, // Adjust dynamically based on the number of icons
         }}
           style={{ x: socialX }}
           className="relative flex flex-col bottom-10 items-start mt-auto bg-gray-800 px-5 py-3 rounded-l-full border border-white/30 shadow-lg z-100 hidden sm:flex w-[515px]"

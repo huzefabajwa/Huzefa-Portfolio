@@ -93,15 +93,17 @@ export default function ProjectDetails() {
                             ))}
                         </div>
                         <div className="mt-20 flex flex-wrap gap-4 items-center">
-                            <a 
-                                href={project.github} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
-                            >
-                                <FaGithub size={30} />
-                                View on GitHub
-                            </a>
+                            {project.github && (
+                                <a 
+                                    href={project.github} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
+                                >
+                                    <FaGithub size={30} />
+                                    View on GitHub
+                                </a>
+                            )}
                             {project.playstore && (
                                 <a href={project.playstore} target="_blank" rel="noopener noreferrer">
                                     <img 
@@ -120,29 +122,32 @@ export default function ProjectDetails() {
                                     />
                                 </a>
                             )}
-                            <a 
-                                href={project.application} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
-                            >
-                                <MdAndroid size={30} />
-                                Download APK
-                            </a>
-                            <a 
-                                href={project.weburl} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
-                            >
-                                <IoIosGlobe size={30} />
-                                View Website
-                            </a>
+                            {project.application && (
+                                <a 
+                                    href={project.application} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
+                                >
+                                    <MdAndroid size={30} />
+                                    Download APK
+                                </a>
+                            )}
+                            {project.weburl && (
+                                <a 
+                                    href={project.weburl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 px-2 py-[10px] border-2 border-gray-600 bg-[#000000] text-white rounded-lg text-lg md:text-xl transition-transform duration-500 hover:scale-105"
+                                >
+                                    <IoIosGlobe size={30} />
+                                    View Website
+                                </a>
+                            )}
                         </div>
                     </div>
                 </div>
 
-                {/* Updated: Made images visible on all screens */}
                 <div className="w-full lg:w-2/5 relative">
                     <div className="space-y-6 flex flex-wrap justify-center lg:block">
                         {images.map((img, index) => (
@@ -169,8 +174,8 @@ export default function ProjectDetails() {
                 on={{ view: ({ index }) => setSelectedImageIndex(index) }}
                 styles={{
                     container: {
-                        backdropFilter: "blur(10px)",  // Adds a blur effect to the background
-                        backgroundColor: "rgba(0, 0, 0, 0.2)" // Light transparent black
+                        backdropFilter: "blur(10px)", 
+                        backgroundColor: "rgba(0, 0, 0, 0.2)" 
                     }
                 }}
             />
