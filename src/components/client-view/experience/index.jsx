@@ -124,7 +124,7 @@ export default function ClientExperienceAndEducationView({ educationData, experi
                                             }}
                                         >
                                             <h3 className="text-amber-400 text-2xl py-1 mt-[-65px]">{educationItem.degree}</h3>
-                                            <h4 className="text-xl mt-[10px] text-[#626A77]">{educationItem.year}</h4>
+                                            <h4 className="text-xl mt-[10px] text-gray-400">{educationItem.year}</h4>
                                             <h4 className="text-xl py-1 mt-[10px]">{educationItem.college}</h4>
                                         </VerticalTimelineElement>
                                     )) 
