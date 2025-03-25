@@ -6,7 +6,7 @@ const ProjectsSchema = new mongoose.Schema(
         name: String,
         application: String, 
         github: String,
-        imageUrl: String,
+        imageUrl: [String],
         imageUrl1:String,
         imageUrl2:String,
         imageUrl3:String,

@@ -74,8 +74,12 @@ export default function ProjectDetails() {
         return text.replace(/\/\*(.*?)\*\//g, "<strong>$1</strong>");
     };
 
-    const images = [project.imageUrl, project.imageUrl1, project.imageUrl2, project.imageUrl3].filter(Boolean);
-    const lightboxImages = images.map((img) => ({ src: img }));
+    /** ✅ CHANGE: Ensure `imageUrl` is always treated as an array */
+    const images = Array.isArray(project.imageUrl) ? project.imageUrl : [project.imageUrl];
+
+    /** ✅ CHANGE: Include `imageUrl` array images along with other images */
+    const allImages = [...images ].filter(Boolean);
+    const lightboxImages = allImages.map((img) => ({ src: img }));
 
     return (
         <div className="w-full min-h-screen bg-gray-900 text-white px-6 md:px-16 lg:px-32 py-12">
@@ -150,7 +154,7 @@ export default function ProjectDetails() {
 
                 <div className="w-full lg:w-2/5 relative">
                     <div className="space-y-6 flex flex-wrap justify-center lg:block">
-                        {images.map((img, index) => (
+                        {allImages.map((img, index) => (
                             <img
                                 key={index}
                                 src={img}

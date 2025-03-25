@@ -14,6 +14,9 @@ export default function ClientProjectView({ data }) {
 
     if (!mounted) return null; // Fixes hydration mismatch in Next.js
 
+    // Sort projects by creation date (latest first)
+    const sortedData = [...data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
     // **Framer Motion Variants**
     const sectionVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -79,8 +82,9 @@ export default function ClientProjectView({ data }) {
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.2 }}
                 >
-                    {data?.map((item, index) => {
-                        const images = [item.imageUrl, item.imageUrl1, item.imageUrl2, item.imageUrl3].filter(Boolean);
+                    {sortedData?.map((item, index) => {
+                        const images = item.imageUrl || [];
+                        const firstImage = images.length > 0 ? images[0] : null;
 
                         return (
                             <motion.div
@@ -93,9 +97,9 @@ export default function ClientProjectView({ data }) {
                                     <div className="cursor-pointer flex flex-col h-full">
                                         {/* Project Image */}
                                         <div className="w-full h-[190px] overflow-hidden">
-                                            {images.length > 0 ? (
+                                            {firstImage ? (
                                                 <img
-                                                    src={images[0]}
+                                                    src={firstImage}
                                                     alt={item.name}
                                                     className="w-full h-full object-cover"
                                                     loading="lazy"
@@ -126,8 +130,6 @@ export default function ClientProjectView({ data }) {
                                                     </span>
                                                 ))}
                                             </div>
-
-                                            
                                         </div>
                                     </div>
                                 </Link>

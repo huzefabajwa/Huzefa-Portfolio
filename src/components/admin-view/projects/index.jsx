@@ -15,37 +15,35 @@ const controls = [
     { name: "techstack", placeholder: "Enter TechStack", type: "text", label: "Techstack" },
     { name: "weburl", placeholder: "Enter WebURL", type: "text", label: "WEB URL" },
     { name: "projecttype", placeholder: "Enter PROJECT TYPE", type: "text", label: "Project Type" },
-
 ];
 
 export default function AdminProjectView({ formData, setFormData, handleSaveData, data, setData }) {
     console.log(formData);
     const formRef = useRef();
-    const [imagePreviews, setImagePreviews] = useState({
-        imageUrl: null,
-        imageUrl1: null,
-        imageUrl2: null,
-        imageUrl3: null
-    });
+    const [imagePreviews, setImagePreviews] = useState(formData.imageUrl || []);
 
-    // ✅ Handle image uploads
-    const handleUpload = (result, field) => {
+    // ✅ Handle image uploads (store multiple images in imageUrl array)
+    const handleUpload = (result) => {
         if (result.info && result.info.secure_url) {
-            console.log(`🎉 Uploaded Image URL (${field}):`, result.info.secure_url);
-
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                [field]: result.info.secure_url
-            }));
-
-            setImagePreviews((prevPreviews) => ({
-                ...prevPreviews,
-                [field]: result.info.secure_url
-            }));
+            console.log(`🎉 Uploaded Image URL:`, result.info.secure_url);
+    
+            // Ensure imageUrl is treated as an array
+            setFormData((prevFormData) => {
+                const existingImages = Array.isArray(prevFormData.imageUrl) 
+                    ? prevFormData.imageUrl 
+                    : prevFormData.imageUrl ? prevFormData.imageUrl.split(",") : [];
+    
+                const newImageList = [...existingImages, result.info.secure_url];
+    
+                return { ...prevFormData, imageUrl: newImageList };
+            });
+    
+            setImagePreviews((prevImages) => [...prevImages, result.info.secure_url]);
         } else {
-            console.error(`⚠️ Upload failed (${field}):`, result);
+            console.error(`⚠️ Upload failed:`, result);
         }
     };
+    
 
     // ✅ Handle Delete Project
     const handleDelete = async (id) => {
@@ -77,12 +75,16 @@ export default function AdminProjectView({ formData, setFormData, handleSaveData
                                 key={index}
                                 className="flex bg-[#ffffff] flex-col gap-2 p-6 rounded-md shadow-md border border-green-600 hover:border-green-800 transition duration-300"
                             >
-                                {/* ✅ Display all images */}
+                                {/* ✅ Display multiple images (ensure imageUrl is an array) */}
                                 <div className="flex gap-3 flex-wrap">
-                                    {item.imageUrl && <img src={item.imageUrl} alt="Project" className="w-20 h-20 object-cover rounded-md border shadow-md" />}
-                                    {item.imageUrl1 && <img src={item.imageUrl1} alt="Project" className="w-20 h-20 object-cover rounded-md border shadow-md" />}
-                                    {item.imageUrl2 && <img src={item.imageUrl2} alt="Project" className="w-20 h-20 object-cover rounded-md border shadow-md" />}
-                                    {item.imageUrl3 && <img src={item.imageUrl3} alt="Project" className="w-20 h-20 object-cover rounded-md border shadow-md" />}
+                                    {Array.isArray(item.imageUrl) // ✅ Ensure imageUrl is an array
+                                        ? item.imageUrl.map((img, i) => (
+                                            <img key={i} src={img} alt={`Project Image ${i}`} className="w-20 h-20 object-cover rounded-md border shadow-md" />
+                                        ))
+                                        : item.imageUrl?.split(",").map((img, i) => ( // ✅ Fallback for string values
+                                            <img key={i} src={img} alt={`Project Image ${i}`} className="w-20 h-20 object-cover rounded-md border shadow-md" />
+                                        ))
+                                    }
                                 </div>
 
                                 <p className="text-lg font-semibold text-gray-700">Name: {item.name}</p>
@@ -119,45 +121,20 @@ export default function AdminProjectView({ formData, setFormData, handleSaveData
                     )}
                 </div>
 
-                {/* ✅ Image Upload Sections */}
+                {/* ✅ Image Upload Section (handles multiple images) */}
                 <div className="mb-6">
-                    <label className="block font-semibold mb-2">Upload Image 1</label>
+                    <label className="block font-semibold mb-2">Upload Images</label>
                     <CldUploadButton 
                         uploadPreset="projects"
-                        onSuccess={(result) => handleUpload(result, "imageUrl")}
+                        onSuccess={handleUpload}
                         onError={(error) => console.error("❌ Upload Error:", error)}
                     />
-                    {imagePreviews.imageUrl && <img src={imagePreviews.imageUrl} alt="Preview 1" className="mt-3 w-full h-40 object-cover rounded-md shadow-md" />}
-                </div>
-
-                <div className="mb-6">
-                    <label className="block font-semibold mb-2">Upload Image 2</label>
-                    <CldUploadButton 
-                        uploadPreset="projects"
-                        onSuccess={(result) => handleUpload(result, "imageUrl1")}
-                        onError={(error) => console.error("❌ Upload Error:", error)}
-                    />
-                    {imagePreviews.imageUrl1 && <img src={imagePreviews.imageUrl1} alt="Preview 2" className="mt-3 w-full h-40 object-cover rounded-md shadow-md" />}
-                </div>
-
-                <div className="mb-6">
-                    <label className="block font-semibold mb-2">Upload Image 3</label>
-                    <CldUploadButton 
-                        uploadPreset="projects"
-                        onSuccess={(result) => handleUpload(result, "imageUrl2")}
-                        onError={(error) => console.error("❌ Upload Error:", error)}
-                    />
-                    {imagePreviews.imageUrl2 && <img src={imagePreviews.imageUrl2} alt="Preview 3" className="mt-3 w-full h-40 object-cover rounded-md shadow-md" />}
-                </div>
-
-                <div className="mb-6">
-                    <label className="block font-semibold mb-2">Upload Image 4</label>
-                    <CldUploadButton 
-                        uploadPreset="projects"
-                        onSuccess={(result) => handleUpload(result, "imageUrl3")}
-                        onError={(error) => console.error("❌ Upload Error:", error)}
-                    />
-                    {imagePreviews.imageUrl3 && <img src={imagePreviews.imageUrl3} alt="Preview 4" className="mt-3 w-full h-40 object-cover rounded-md shadow-md" />}
+                    {/* ✅ Show image previews */}
+                    <div className="flex gap-3 flex-wrap mt-3">
+                        {imagePreviews.map((img, index) => (
+                            <img key={index} src={img} alt={`Preview ${index}`} className="w-20 h-20 object-cover rounded-md shadow-md" />
+                        ))}
+                    </div>
                 </div>
 
                 {/* Form Controls */}
