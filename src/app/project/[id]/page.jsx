@@ -86,7 +86,8 @@ export default function ProjectDetails() {
             <div className="container mx-auto flex flex-col lg:flex-row gap-16 items-start max-w-screen-xl mt-20">
                 <div className="flex-1">
                     <h1 className="text-4xl md:text-5xl font-extrabold md:font-bold text-white">{project.name}</h1>
-                    <div className="mt-6 text-gray-300">{processText(project.description)}</div>
+                    <h1 className="text-xl md:text-xl mb-5  mt-5   text-amber-300">{project.projecttype}</h1>
+                    <div className="mt-8 text-gray-300">{processText(project.description)}</div>
                     <div className="mt-8">
                         <h2 className="text-2xl font-semibold mb-3">Tech Stack</h2>
                         <div className="flex flex-wrap gap-3">

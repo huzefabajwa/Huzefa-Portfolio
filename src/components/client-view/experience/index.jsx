@@ -70,11 +70,11 @@ export default function ClientExperienceAndEducationView({ educationData, experi
                                                 marginTop: '-40px',
                                             }}
                                         >
-                                            <h3 className="text-amber-400 text-3xl py-1 mt-[-70px]">{experienceItem.position}</h3>
-                                            <h3 className="text-2xl text-gray-400 py-1">{experienceItem.duration}</h3>
-                                            <h4 className="text-2xl py-1">{experienceItem.company}</h4>
-                                            <h4 className="text-2xl py-1">{experienceItem.location}</h4>
-                                            <h4 className="text-1xl text-gray-400">{experienceItem.jobprofile}</h4>
+                                            <h3 className="text-amber-400 text-2xl py-1 mt-[-65px]">{experienceItem.position}</h3>
+                                            <h3 className="text-xl text-gray-400 py-1">{experienceItem.duration}</h3>
+                                            <h4 className="text-xl py-1">{experienceItem.company}</h4>
+                                            <h4 className="text-xl py-1">{experienceItem.location}</h4>
+                                            <h4 className="text-lg text-gray-400">{experienceItem.jobprofile}</h4>
                                         </VerticalTimelineElement>
                                     )) 
                                     : null 
@@ -123,9 +123,9 @@ export default function ClientExperienceAndEducationView({ educationData, experi
                                                 marginTop: '-40px',
                                             }}
                                         >
-                                            <h3 className="text-amber-400 text-3xl py-1 mt-[-70px]">{educationItem.degree}</h3>
-                                            <h4 className="text-2xl mt-[10px]">{educationItem.year}</h4>
-                                            <h4 className="text-2xl py-1 mt-[10px]">{educationItem.college}</h4>
+                                            <h3 className="text-amber-400 text-2xl py-1 mt-[-65px]">{educationItem.degree}</h3>
+                                            <h4 className="text-xl mt-[10px] text-[#626A77]">{educationItem.year}</h4>
+                                            <h4 className="text-xl py-1 mt-[10px]">{educationItem.college}</h4>
                                         </VerticalTimelineElement>
                                     )) 
                                     : null 
