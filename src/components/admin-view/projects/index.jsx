@@ -90,97 +90,129 @@ export default function AdminProjectView({ formData, setFormData, handleSaveData
 
     return (
         <div className="w-full">
-            <div className="bg-[#d7d7d7] shadow-md rounded px-8 pt-6 pb-8">
-                <div className="mb-10 space-y-6">
-                    {Array.isArray(data) && data.length ? (
-                        data.map((item) => (
-                            <div
-                                key={item._id}
-                                className="flex bg-[#ffffff] flex-col gap-2 p-6 rounded-md shadow-md border border-green-600 hover:border-green-800 transition duration-300"
-                            >
-                                <div className="flex gap-3 flex-wrap">
-                                    {Array.isArray(item.imageUrl) &&
-                                        item.imageUrl.map((img, i) => (
-                                            <img
-                                                key={i}
-                                                src={img}
-                                                alt={`Project Image ${i}`}
-                                                className="w-20 h-20 object-cover rounded-md border shadow-md"
-                                            />
-                                        ))}
-                                </div>
-
-                                <p className="text-lg font-semibold text-gray-700">Name: {item.name}</p>
-                                <p className="text-lg font-semibold text-gray-700 hover:text-blue-600">
-                                    <a href={item.application} target="_blank" rel="noopener noreferrer">
-                                        Application: {item.application}
-                                    </a>
-                                </p>
-                                <p className="text-lg font-semibold text-gray-700 hover:text-blue-600">
-                                    <a href={item.github} target="_blank" rel="noopener noreferrer">
-                                        Github: {item.github}
-                                    </a>
-                                </p>
-                                <p className="text-lg font-semibold text-gray-700">Description: {item.description}</p>
-
-                                <button
-                                    onClick={() => handleDelete(item._id)}
-                                    className="mt-3 flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 transition"
-                                >
-                                    <TrashIcon className="h-5 w-5 text-white" />
-                                    Delete
-                                </button>
-
-                                <button
-                                    onClick={() => handleEdit(item)}
-                                    className="mt-3 flex items-center gap-2 bg-yellow-600 text-white px-3 py-2 rounded hover:bg-yellow-700 transition"
-                                >
-                                    <PencilIcon className="h-5 w-5 text-white" />
-                                    Edit
-                                </button>
-
-                                {editProjectId === item._id && editFormData && (
-                                    <div className="mt-4 border-t pt-4">
-                                        <FormControls controls={controls} formData={editFormData} setFormData={setEditFormData} />
-
-                                        <div className="mt-4">
-                                            <label className="block font-semibold mb-2">Upload Images</label>
-                                            <CldUploadButton
-                                                uploadPreset="projects"
-                                                onSuccess={handleUpload}
-                                                onError={(error) => console.error("❌ Upload Error:", error)}
-                                            />
-                                            <div className="flex gap-3 flex-wrap mt-3 relative">
-                                                {Array.isArray(editFormData.imageUrl) &&
-                                                    editFormData.imageUrl.map((img, index) => (
-                                                        <div key={index} className="relative w-20 h-20">
-                                                            <img src={img} alt={`Preview ${index}`} className="w-full h-full object-cover rounded-md shadow-md" />
-                                                            <button
-                                                                className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1 transform translate-x-1/2 -translate-y-1/2"
-                                                                onClick={() => handleRemoveImage(index)}
-                                                            >
-                                                                <XCircleIcon className="h-5 w-5" />
-                                                            </button>
-                                                        </div>
-                                                    ))}
-                                            </div>
-                                        </div>
-
-                                        <button onClick={handleSaveEdit} className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
-                                            Save Changes
-                                        </button>
-
-                                        <button onClick={() => setEditProjectId(null)} className="mt-4 ml-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
-                                            Cancel
-                                        </button>
-                                    </div>
-                                )}
+        <div className="bg-[#d7d7d7] shadow-md rounded px-8 pt-6 pb-8">
+            <div className="mb-10 space-y-6">
+                {Array.isArray(data) && data.length ? (
+                    data.map((item) => (
+                        <div
+                            key={item._id}
+                            className="flex bg-[#ffffff] flex-col gap-2 p-6 rounded-md shadow-md border border-green-600 hover:border-green-800 transition duration-300"
+                        >
+                            <div className="flex gap-3 flex-wrap">
+                                {Array.isArray(item.imageUrl) &&
+                                    item.imageUrl.map((img, i) => (
+                                        <img
+                                            key={i}
+                                            src={img}
+                                            alt={`Project Image ${i}`}
+                                            className="w-20 h-20 object-cover rounded-md border shadow-md"
+                                        />
+                                    ))}
                             </div>
-                        ))
-                    ) : (
-                        <p className="text-center text-gray-600">No data found</p>
-                    )}
+
+                            <p className="text-lg font-semibold text-gray-700">Name: {item.name}</p>
+                            <p className="text-lg font-semibold text-gray-700 hover:text-blue-600">
+                                <a href={item.application} target="_blank" rel="noopener noreferrer">
+                                    Application: {item.application}
+                                </a>
+                            </p>
+                            <p className="text-lg font-semibold text-gray-700 hover:text-blue-600">
+                                <a href={item.github} target="_blank" rel="noopener noreferrer">
+                                    Github: {item.github}
+                                </a>
+                            </p>
+                            <p className="text-lg font-semibold text-gray-700">Description: {item.description}</p>
+
+                            <button
+                                onClick={() => handleDelete(item._id)}
+                                className="mt-3 flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 transition"
+                            >
+                                <TrashIcon className="h-5 w-5 text-white" />
+                                Delete
+                            </button>
+
+                            <button
+                                onClick={() => handleEdit(item)}
+                                className="mt-3 flex items-center gap-2 bg-yellow-600 text-white px-3 py-2 rounded hover:bg-yellow-700 transition"
+                            >
+                                <PencilIcon className="h-5 w-5 text-white" />
+                                Edit
+                            </button>
+
+                            {editProjectId === item._id && editFormData && (
+                                <div className="mt-4 border-t pt-4">
+                                    <FormControls controls={controls} formData={editFormData} setFormData={setEditFormData} />
+
+                                    <div className="mt-4">
+                                        <label className="block font-semibold mb-2">Upload Images</label>
+                                        <CldUploadButton
+                                            uploadPreset="projects"
+                                            onSuccess={handleUpload}
+                                            onError={(error) => console.error("❌ Upload Error:", error)}
+                                        />
+                                        <div className="flex gap-3 flex-wrap mt-3 relative">
+                                            {Array.isArray(editFormData.imageUrl) &&
+                                                editFormData.imageUrl.map((img, index) => (
+                                                    <div key={index} className="relative w-20 h-20">
+                                                        <img src={img} alt={`Preview ${index}`} className="w-full h-full object-cover rounded-md shadow-md" />
+                                                        <button
+                                                            className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1 transform translate-x-1/2 -translate-y-1/2"
+                                                            onClick={() => handleRemoveImage(index)}
+                                                        >
+                                                            <XCircleIcon className="h-5 w-5" />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    </div>
+
+                                    <button onClick={handleSaveEdit} className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                                        Save Changes
+                                    </button>
+
+                                    <button onClick={() => setEditProjectId(null)} className="mt-4 ml-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
+                                        Cancel
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-center text-gray-600">No data found</p>
+                )}
+            </div>
+
+                <FormControls controls={controls} formData={formData} setFormData={setFormData} />
+
+                <div className="mt-4">
+                    <label className="block font-semibold mb-2">Upload Images</label>
+                    <CldUploadButton
+                        uploadPreset="projects"
+                        onSuccess={handleUpload}
+                        onError={(error) => console.error("❌ Upload Error:", error)}
+                    />
+                    <div className="flex gap-3 flex-wrap mt-3 relative">
+                        {Array.isArray(formData.imageUrl) &&
+                            formData.imageUrl.map((img, index) => (
+                                <div key={index} className="relative w-20 h-20">
+                                    <img src={img} alt={`Preview ${index}`} className="w-full h-full object-cover rounded-md shadow-md" />
+                                    <button
+                                        className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1 transform translate-x-1/2 -translate-y-1/2"
+                                        onClick={() => handleRemoveImage(index)}
+                                    >
+                                        <XCircleIcon className="h-5 w-5" />
+                                    </button>
+                                </div>
+                            ))}
+                    </div>
                 </div>
+
+                <button
+                    onClick={() => handleSaveData("projects")}
+                    className="mt-4 border border-blue-600 bg-blue-600 text-white p-3 font-bold text-[16px] focus:bg-green-800 rounded-md w-full hover:bg-blue-700 transition"
+                >
+                    Add Info
+                </button>
             </div>
         </div>
     );
