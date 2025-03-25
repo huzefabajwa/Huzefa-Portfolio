@@ -61,19 +61,22 @@ export default function ClientProjectView({ data }) {
                 viewport={{ once: true, amount: 0.2 }} 
                 variants={sectionVariants}
             >
-                {/* Section Header */}
-                <motion.div className="relative text-center my-30" variants={sectionVariants}>
-                    <h1 className="absolute inset-0 text-3xl lg:text-9xl font-bold text-gray-800 opacity-30 flex items-center justify-center">
-                        MY WORK
-                    </h1>
-                    <h2 className="relative text-xl lg:text-5xl text-yellow-400">
-                        PROJECTS
-                    </h2>
-                    <div className="w-16 h-1 bg-gray-400 mx-auto mt-2 relative">
-                        <div className="absolute w-8 h-1 bg-amber-500"></div>
-                    </div>
-                </motion.div>
+                  <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
+                        {/* Background Large Text (Always Centered) */}
+                        <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
+                            PORTFOLIO
+                        </h1>
 
+                        {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
+                        <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
+                            PORTFOLIO
+                        </h2>
+
+                        {/* Underline Effect */}
+                        <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
+                            <div className="absolute w-8 h-1 bg-amber-500"></div>
+                        </div>
+                    </div>
                 {/* Projects Grid View with Animated Entrance */}
                 <motion.div 
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10"

@@ -6,9 +6,10 @@ import { X, Menu } from "lucide-react";
 
 const menuItems = [
     { id: "home", label: "Home" },
-    { id: "experience", label: "Experience" },
-    { id: "project", label: "Project" },
     { id: "services", label: "Services" },
+    { id: "experience", label: "Resume" },
+    { id: "project", label: "Portfolio" },
+  ,
     { id: "reviews", label: "Testimonials" },
 ];
 

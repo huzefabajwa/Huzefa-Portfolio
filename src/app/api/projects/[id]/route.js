@@ -9,7 +9,7 @@ export async function GET(req, context) {
         await connectToDb();
 
         // ✅ Extract `params` correctly
-        const params = await context.params;  // Awaiting params as required by Next.js
+        const params = await context.params;  
 
         if (!params || !params.id) {
             return NextResponse.json({ success: false, message: "Invalid project ID" }, { status: 400 });
@@ -27,6 +27,7 @@ export async function GET(req, context) {
         return NextResponse.json({ success: false, message: "Server error" }, { status: 500 });
     }
 }
+
 export async function DELETE(req, { params }) {
     try {
         await connectToDb();
@@ -44,6 +45,31 @@ export async function DELETE(req, { params }) {
         return NextResponse.json({ success: true, message: "Project deleted successfully" }, { status: 200 });
     } catch (e) {
         console.error("Error deleting project:", e);
+        return NextResponse.json({ success: false, message: "Server error" }, { status: 500 });
+    }
+}
+
+// ✅ Added UPDATE (PUT) functionality
+export async function PUT(req, context) {
+    try {
+        await connectToDb();
+        const params = await context.params;  
+
+        if (!params || !params.id) {
+            return NextResponse.json({ success: false, message: "Invalid project ID" }, { status: 400 });
+        }
+
+        const updatedData = await req.json(); // Get the updated project data from the request body
+
+        const updatedProject = await Projects.findByIdAndUpdate(params.id, updatedData, { new: true });
+
+        if (!updatedProject) {
+            return NextResponse.json({ success: false, message: "Project not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ success: true, message: "Project updated successfully", data: updatedProject }, { status: 200 });
+    } catch (e) {
+        console.error("Error updating project:", e);
         return NextResponse.json({ success: false, message: "Server error" }, { status: 500 });
     }
 }

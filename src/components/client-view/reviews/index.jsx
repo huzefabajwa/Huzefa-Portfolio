@@ -47,23 +47,29 @@ export default function ClientProjectView({ data }) {
     return (
         <div className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mb-6 mx-auto mt-24" id="reviews">
             {/* Section Header */}
-            <div className="relative text-center my-30">
-                <h1 className="absolute inset-0 text-3xl lg:text-9xl font-bold text-gray-800 opacity-30 flex items-center justify-center">
-                    TESTIMONIALS
-                </h1>
-                <h2 className="relative text-xl lg:text-5xl text-yellow-400">TESTIMONIALS</h2>
-                <div className="w-16 h-1 bg-gray-400 mx-auto mt-2 relative">
-                    <div className="absolute w-8 h-1 bg-amber-500"></div>
-                </div>
-            </div>
+            <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
+                        {/* Background Large Text (Always Centered) */}
+                        <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
+                            TESTIMONIALS
+                        </h1>
 
+                        {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
+                        <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
+                            TESTIMONIALS
+                        </h2>
+
+                        {/* Underline Effect */}
+                        <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
+                            <div className="absolute w-8 h-1 bg-amber-500"></div>
+                        </div>
+                    </div>
             {/* Carousel Slider */}
             <Slider {...settings} className="gap-x-6 mb-10">
                 {data?.map((item, index) => (
                     <div key={index} className="px-4">
                         {/* Clickable Box */}
                         <a href={item.link} target="_blank" rel="noopener noreferrer" className="block">
-                            <div className="relative bg-gray-900 shadow-lg border-2 mb-10 border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 hover:scale-105 cursor-pointer">
+                            <div className="relative bg-gray-900 shadow-lg border-2 mb-10 mt-5 border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 hover:scale-105 cursor-pointer">
                                 {/* Star Rating */}
                                 {renderStars(item.rating)}
 

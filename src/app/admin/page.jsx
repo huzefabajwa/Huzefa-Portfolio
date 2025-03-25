@@ -33,6 +33,7 @@ const initialReviewsFormData = {
     content:"",
     company:"",
     rating:0,
+    link:"",
 };
 const initialAboutFormData = {
     aboutme:"",
@@ -162,6 +163,7 @@ export default function AdminView(){
             setFormData = {setProjectViewFormData}
             handleSaveData = {handleSaveData}
             data={allData?.projects}
+            setData={setAllData}
             />
         },
         

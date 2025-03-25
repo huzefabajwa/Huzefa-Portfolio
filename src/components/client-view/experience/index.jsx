@@ -13,18 +13,22 @@ const TimelineIcon = () => (
 export default function ClientExperienceAndEducationView({ educationData, experienceData }) {
     return (
         <div className="max-w-screen-xl mt-24 mb-6 sm:mt-14 sm:mb-14 px-4 sm:px-8 mx-auto" id="experience">
-              <div className="relative text-center my-10">
-                        <h1 className="absolute inset-0 text-3xl lg:text-9xl font-bold text-gray-800 opacity-30 flex items-center justify-center">
-                            PORTFOLIO
+                <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
+                        {/* Background Large Text (Always Centered) */}
+                        <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
+                            RESUME
                         </h1>
-                        <h2 className="relative text-xl lg:text-5xl text-yellow-400">
+
+                        {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
+                        <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
                             RESUME
                         </h2>
-                        <div className="w-16 h-1 bg-gray-400 mx-auto mt-2 relative">
+
+                        {/* Underline Effect */}
+                        <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
                             <div className="absolute w-8 h-1 bg-amber-500"></div>
                         </div>
                     </div>
-            {/* Two Column Layout */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
 
                 {/* Experience Section */}

@@ -57,7 +57,7 @@ export default function ClientAboutView({ data }) {
     const aboutDataInfo = [
         { label: "Clients", value: Number(data?.noofclients) || 0 },
         { label: "Projects", value: Number(data?.noofprojects) || 0 },
-        { label: "Experience", value: (Number(data?.yearsofexperience) || 0) + "+ Years" },
+        { label: "Years Experience", value: (Number(data?.yearsofexperience) || 0) + "+" },
     ];
 
     const headingText = "Why Hire Me For Your Next Project?";
@@ -80,7 +80,7 @@ export default function ClientAboutView({ data }) {
                                         whileInView="onscreen"
                                         viewport={{ once: true, amount: 0.5 }}
                                     >
-                                        {infoItem.label === "Experience" ? (
+                                        {infoItem.label === "Years Experience" ? (
                                             <span className="text-[50px] text-amber-300 font-semibold tracking-wider">
                                                 {infoItem.value}
                                             </span>

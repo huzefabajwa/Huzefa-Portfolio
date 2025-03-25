@@ -85,12 +85,12 @@ export default function ProjectDetails() {
         <div className="w-full min-h-screen bg-gray-900 text-white px-6 md:px-16 lg:px-32 py-12">
             <div className="container mx-auto flex flex-col lg:flex-row gap-16 items-start max-w-screen-xl mt-20">
                 <div className="flex-1">
-                    <h1 className="text-4xl md:text-5xl font-semibold text-amber-300">{project.name}</h1>
+                    <h1 className="text-4xl md:text-5xl font-extrabold md:font-bold text-white">{project.name}</h1>
                     <div className="mt-6 text-gray-300">{processText(project.description)}</div>
                     <div className="mt-8">
                         <h2 className="text-2xl font-semibold mb-3">Tech Stack</h2>
                         <div className="flex flex-wrap gap-3">
-                            {project.techstack?.split(" ").map((tech, index) => (
+                            {project.techstack?.split(",").map((tech, index) => (
                                 <span key={index} className="px-4 py-2 bg-gray-800 text-white rounded-full text-lg md:text-xl font-medium">
                                     {tech}
                                 </span>
