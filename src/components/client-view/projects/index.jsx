@@ -57,33 +57,32 @@ export default function ClientProjectView({ data }) {
                 className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mx-auto mb-6 mt-24"
                 id="project"
                 initial="hidden"
-                whileInView="visible" 
-                viewport={{ once: true, amount: 0.2 }} 
+                animate="visible"
                 variants={sectionVariants}
             >
-                  <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
-                        {/* Background Large Text (Always Centered) */}
-                        <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
-                            PORTFOLIO
-                        </h1>
+                <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
+                    {/* Background Large Text (Always Centered) */}
+                    <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
+                        PORTFOLIO
+                    </h1>
 
-                        {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
-                        <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
-                            PORTFOLIO
-                        </h2>
+                    {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
+                    <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
+                        PORTFOLIO
+                    </h2>
 
-                        {/* Underline Effect */}
-                        <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
-                            <div className="absolute w-8 h-1 bg-amber-500"></div>
-                        </div>
+                    {/* Underline Effect */}
+                    <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
+                        <div className="absolute w-8 h-1 bg-amber-500"></div>
                     </div>
+                </div>
+
                 {/* Projects Grid View with Animated Entrance */}
                 <motion.div 
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10"
                     variants={gridVariants}
                     initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
+                    animate="visible"
                 >
                     {sortedData?.map((item, index) => {
                         const images = item.imageUrl || [];
