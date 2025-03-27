@@ -21,44 +21,48 @@ async function extractAllDatas(currentSection) {
     cache: "no-store",
   });
   const data = await res.json();
-  return data && data.data;
+  return data?.data || null;
 }
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isContentVisible, setIsContentVisible] = useState(false);
-
-  // Store the fetched data in state
   const [homeSectioData, setHomeSectioData] = useState(null);
-  const [aboutSectioData, setAboutSectioData] = useState(null);
-  const [experienceSectioData, setExperienceSectioData] = useState(null);
-  const [educationSectioData, setEducationSectioData] = useState(null);
-  const [projectsSectioData, setProjectsSectioData] = useState(null);
-  const [servicesSectioData, setServicesSectioData] = useState(null);
-  const [reviewsSectioData, setReviewsSectioData] = useState(null);
+  const [sectionsData, setSectionsData] = useState({});
 
   useEffect(() => {
     async function fetchData() {
-      // Fetch home section first
-      const homeData = await extractAllDatas("home");
+      // Fetch all data in parallel
+      const [
+        homeData,
+        aboutData,
+        experienceData,
+        educationData,
+        projectsData,
+        servicesData,
+        reviewsData,
+      ] = await Promise.all([
+        extractAllDatas("home"),
+        extractAllDatas("about"),
+        extractAllDatas("experience"),
+        extractAllDatas("education"),
+        extractAllDatas("projects"),
+        extractAllDatas("services"),
+        extractAllDatas("reviews"),
+      ]);
+
+      // Update state separately
       setHomeSectioData(homeData);
+      setSectionsData({
+        aboutData,
+        experienceData,
+        educationData,
+        projectsData,
+        servicesData,
+        reviewsData,
+      });
 
-      // Fetch other sections after a slight delay
-      const delay = 300;
-      setTimeout(async () => {
-        setAboutSectioData(await extractAllDatas("about"));
-        setExperienceSectioData(await extractAllDatas("experience"));
-        setEducationSectioData(await extractAllDatas("education"));
-        setProjectsSectioData(await extractAllDatas("projects"));
-        setServicesSectioData(await extractAllDatas("services"));
-        setReviewsSectioData(await extractAllDatas("reviews"));
-
-        setTimeout(() => {
-          setIsLoading(false);
-          setTimeout(() => setIsContentVisible(true), 200);
-        }, delay);
-      }, delay);
+      setIsLoading(false);
     }
 
     fetchData();
@@ -74,37 +78,33 @@ export default function Home() {
         {isLoading && <LoadingScreen isLoading={isLoading} />}
       </AnimatePresence>
 
-      {/* Show ONLY Home First */}
+      {/* Show Content */}
       {!isLoading && (
         <div className="bg-[#070E1B] max-w-screen w-full min-h-screen bg-primary text-primary">
           <Suspense fallback={<LoadingScreen isLoading={true} />}>
-            <ClientHomeView data={homeSectioData} aboutData={aboutSectioData?.[0] || []} />
+            <ClientHomeView data={homeSectioData} aboutData={sectionsData.aboutData?.[0] || []} />
           </Suspense>
 
-          {/* Render Other Sections After Everything is Loaded */}
-          {isContentVisible && (
-            <>
-              <Suspense fallback={<LoadingScreen isLoading={true} />}>
-                <ClientAboutView data={aboutSectioData?.[0] || []} />
-              </Suspense>
-              <Suspense fallback={<LoadingScreen isLoading={true} />}>
-                <ClientServicesView data={servicesSectioData} />
-              </Suspense>
-              <Suspense fallback={<LoadingScreen isLoading={true} />}>
-                <ClientExperienceAndEducation
-                  educationData={educationSectioData}
-                  experienceData={experienceSectioData}
-                />
-              </Suspense>
-              <Suspense fallback={<LoadingScreen isLoading={true} />}>
-                <ClientProjectView data={projectsSectioData} />
-              </Suspense>
-              <Suspense fallback={<LoadingScreen isLoading={true} />}>
-                <ClientReviewsView data={reviewsSectioData} />
-              </Suspense>
-              <ClientContactView />
-            </>
-          )}
+          {/* Other Sections Load Independently */}
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientAboutView data={sectionsData.aboutData?.[0] || []} />
+          </Suspense>
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientServicesView data={sectionsData.servicesData} />
+          </Suspense>
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientExperienceAndEducation
+              educationData={sectionsData.educationData}
+              experienceData={sectionsData.experienceData}
+            />
+          </Suspense>
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientProjectView data={sectionsData.projectsData} />
+          </Suspense>
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientReviewsView data={sectionsData.reviewsData} />
+          </Suspense>
+          <ClientContactView />
         </div>
       )}
     </>
