@@ -22,7 +22,9 @@ export default function ClientProjectView({ data }) {
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
-        arrows: false, // Completely remove arrows
+        arrows: false,
+        draggable: true, // Ensures proper mouse dragging
+        swipe: true, // Ensures touch swiping
         responsive: [
             { breakpoint: 1024, settings: { slidesToShow: 2 } },
             { breakpoint: 768, settings: { slidesToShow: 1 } }
@@ -48,38 +50,41 @@ export default function ClientProjectView({ data }) {
         <div className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mb-6 mx-auto mt-24" id="reviews">
             {/* Section Header */}
             <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
-                        {/* Background Large Text (Always Centered) */}
-                        <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
-                            TESTIMONIALS
-                        </h1>
+                <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
+                    TESTIMONIALS
+                </h1>
+                <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
+                    TESTIMONIALS
+                </h2>
+                <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
+                    <div className="absolute w-8 h-1 bg-amber-500"></div>
+                </div>
+            </div>
 
-                        {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
-                        <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
-                            TESTIMONIALS
-                        </h2>
-
-                        {/* Underline Effect */}
-                        <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
-                            <div className="absolute w-8 h-1 bg-amber-500"></div>
-                        </div>
-                    </div>
             {/* Carousel Slider */}
             <Slider {...settings} className="gap-x-6 mb-10">
                 {data?.map((item, index) => (
                     <div key={index} className="px-4">
                         {/* Clickable Box */}
-                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="block">
-                            <div className="relative bg-gray-900 shadow-lg border-2 mb-10 mt-5 border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 hover:scale-105 cursor-pointer">
-                                {/* Star Rating */}
+                        {item.link ? (
+                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="block">
+                                <div className="relative bg-gray-900 shadow-lg border-2 z-0 mb-10 mt-5 border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 hover:scale-105 cursor-pointer">
+                                    {renderStars(item.rating)}
+                                    <h3 className="text-lg text-white font-bold">{item.author}</h3>
+                                    <p className="text-gray-400 text-sm">{item.company}</p>
+                                    <div className="flex items-center mt-3">
+                                        <p className="text-gray-300 text-md italic leading-relaxed line-clamp-4 flex-1">
+                                            "{item.content}"
+                                        </p>
+                                        <span className="text-[#FDC700] text-6xl ml-2">❞</span>
+                                    </div>
+                                </div>
+                            </a>
+                        ) : (
+                            <div className="relative bg-gray-900 shadow-lg border-2 z-0 mb-10 mt-5 border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 cursor-default">
                                 {renderStars(item.rating)}
-
-                                {/* Author Name */}
                                 <h3 className="text-lg text-white font-bold">{item.author}</h3>
-
-                                {/* Designation Placeholder */}
                                 <p className="text-gray-400 text-sm">{item.company}</p>
-
-                                {/* Content with Quote Icon */}
                                 <div className="flex items-center mt-3">
                                     <p className="text-gray-300 text-md italic leading-relaxed line-clamp-4 flex-1">
                                         "{item.content}"
@@ -87,7 +92,7 @@ export default function ClientProjectView({ data }) {
                                     <span className="text-[#FDC700] text-6xl ml-2">❞</span>
                                 </div>
                             </div>
-                        </a>
+                        )}
                     </div>
                 ))}
             </Slider>
