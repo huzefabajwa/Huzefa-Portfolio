@@ -63,7 +63,7 @@ export default function ClientAboutView({ data }) {
     const headingText = "Why Hire Me For Your Next Project?";
 
     return (
-        <div className="bg-[#0A101E] mt-[-56px] pb-16">
+        <div className="bg-[#0A101E] mt-[-56px] pb-7">
             <div className="max-w-screen-xl  sm:mt-14 sm:mb-20 px-6 sm:px-8 lg:px-16 mx-auto flex flex-col items-center justify-center mt-[30px]" id="about">
                 <AnimationWrapper className="w-full flex flex-col items-center ">
                     {/* Stats Section - Commented out as per request */}
