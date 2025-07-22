@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import LoadingScreen from "@/components/LoadingScreen";
+import useSWR from "swr";
 
 // Lazy load components
 const ClientHomeView = dynamic(() => import("@/components/client-view/home"), { ssr: false });
@@ -15,60 +16,26 @@ const ClientContactView = dynamic(() => import("@/components/client-view/contact
 const ClientServicesView = dynamic(() => import("@/components/client-view/services"), { ssr: false });
 const ClientReviewsView = dynamic(() => import("@/components/client-view/reviews"), { ssr: false });
 
-async function extractAllDatas(currentSection) {
-  const res = await fetch(`https://www.huzefabajwa.site/api/${currentSection}/get`, {
-    method: "GET",
-    cache: "no-store",
-  });
-  const data = await res.json();
-  return data?.data || null;
-}
+const fetcher = (url) => fetch(url).then((res) => res.json()).then((data) => data.data || null);
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [homeSectioData, setHomeSectioData] = useState(null);
-  const [sectionsData, setSectionsData] = useState({});
+  const [homeLoaded, setHomeLoaded] = useState(false);
+
+  // SWR hooks for each section
+  const { data: homeSectioData, isLoading: loadingHome } = useSWR("/api/home/get", fetcher);
+  const { data: aboutData, isLoading: loadingAbout } = useSWR("/api/about/get", fetcher);
+  const { data: experienceData, isLoading: loadingExperience } = useSWR("/api/experience/get", fetcher);
+  const { data: educationData, isLoading: loadingEducation } = useSWR("/api/education/get", fetcher);
+  const { data: projectsData, isLoading: loadingProjects } = useSWR("/api/projects/get", fetcher);
+  const { data: servicesData, isLoading: loadingServices } = useSWR("/api/services/get", fetcher);
+  const { data: reviewsData, isLoading: loadingReviews } = useSWR("/api/reviews/get", fetcher);
 
   useEffect(() => {
-    async function fetchData() {
-      // Fetch all data in parallel
-      const [
-        homeData,
-        aboutData,
-        experienceData,
-        educationData,
-        projectsData,
-        servicesData,
-        reviewsData,
-      ] = await Promise.all([
-        extractAllDatas("home"),
-        extractAllDatas("about"),
-        extractAllDatas("experience"),
-        extractAllDatas("education"),
-        extractAllDatas("projects"),
-        extractAllDatas("services"),
-        extractAllDatas("reviews"),
-      ]);
-
-      // Update state separately
-      setHomeSectioData(homeData);
-      setSectionsData({
-        aboutData,
-        experienceData,
-        educationData,
-        projectsData,
-        servicesData,
-        reviewsData,
-      });
-      setIsLoading(false);
-    }
-
-    fetchData();
     setMounted(true);
   }, []);
 
-  if (!mounted) return null; // Prevent hydration mismatch
+  const isLoading = !mounted || loadingHome || loadingAbout || loadingExperience || loadingEducation || loadingProjects || loadingServices || loadingReviews;
 
   if (isLoading) {
     return <LoadingScreen isLoading={true} />;
@@ -77,27 +44,31 @@ export default function Home() {
   return (
     <div className="bg-[#070E1B] max-w-screen w-full min-h-screen bg-primary text-primary">
       <Suspense fallback={<LoadingScreen isLoading={true} />}>
-        <ClientHomeView data={homeSectioData || []} aboutData={sectionsData.aboutData?.[0] || []} />
+        <ClientHomeView data={homeSectioData || []} aboutData={aboutData?.[0] || []} onLoaded={() => setHomeLoaded(true)} />
       </Suspense>
-      <Suspense fallback={<LoadingScreen isLoading={true} />}>
-        <ClientAboutView data={sectionsData.aboutData?.[0] || []} />
-      </Suspense>
-      <Suspense fallback={<LoadingScreen isLoading={true} />}>
-        <ClientServicesView data={sectionsData.servicesData || []} />
-      </Suspense>
-      <Suspense fallback={<LoadingScreen isLoading={true} />}>
-        <ClientExperienceAndEducation
-          educationData={sectionsData.educationData || []}
-          experienceData={sectionsData.experienceData || []}
-        />
-      </Suspense>
-      <Suspense fallback={<LoadingScreen isLoading={true} />}>
-        <ClientProjectView data={sectionsData.projectsData || []} />
-      </Suspense>
-      <Suspense fallback={<LoadingScreen isLoading={true} />}>
-        <ClientReviewsView data={sectionsData.reviewsData || []} />
-      </Suspense>
-      <ClientContactView />
+      {homeLoaded && (
+        <>
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientAboutView data={aboutData?.[0] || []} />
+          </Suspense>
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientServicesView data={servicesData || []} />
+          </Suspense>
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientExperienceAndEducation
+              educationData={educationData || []}
+              experienceData={experienceData || []}
+            />
+          </Suspense>
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientProjectView data={projectsData || []} />
+          </Suspense>
+          <Suspense fallback={<LoadingScreen isLoading={true} />}>
+            <ClientReviewsView data={reviewsData || []} />
+          </Suspense>
+          <ClientContactView />
+        </>
+      )}
     </div>
   );
 }

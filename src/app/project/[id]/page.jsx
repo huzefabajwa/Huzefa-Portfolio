@@ -10,50 +10,21 @@ import { MdAndroid } from "react-icons/md";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import Navbar from "@/components/client-view/navbar";
+import Image from "next/image";
+import useSWR from "swr";
 
 export default function ProjectDetails() {
     const params = useParams();
-    const [id, setId] = useState(null);
-    const [project, setProject] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const id = params?.id;
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-    useEffect(() => {
-        if (params?.id) {
-            setId(params.id);
-        }
-    }, [params]);
+    // SWR for project details
+    const fetcher = (url) => fetch(url).then((res) => res.json()).then((data) => data.data || null);
+    const { data: project, error, isLoading } = useSWR(id ? `/api/projects/${id}` : null, fetcher);
 
-    useEffect(() => {
-        if (!id) return;
-
-        async function fetchProject() {
-            try {
-                const res = await fetch(`/api/projects/${id}`);
-
-                if (!res.ok) throw new Error("Project not found");
-
-                const { success, data } = await res.json();
-
-                if (success) {
-                    setProject(data);
-                } else {
-                    throw new Error("Project not found");
-                }
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchProject();
-    }, [id]);
-
-    if (loading) return <LoadingScreen />;
-    if (error) return <div className="text-red-500 text-center mt-10">🚨 {error}</div>;
+    if (isLoading) return <LoadingScreen />;
+    if (error) return <div className="text-red-500 text-center mt-10">🚨 {error.message || "Error loading project"}</div>;
     if (!project) return <div className="text-white text-center mt-10">🚨 Project Not Found</div>;
 
     const processText = (text) => {
@@ -111,19 +82,25 @@ export default function ProjectDetails() {
                             )}
                             {project.playstore && (
                                 <a href={project.playstore} target="_blank" rel="noopener noreferrer">
-                                    <img 
+                                    <Image 
                                         src="/googleplaybadge.png" 
                                         alt="Get it on Google Play"
+                                        width={160}
+                                        height={52}
                                         className="w-40 md:w-43 h-13 transition-transform duration-200 hover:scale-105"
+                                        loading="lazy"
                                     />
                                 </a>
                             )}
                             {project.ios && (
                                 <a href={project.ios} target="_blank" rel="noopener noreferrer">
-                                    <img 
+                                    <Image 
                                         src="/appstore.png" 
                                         alt="Download on the App Store"
+                                        width={160}
+                                        height={52}
                                         className="w-40 md:w-40 h-13 transition-transform duration-200 hover:scale-105"
+                                        loading="lazy"
                                     />
                                 </a>
                             )}
@@ -156,11 +133,15 @@ export default function ProjectDetails() {
                 <div className="w-full lg:w-2/5 relative">
                     <div className="space-y-6 flex flex-wrap justify-center lg:block">
                         {allImages.map((img, index) => (
-                            <img
+                            <Image
                                 key={index}
                                 src={img}
                                 alt={project.name}
+                                width={400}
+                                height={300}
                                 className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-full h-auto object-cover rounded-lg shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105"
+                                loading="lazy"
+                                unoptimized={true}
                                 onClick={() => {
                                     setSelectedImageIndex(index);
                                     setLightboxOpen(true);

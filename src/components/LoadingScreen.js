@@ -1,6 +1,16 @@
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 
 export default function LoadingScreen({ isLoading }) {
+  // Memoize particle data to avoid hydration errors
+  const particles = useMemo(() => {
+    return Array.from({ length: 30 }).map(() => ({
+      x: Math.random() * 200 - 100,
+      y: Math.random() * 200 - 100,
+      duration: 1.5 + Math.random(),
+      delay: Math.random(),
+    }));
+  }, []);
   return (
     isLoading && (
       <motion.div
@@ -36,20 +46,20 @@ export default function LoadingScreen({ isLoading }) {
 
         {/* Particle Effect */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {Array.from({ length: 30 }).map((_, i) => (
+          {particles.map((particle, i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-[#FFD700] rounded-full"
               initial={{ opacity: 0, x: 0, y: 0 }}
               animate={{
                 opacity: [0.8, 0],
-                x: Math.random() * 200 - 100,
-                y: Math.random() * 200 - 100,
+                x: particle.x,
+                y: particle.y,
               }}
               transition={{
-                duration: 1.5 + Math.random(),
+                duration: particle.duration,
                 repeat: Infinity,
-                delay: Math.random(),
+                delay: particle.delay,
               }}
               style={{
                 top: "50%",

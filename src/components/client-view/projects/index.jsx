@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import AnimationWrapper from "../animation-wrapper";
+import Image from "next/image";
 
 export default function ClientProjectView({ data }) {
     const [mounted, setMounted] = useState(false);
@@ -100,11 +101,14 @@ export default function ClientProjectView({ data }) {
                                         {/* Project Image */}
                                         <div className="w-full h-[190px] overflow-hidden">
                                             {firstImage ? (
-                                                <img
+                                                <Image
                                                     src={firstImage}
                                                     alt={item.name}
+                                                    width={400}
+                                                    height={190}
                                                     className="w-full h-full object-cover"
                                                     loading="lazy"
+                                                    unoptimized={true}
                                                 />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center bg-gray-700 text-white">

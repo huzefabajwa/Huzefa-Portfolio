@@ -35,7 +35,7 @@ function variants() {
   };
 }
 
-export default function ClientHomeView({ data }) {
+export default function ClientHomeView({ data, onLoaded }) {
   const setVariants = useMemo(() => variants(), []);
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
@@ -73,7 +73,33 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (!mounted || typeof window === "undefined") return;
+  if (mounted && typeof onLoaded === 'function') {
+    onLoaded();
+  }
+}, [mounted, onLoaded]);
+
+// Generate star data only once on the client
+const starData = useMemo(() => {
+  if (!mounted) return null;
+  const starVertices = [];
+  const starOpacities = new Float32Array(2000);
+  const starFlickerSpeeds = [];
+  for (let i = 0; i < 3000; i++) {
+    const radius = Math.random() * 1000 + 500;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const x = radius * Math.sin(phi) * Math.cos(theta);
+    const y = radius * Math.sin(phi) * Math.sin(theta);
+    const z = radius * Math.cos(phi);
+    starVertices.push(x, y, z);
+    starFlickerSpeeds.push(0.002 + Math.random() * 0.00);
+    starOpacities[i] = Math.random();
+  }
+  return { starVertices, starOpacities, starFlickerSpeeds };
+}, [mounted]);
+
+useEffect(() => {
+  if (!mounted || typeof window === "undefined" || !starData) return;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
@@ -87,65 +113,39 @@ useEffect(() => {
   renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
   containerRef.current.appendChild(renderer.domElement);
 
-  // Create star particles
+  // Use memoized star data
   const starGeometry = new THREE.BufferGeometry();
   const starMaterial = new THREE.PointsMaterial({
     color: 0xffffff,
-    size: 0.8, // Smaller size for uniform stars
+    size: 0.8,
     transparent: true,
     depthWrite: false
   });
-
-  const starVertices = [];
-  const starOpacities = new Float32Array(2000);
-  const starFlickerSpeeds = [];
-
-  for (let i = 0; i < 3000; i++) {
-    const radius = Math.random() * 1000 + 500; // Stars distributed naturally in a sphere
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    
-    const x = radius * Math.sin(phi) * Math.cos(theta);
-    const y = radius * Math.sin(phi) * Math.sin(theta);
-    const z = radius * Math.cos(phi);
-    
-    starVertices.push(x, y, z);
-    starFlickerSpeeds.push(0.002 + Math.random() * 0.00); // Flicker speed
-    starOpacities[i] = Math.random(); // Initial random brightness
-  }
-
-  starGeometry.setAttribute("position", new THREE.Float32BufferAttribute(starVertices, 3));
-  starGeometry.setAttribute("alpha", new THREE.Float32BufferAttribute(starOpacities, 1));
-
+  starGeometry.setAttribute("position", new THREE.Float32BufferAttribute(starData.starVertices, 3));
+  starGeometry.setAttribute("alpha", new THREE.Float32BufferAttribute(starData.starOpacities, 1));
   const stars = new THREE.Points(starGeometry, starMaterial);
   scene.add(stars);
-
   camera.position.z = 500;
 
   // Animate stars with independent twinkling
   const animate = () => {
     requestAnimationFrame(animate);
-
-    // Rotate stars for a subtle motion
     stars.rotation.x += 0.0001;
     stars.rotation.y += 0.0001;
-
-    // Update each star's opacity for the twinkling effect
-    const positions = starGeometry.attributes.position.array;
     const alphas = starGeometry.attributes.alpha.array;
-
     for (let i = 0; i < alphas.length; i++) {
-      alphas[i] = 0.4 + 0.6 * Math.sin(Date.now() * starFlickerSpeeds[i]); // Smooth dimming and lighting
+      alphas[i] = 0.4 + 0.6 * Math.sin(Date.now() * starData.starFlickerSpeeds[i]);
     }
-
-    starGeometry.attributes.alpha.needsUpdate = true; // Update changes
-
+    starGeometry.attributes.alpha.needsUpdate = true;
     renderer.render(scene, camera);
   };
-
   animate();
 
-}, [mounted]);
+  // Cleanup
+  return () => {
+    renderer.dispose();
+  };
+}, [mounted, starData]);
 
 
   return (

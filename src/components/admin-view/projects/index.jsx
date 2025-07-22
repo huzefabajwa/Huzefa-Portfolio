@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import FormControls from "../form-controls";
 import { CldUploadButton } from "next-cloudinary";
 import { TrashIcon, PencilIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
 
 const controls = [
     { name: "name", placeholder: "Enter your Project Name", type: "text", label: "Name" },
@@ -116,11 +117,15 @@ export default function AdminProjectView({ formData, setFormData, handleSaveData
                             <div className="flex gap-3 flex-wrap">
                                 {Array.isArray(item.imageUrl) &&
                                     item.imageUrl.map((img, i) => (
-                                        <img
+                                        <Image
                                             key={i}
                                             src={img}
                                             alt={`Project Image ${i}`}
+                                            width={80}
+                                            height={80}
                                             className="w-20 h-20 object-cover rounded-md border shadow-md"
+                                            loading="lazy"
+                                            unoptimized={true}
                                         />
                                     ))}
                             </div>
@@ -169,7 +174,7 @@ export default function AdminProjectView({ formData, setFormData, handleSaveData
                                             {Array.isArray(editFormData.imageUrl) &&
                                                 editFormData.imageUrl.map((img, index) => (
                                                     <div key={index} className="relative w-20 h-20">
-                                                        <img src={img} alt={`Preview ${index}`} className="w-full h-full object-cover rounded-md shadow-md" />
+                                                        <Image src={img} alt={`Preview ${index}`} width={80} height={80} className="w-full h-full object-cover rounded-md shadow-md" loading="lazy" unoptimized={true} />
                                                         <button
                                                             className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1 transform translate-x-1/2 -translate-y-1/2"
                                                             onClick={() => handleRemoveImage(index)}
@@ -210,7 +215,7 @@ export default function AdminProjectView({ formData, setFormData, handleSaveData
                         {Array.isArray(formData.imageUrl) &&
                             formData.imageUrl.map((img, index) => (
                                 <div key={index} className="relative w-20 h-20">
-                                    <img src={img} alt={`Preview ${index}`} className="w-full h-full object-cover rounded-md shadow-md" />
+                                    <Image src={img} alt={`Preview ${index}`} width={80} height={80} className="w-full h-full object-cover rounded-md shadow-md" loading="lazy" unoptimized={true} />
                                     <button
                                         className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1 transform translate-x-1/2 -translate-y-1/2"
                                         onClick={() => handleRemoveImage(index)}
