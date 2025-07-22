@@ -26,7 +26,6 @@ async function extractAllDatas(currentSection) {
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [homeSectioData, setHomeSectioData] = useState(null);
   const [sectionsData, setSectionsData] = useState({});
 
@@ -61,8 +60,6 @@ export default function Home() {
         servicesData,
         reviewsData,
       });
-
-      setIsLoading(false);
     }
 
     fetchData();
@@ -72,41 +69,29 @@ export default function Home() {
   if (!mounted) return null; // Prevent hydration mismatch
 
   return (
-    <>
-      {/* Loading Screen */}
-      <AnimatePresence mode="wait">
-        {isLoading && <LoadingScreen isLoading={isLoading} />}
-      </AnimatePresence>
-
-      {/* Show Content */}
-      {!isLoading && (
-        <div className="bg-[#070E1B] max-w-screen w-full min-h-screen bg-primary text-primary">
-          <Suspense fallback={<LoadingScreen isLoading={true} />}>
-            <ClientHomeView data={homeSectioData} aboutData={sectionsData.aboutData?.[0] || []} />
-          </Suspense>
-
-          {/* Other Sections Load Independently */}
-          <Suspense fallback={<LoadingScreen isLoading={true} />}>
-            <ClientAboutView data={sectionsData.aboutData?.[0] || []} />
-          </Suspense>
-          <Suspense fallback={<LoadingScreen isLoading={true} />}>
-            <ClientServicesView data={sectionsData.servicesData} />
-          </Suspense>
-          <Suspense fallback={<LoadingScreen isLoading={true} />}>
-            <ClientExperienceAndEducation
-              educationData={sectionsData.educationData}
-              experienceData={sectionsData.experienceData}
-            />
-          </Suspense>
-          <Suspense fallback={<LoadingScreen isLoading={true} />}>
-            <ClientProjectView data={sectionsData.projectsData} />
-          </Suspense>
-          <Suspense fallback={<LoadingScreen isLoading={true} />}>
-            <ClientReviewsView data={sectionsData.reviewsData} />
-          </Suspense>
-          <ClientContactView />
-        </div>
-      )}
-    </>
+    <div className="bg-[#070E1B] max-w-screen w-full min-h-screen bg-primary text-primary">
+      <Suspense fallback={<LoadingScreen isLoading={true} />}>
+        <ClientHomeView data={homeSectioData} aboutData={sectionsData.aboutData?.[0] || []} />
+      </Suspense>
+      <Suspense fallback={<LoadingScreen isLoading={true} />}>
+        <ClientAboutView data={sectionsData.aboutData?.[0] || []} />
+      </Suspense>
+      <Suspense fallback={<LoadingScreen isLoading={true} />}>
+        <ClientServicesView data={sectionsData.servicesData} />
+      </Suspense>
+      <Suspense fallback={<LoadingScreen isLoading={true} />}>
+        <ClientExperienceAndEducation
+          educationData={sectionsData.educationData}
+          experienceData={sectionsData.experienceData}
+        />
+      </Suspense>
+      <Suspense fallback={<LoadingScreen isLoading={true} />}>
+        <ClientProjectView data={sectionsData.projectsData} />
+      </Suspense>
+      <Suspense fallback={<LoadingScreen isLoading={true} />}>
+        <ClientReviewsView data={sectionsData.reviewsData} />
+      </Suspense>
+      <ClientContactView />
+    </div>
   );
 }
