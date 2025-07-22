@@ -4,10 +4,10 @@ import { headers } from "next/headers";
 const AboutSchema = new mongoose.Schema(
     {
         aboutme: { type: String, required: true },
-        noofprojects: { type: Number, required: true },
-        yearsofexperience: { type: Number, required: true },
-        noofclients: { type: Number, required: true },
-        skills: { type: String, required: true },
+        noofprojects: { type: String, required: false },
+        yearsofexperience: { type: String, required: false },
+        noofclients: { type: String, required: false },
+        skills: { type: String, required: false },
     },
     {timestamps:true}
 );

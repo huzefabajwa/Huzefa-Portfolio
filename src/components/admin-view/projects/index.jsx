@@ -23,10 +23,18 @@ export default function AdminProjectView({ formData, setFormData, handleSaveData
 
     const handleUpload = (result) => {
         if (result.info && result.info.secure_url) {
-            setEditFormData((prev) => ({
-                ...prev,
-                imageUrl: [...(prev?.imageUrl || []), result.info.secure_url],
-            }));
+            const newImageUrl = result.info.secure_url;
+            if (editProjectId) {
+                setEditFormData((prev) => ({
+                    ...prev,
+                    imageUrl: [...(prev?.imageUrl || []), newImageUrl],
+                }));
+            } else {
+                setFormData((prev) => ({
+                    ...prev,
+                    imageUrl: [...(prev?.imageUrl || []), newImageUrl],
+                }));
+            }
         }
     };
 
@@ -82,10 +90,17 @@ export default function AdminProjectView({ formData, setFormData, handleSaveData
     };
 
     const handleRemoveImage = (index) => {
-        setEditFormData((prev) => ({
-            ...prev,
-            imageUrl: prev.imageUrl.filter((_, i) => i !== index),
-        }));
+        if (editProjectId) {
+            setEditFormData((prev) => ({
+                ...prev,
+                imageUrl: prev.imageUrl.filter((_, i) => i !== index),
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                imageUrl: prev.imageUrl.filter((_, i) => i !== index),
+            }));
+        }
     };
 
     return (
