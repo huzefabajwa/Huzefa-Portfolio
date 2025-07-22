@@ -67,7 +67,7 @@ export default function Navbar() {
             >
                 {/* 🚀 Brand Name */}
                 <div className="text-4xl font-bold text-[#FEC544] tracking-wide uppercase mr-40">
-                    T<span className="text-white">alha</span>
+                    H<span className="text-white">uzefa</span>
                 </div>
 
                 {/* 🖥️ Desktop Navigation */}
