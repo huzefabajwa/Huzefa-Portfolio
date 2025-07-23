@@ -100,7 +100,7 @@ export default function ClientAboutView({ data }) {
                     )}
                     {/* Skills Section Title - Conditionally render if there are skills */}
                     {data?.skills && data.skills.trim() !== "" && (
-                        <div className="relative flex flex-col items-center justify-center min-h-[180px] sm:min-h-[220px] md:min-h-[270px] lg:min-h-[320px] my-14">
+                        <div className="relative flex flex-col items-center justify-center min-h-[180px] sm:min-h-[220px] md:min-h-[270px] lg:min-h-[320px] my-3">
                             {/* Background Large Text (Always Centered) */}
                             <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
                                 MY SKILLS
@@ -119,10 +119,10 @@ export default function ClientAboutView({ data }) {
                     )}
 
                     {/* About Me & Skills Section */}
-                    <div className="w-full flex flex-col lg:flex-row mt-20 mb-10">
+                    <div className="w-full flex flex-col lg:flex-row mt-1 mb-1">
                         {/* Left Section - Why Hire Me & About Me */}
                         <motion.div 
-                            className="w-full lg:w-1/2 text-left mb-10 lg:mb-0"
+                            className="w-full lg:w-1/2 text-left mb-3 lg:mb-0"
                             custom={{ duration: 4 }}
                             variants={setVariants}
                             initial="offscreen"
@@ -144,7 +144,7 @@ export default function ClientAboutView({ data }) {
                             </motion.p>
                         </motion.div>
                         {/* Right Section - Skills */}
-                        <div className="w-full lg:w-1/2 mt-10 lg:mt-0">
+                        <div className="w-full lg:w-1/2 mt-3 lg:mt-0">
                             {/* Skills List - Conditionally render if there are skills */}
                             {data?.skills && data.skills.trim() !== "" && (
                                 <div className="w-full mt-6">
