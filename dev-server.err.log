@@ -1,0 +1,6 @@
+ ⚠ Attempted to load @next/swc-win32-x64-msvc, but an error occurred: \\?\C:\Users\huzef\Downloads\Huzefa-Portfolio-main\Huzefa-Portfolio-main\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node is not a valid Win32 application.
+\\?\C:\Users\huzef\Downloads\Huzefa-Portfolio-main\Huzefa-Portfolio-main\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node
+Request timed out after 3000ms
+
+Retrying 1/3...
+^C^C

@@ -1,0 +1,12 @@
+
+> portfolio-admin@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.2.0
+   - Local:        http://localhost:3000
+   - Network:      http://10.5.0.2:3000
+
+ ✓ Starting...
+   Downloading swc package @next/swc-wasm-nodejs... to C:\Users\huzef\AppData\Local\next-swc
+ ✓ Ready in 9.9s
+ ○ Compiling / ...
