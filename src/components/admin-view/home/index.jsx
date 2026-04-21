@@ -48,7 +48,7 @@ export default function AdminHomeView({ formData, setFormData, handleSaveData })
 
       {/* Profile Photo */}
       <AdminCard title="Profile Photo" subtitle="Upload your photo shown in the hero section">
-        <PhotoUpload value={formData.imageUrl} onChange={url => update("imageUrl", url)} />
+        <PhotoCropper value={formData.imageUrl} onChange={url => update("imageUrl", url)} />
       </AdminCard>
 
       {/* Social Links */}
