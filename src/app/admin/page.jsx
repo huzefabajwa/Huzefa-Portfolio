@@ -1,277 +1,172 @@
-"use client"
+"use client";
 
-import AdminAboutView from "@/components/admin-view/about"
-import AdminContactView from "@/components/admin-view/contact"
-import AdminEducationView from "@/components/admin-view/education"
-import AdminExperienceView from "@/components/admin-view/experience"
-import AdminHomeView from "@/components/admin-view/home"
-import AdminProjectView from "@/components/admin-view/projects"
-import AdminServicesView from "@/components/admin-view/services"
-import AdminReviewsView from "@/components/admin-view/reviews"
-import { addData, getData, updateData, login } from "@/services"
-import { use, useEffect, useState } from "react"
-import Login from "@/components/admin-view/login"
-import { Passero_One } from "next/font/google"
+import { useEffect, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import AdminLayout from "@/components/admin-view/layout";
+import AdminHomeView from "@/components/admin-view/home";
+import AdminAboutView from "@/components/admin-view/about";
+import AdminPlatformsView from "@/components/admin-view/platforms";
+import AdminServicesView from "@/components/admin-view/services";
+import AdminExperienceView from "@/components/admin-view/experience";
+import AdminEducationView from "@/components/admin-view/education";
+import AdminProjectView from "@/components/admin-view/projects";
+import AdminReviewsView from "@/components/admin-view/reviews";
+import AdminContactView from "@/components/admin-view/contact";
+import Login from "@/components/admin-view/login";
+import { addData, getData, updateData, login } from "@/services";
 
-const initialHomeFormData = {
-    heading:"",
-    summary:"",
-    hireme:"",
-    upwork:"",
-    slack:"",
-    github:"",
-    linkedin:"",
-    stack:"",
-};
-const initialServicesFormData = {
-    title:"",
-    service:"",
-    fareacticon:""
-};
-const initialReviewsFormData = {
-    author:"",
-    content:"",
-    company:"",
-    rating:0,
-    link:"",
-};
-const initialAboutFormData = {
-    aboutme:"",
-    noofprojects:"",
-    yearsofexperience:"",
-    noofclients:"",
-    skills:"",
-    progress:"",
-};
-const initialExperienceFormData = {
-    position:"",
-    company:"",
-    duration:"",
-    location:"",
-    jobprofile:""
-};
-const initialEducationFormData = {
-    degree:"",
-    year:"",
-    college:"",
-};
-const initialProjectsFormData = {
-    name:"",
-    application:"",
-    github:"",
-    imageUrl:"",
-    description:"",
-    shortdescription:"",
-    playstore:"",
-    ios:"",
-    techstack:"",
-    weburl:"",
-    projecttype:""
-};
-const initialLoginFormData = {
-    username:"",
-    Passeword:"",
+// ── Initial form states ──────────────────────────────────────────
+const INIT = {
+  home:       { heading:"", summary:"", hireme:"", upwork:"", slack:"", github:"", linkedin:"", stack:"" },
+  services:   { title:"", service:"", fareacticon:"" },
+  reviews:    { author:"", content:"", company:"", rating:0, link:"" },
+  about:      { aboutme:"", noofprojects:"", yearsofexperience:"", noofclients:"", skills:"", progress:"" },
+  experience: { position:"", company:"", duration:"", location:"", jobprofile:"" },
+  education:  { degree:"", year:"", college:"" },
+  projects:   { name:"", application:"", github:"", imageUrl:"", images:[], description:"", shortdescription:"", playstore:"", ios:"", techstack:"", weburl:"", projecttype:"", tags:[], thumbnailPosition:"center" },
+  platforms:  { name:"", description:"", logoUrl:"", color:"#00A1E0", order:0 },
+  login:      { username:"", password:"" },
 };
 
+export default function AdminPage() {
+  const [currentTab, setCurrentTab] = useState("home");
+  const [authUser, setAuthUser] = useState(false);
+  const [allData, setAllData] = useState({});
+  const [update, setUpdate] = useState(false);
+  const [loginFormData, setLoginFormData] = useState(INIT.login);
 
-export default function AdminView(){
-    const [currentTab, setActiveTab] = useState('home');
-    const [homeViewFormData, setHomeViewFormData] = useState(initialHomeFormData);
-    const [servicesViewFormData, setServicesViewFormData] = useState(initialServicesFormData);
-    const [aboutViewFormData, setAboutViewFormData] = useState(initialAboutFormData);
-    const [ExperienceViewFormData, setExperienceViewFormData] = useState(initialExperienceFormData);
-    const [educationViewFormData, setEducationViewFormData] = useState(initialEducationFormData);
-    const [projectViewFormData, setProjectViewFormData] = useState(initialProjectsFormData);
-    const [reviewsViewFormData, setReviewsViewFormData] = useState(initialReviewsFormData);
-    const [allData,setAllData] = useState({});
-    const [update,setUpdate] = useState(false);
-    const [authUser, setAuthUser] = useState(false);
-    const [loginFormData, setLoginFormdata] = useState(initialLoginFormData);
-    const menuItem = [
-        {
-            id: 'home',
-            label: 'Home',
-            component:<AdminHomeView
-            formData = {homeViewFormData}
-            setFormData = {setHomeViewFormData}
-            handleSaveData = {handleSaveData}
-            />
-        },
-        {
-            id: 'services',
-            label: 'Services',
-            component:<AdminServicesView
-            formData = {servicesViewFormData}
-            setFormData = {setServicesViewFormData}
-            handleSaveData = {handleSaveData}
-            data={allData?.services}
-            setAllData={setAllData}
-            />
-        },
-        {
-            id: 'reviews',
-            label: 'Reviews',
-            component:<AdminReviewsView
-            formData = {reviewsViewFormData}
-            setFormData = {setReviewsViewFormData}
-            handleSaveData = {handleSaveData}
-            data={allData?.reviews}
-            setAllData={setAllData}
-            />
-        },
-        {
-            id: 'about',
-            label: 'About',
-            component:<AdminAboutView
-            formData = {aboutViewFormData}
-            setFormData = {setAboutViewFormData}
-            handleSaveData = {handleSaveData}
-            />
-        },
-        {
-            id: 'contact',
-            label: 'Contact',
-            component:<AdminContactView/>
-        },
-        {
-            id: 'education',
-            label: 'Education',
-            component:<AdminEducationView
-            formData = {educationViewFormData}
-            setFormData = {setEducationViewFormData}
-            handleSaveData = {handleSaveData}
-            data={allData?.education}
-            setAllData={setAllData}
-            />
-        },
-        {
-            id: 'experience',
-            label: 'Experience',
-            component:<AdminExperienceView
-            formData = {ExperienceViewFormData}
-            setFormData = {setExperienceViewFormData}
-            handleSaveData = {handleSaveData}
-            data={allData?.experience}
-            setAllData={setAllData}
-            />
-        },
-        {
-            id: 'projects',
-            label: 'Projects',
-            component:<AdminProjectView
-            formData = {projectViewFormData}
-            setFormData = {setProjectViewFormData}
-            handleSaveData = {handleSaveData}
-            data={allData?.projects}
-            setData={setAllData}
-            />
-        },
-        
-    ]
-    
-    async function handleSaveData() {
-        const dataMap = {
-            home: homeViewFormData,
-            about: aboutViewFormData,
-            experience: ExperienceViewFormData,
-            education: educationViewFormData,
-            projects: projectViewFormData,
-            services: servicesViewFormData,
-            reviews: reviewsViewFormData,
-        };
-        const response = update ? await updateData(currentTab,dataMap[currentTab]):
-        await addData(currentTab,dataMap[currentTab]);
-        console.log(response,"response");
-        if (response.success) {
-            resetFormData();
-            extractAllData();
-        }
+  // Per-tab form states
+  const [homeForm,       setHomeForm]       = useState(INIT.home);
+  const [aboutForm,      setAboutForm]      = useState(INIT.about);
+  const [servicesForm,   setServicesForm]   = useState(INIT.services);
+  const [experienceForm, setExperienceForm] = useState(INIT.experience);
+  const [educationForm,  setEducationForm]  = useState(INIT.education);
+  const [projectForm,    setProjectForm]    = useState(INIT.projects);
+  const [reviewsForm,    setReviewsForm]    = useState(INIT.reviews);
+  const [platformsForm,  setPlatformsForm]  = useState(INIT.platforms);
 
-}
-useEffect(() => {
-    extractAllData();
-},[currentTab]);
-async function extractAllData() {
-     const response = await getData(currentTab);
-     if (currentTab == "home" && response && response.data && response.data.length) {
-         setHomeViewFormData(response && response.data[0]);
-         setUpdate(true);
-     }
-     if (currentTab == "about" && response && response.data && response.data.length) {
-        setAboutViewFormData(response && response.data[0]);
-        setUpdate(true);
-    }
-    if (response?.success) {
-        setAllData({
-            ...allData,
-            [currentTab]: response &&response.data
-        });
-    }
-}
-console.log(allData,homeViewFormData,"homeViewFormData");
-function resetFormData() {
-    setHomeViewFormData(initialHomeFormData);
-    setAboutViewFormData(initialAboutFormData);
-    setExperienceViewFormData(initialExperienceFormData);
-    setEducationViewFormData(initialEducationFormData);
-    setProjectViewFormData(initialProjectsFormData);
-    setServicesViewFormData(initialServicesFormData);
-    setReviewsViewFormData(initialReviewsFormData);
-} 
+  // ── Auth ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    try {
+      setAuthUser(JSON.parse(sessionStorage.getItem("authUser")));
+    } catch {}
+  }, []);
 
   async function handleLogin() {
     const res = await login(loginFormData);
-    console.log(res, "login");
     if (res?.success) {
-        setAuthUser(true);
-        sessionStorage.setItem("authUser", JSON.stringify(true));
-       
+      setAuthUser(true);
+      sessionStorage.setItem("authUser", JSON.stringify(true));
+      toast.success("Welcome back, Admin! 👋");
+    } else {
+      toast.error("Invalid credentials. Please try again.");
     }
   }
 
-  useEffect(() => {
-      setAuthUser(JSON.parse(sessionStorage.getItem("authUser")));
-  },[]);
-    if (!authUser) {
-        return(
-            <Login 
-            formData = {loginFormData}
-            setFormData = {setLoginFormdata}
-            handlelogin = {handleLogin}
-            />
-        );
-    }
-    return(
-        <div className="border-b border-gray-200 bg-[#0A101E] items-center">
-            <nav className="-mb-0.5 flex justify-center space-x-6" role="tablist">
-                {menuItem.map((item) => (
-                    <button
-                        key={item.id}
-                        type="button"
-                        className="p-4 font-bold text-xl text-white"
-                        onClick={() => {
-                            setActiveTab(item.id);
-                            resetFormData();
-                            setUpdate(false);
-                       }}>
-                            {item.label}
-                        </button>
-                ))}
-                <button onClick={() => {
-                  sessionStorage.removeItem("authUser");
-                  setAuthUser(false);
-            }}
-            className="p-4 font-bold text-xl text-black"
-                >
-                    Logout
-                </button>
-            </nav>
-            <div className="mt-10 p-10">
-                {
+  function handleLogout() {
+    sessionStorage.removeItem("authUser");
+    setAuthUser(false);
+    toast.success("Logged out successfully");
+  }
 
-                menuItem.map(item => item.id === currentTab && item.component)
-              }
-            </div>
-        </div>
-    )
+  // ── Data fetch ───────────────────────────────────────────────────
+  useEffect(() => {
+    if (authUser) extractAllData();
+  }, [currentTab, authUser]);
+
+  async function extractAllData() {
+    try {
+      const response = await getData(currentTab);
+      if (!response?.success) return;
+
+      if (currentTab === "home" && response.data?.length) {
+        setHomeForm(response.data[0]);
+        setUpdate(true);
+      }
+      if (currentTab === "about" && response.data?.length) {
+        setAboutForm(response.data[0]);
+        setUpdate(true);
+      }
+
+      setAllData(prev => ({ ...prev, [currentTab]: response.data }));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // ── Save ─────────────────────────────────────────────────────────
+  async function handleSaveData() {
+    const formMap = {
+      home: homeForm, about: aboutForm, services: servicesForm,
+      experience: experienceForm, education: educationForm,
+      projects: projectForm, reviews: reviewsForm, platforms: platformsForm,
+    };
+
+    const toastId = toast.loading("Saving...");
+    try {
+      const response = update
+        ? await updateData(currentTab, formMap[currentTab])
+        : await addData(currentTab, formMap[currentTab]);
+
+      if (response?.success) {
+        toast.success("Saved successfully! ✓", { id: toastId });
+        resetFormData();
+        await extractAllData();
+      } else {
+        toast.error("Failed to save. Please try again.", { id: toastId });
+      }
+    } catch (e) {
+      toast.error("An error occurred.", { id: toastId });
+    }
+  }
+
+  function resetFormData() {
+    setHomeForm(INIT.home); setAboutForm(INIT.about);
+    setServicesForm(INIT.services); setExperienceForm(INIT.experience);
+    setEducationForm(INIT.education); setProjectForm(INIT.projects);
+    setReviewsForm(INIT.reviews); setPlatformsForm(INIT.platforms);
+    setUpdate(false);
+  }
+
+  // ── Tab content map ──────────────────────────────────────────────
+  const tabContent = {
+    home: <AdminHomeView formData={homeForm} setFormData={setHomeForm} handleSaveData={handleSaveData} />,
+    about: <AdminAboutView formData={aboutForm} setFormData={setAboutForm} handleSaveData={handleSaveData} />,
+    platforms: <AdminPlatformsView formData={platformsForm} setFormData={setPlatformsForm} handleSaveData={handleSaveData} data={allData?.platforms} setAllData={setAllData} />,
+    services: <AdminServicesView formData={servicesForm} setFormData={setServicesForm} handleSaveData={handleSaveData} data={allData?.services} setAllData={setAllData} />,
+    experience: <AdminExperienceView formData={experienceForm} setFormData={setExperienceForm} handleSaveData={handleSaveData} data={allData?.experience} setAllData={setAllData} />,
+    education: <AdminEducationView formData={educationForm} setFormData={setEducationForm} handleSaveData={handleSaveData} data={allData?.education} setAllData={setAllData} />,
+    projects: <AdminProjectView formData={projectForm} setFormData={setProjectForm} handleSaveData={handleSaveData} data={allData?.projects} setData={setAllData} />,
+    reviews: <AdminReviewsView formData={reviewsForm} setFormData={setReviewsForm} handleSaveData={handleSaveData} data={allData?.reviews} setAllData={setAllData} />,
+    contact: <AdminContactView />,
+  };
+
+  if (!authUser) {
+    return (
+      <>
+        <Toaster position="top-right" toastOptions={{
+          style: { background: "#0C1829", color: "#F0F6FF", border: "1px solid rgba(255,255,255,0.08)" }
+        }} />
+        <Login formData={loginFormData} setFormData={setLoginFormData} handlelogin={handleLogin} />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Toaster position="top-right" toastOptions={{
+        style: { background: "#0C1829", color: "#F0F6FF", border: "1px solid rgba(255,255,255,0.08)" },
+        success: { iconTheme: { primary: "#00A1E0", secondary: "#fff" } },
+        error:   { iconTheme: { primary: "#FF6B6B", secondary: "#fff" } },
+      }} />
+      <AdminLayout
+        currentTab={currentTab}
+        setActiveTab={(tab) => { setCurrentTab(tab); resetFormData(); }}
+        onLogout={handleLogout}
+        allData={allData}
+      >
+        {tabContent[currentTab] || <div />}
+      </AdminLayout>
+    </>
+  );
 }

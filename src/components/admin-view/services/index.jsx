@@ -1,81 +1,104 @@
 "use client";
 
-import { ServicesDelete } from "@/services";
-import FormControls from "../form-controls";
+import { useState } from "react";
+import { AdminCard, AdminInput, AdminTextarea, SaveButton, DeleteButton, StatusBadge } from "../ui";
+import { TrendingUp, Zap, Settings } from "lucide-react";
 
-const controls = [
-    {
-        name: 'title',
-        placeholder: 'Enter your title here',
-        type: 'text',
-        label: 'Enter Title Text'
-    },
-    {
-        name: 'service',
-        placeholder: 'Enter Service Summary',
-        type: 'text',
-        label: 'Enter Service Summary'
-    },
-    {
-        name: 'fareacticon',
-        placeholder: 'Enter Icon Name here',
-        type: 'text',
-        label: 'Enter Icon Name'
-    },
+const CRM_ICONS = [
+  "TrendingUp", "Settings", "Users", "BarChart2", "RefreshCcw",
+  "Zap", "Database", "Globe", "Layers", "Shield", "Award", "Target"
 ];
 
 export default function AdminServicesView({ formData, setFormData, handleSaveData, data, setAllData }) {
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(null);
+  const update = (name, value) => setFormData(prev => ({ ...prev, [name]: value }));
 
-    const handleDeleteItem = async (id) => {
-                        const response = await ServicesDelete(id);
-                        if (response.success) {
-                            const updatedData  = data.filter((item) => item._id !== id);
-                            setAllData((prevData) => ({
-                                ...prevData,
-                                services: updatedData
-                            }));
-                            console.log("Item deleted successfully");
-                        }
-                        else {
-                            console.log("Failed to delete item", response.message);
-                        }
-                    
-            };
+  async function save() {
+    setSaving(true);
+    await handleSaveData();
+    setSaving(false);
+  }
 
-    return (
-        <div className="w-full">
-            <div className="bg-[#d7d7d7] shadow-md rounded px-8 pt-6 pb-8">
-                <div className="mb-10 space-y-6">
-                    {data && data.length ? (
-                        data.map((item, index) => (
-                            <div key={index} className="flex bg-[#ffffff] flex-col gap-2 p-6 rounded-md shadow-md border border-green-600 hover:border-green-800 transition duration-300">
-                                <p className="text-lg font-semibold text-gray-700">
-                                    <strong>Title:</strong> {item.title}
-                                </p>
-                                <p className="text-lg font-semibold text-gray-700">
-                                    <strong>Service:</strong> {item.service}
-                                </p>
-                                <p className="text-lg font-semibold text-gray-700">
-                                    <strong>Fareacticon:</strong> {item.fareacticon}
-                                </p>
-                                <div className="flex gap-2">
-                                        <button onClick={() => handleDeleteItem(item._id)} className="bg-red-500 text-white p-2 rounded">
-                                            Delete
-                                        </button>
-                                        </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-center text-gray-600">No data found</p>
-                    )}
-                </div>
+  async function handleDelete(id) {
+    setDeleting(id);
+    try {
+      const res = await fetch("/api/services/delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        setAllData(prev => ({ ...prev, services: prev.services?.filter(s => s._id !== id) }));
+      }
+    } catch (e) { console.error(e); }
+    setDeleting(null);
+  }
 
-                <FormControls controls={controls} formData={formData} setFormData={setFormData} />
+  const CRM_COLORS = ["#00A1E0", "#FF7A59", "#9B59B6", "#8B5CF6", "#00D4AA", "#F2C811"];
 
-                <button onClick={() => handleSaveData('services')} className="mt-5 border border-blue-600 bg-blue-600 text-white p-3 font-bold text-[16px] focus:bg-green-800 rounded-md">
-                    Save Changes
-                </button>
-            </div>
+  return (
+    <div className="flex flex-col gap-6">
+      <AdminCard title="Add Service" subtitle="Add a CRM service offering to your portfolio"
+        action={<StatusBadge count={data?.length || 0} label="services" color="#00A1E0" />}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <AdminInput label="Service Title" name="title" value={formData.title} onChange={update}
+            placeholder="e.g. Salesforce Implementation" />
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#8DA0BC" }}>Icon Name</label>
+            <select
+              value={formData.fareacticon || ""}
+              onChange={e => update("fareacticon", e.target.value)}
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#F0F6FF", fontFamily: "inherit" }}
+            >
+              <option value="" style={{ background: "#0C1829" }}>Select icon...</option>
+              {CRM_ICONS.map(icon => (
+                <option key={icon} value={icon} style={{ background: "#0C1829" }}>{icon}</option>
+              ))}
+            </select>
+          </div>
+          <div className="md:col-span-2">
+            <AdminTextarea label="Service Description" name="service" value={formData.service} onChange={update}
+              rows={4} placeholder="Describe this service offering in detail..." />
+          </div>
         </div>
-    );
+        <div className="flex justify-end mt-5">
+          <SaveButton onClick={save} loading={saving} label="Add Service" />
+        </div>
+      </AdminCard>
+
+      {data && data.length > 0 && (
+        <AdminCard title="Active Services" subtitle="Services displayed on your portfolio">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {data.map((item, i) => {
+              const color = CRM_COLORS[i % CRM_COLORS.length];
+              return (
+                <div key={item._id || i} className="rounded-xl p-5 flex flex-col gap-3"
+                  style={{ background: `${color}06`, border: `1px solid ${color}20` }}>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                        style={{ background: `${color}20`, color }}>
+                        <TrendingUp size={18} />
+                      </div>
+                      <div>
+                        <p className="font-bold text-sm" style={{ color: "#F0F6FF" }}>{item.title}</p>
+                        <div className="w-5 h-0.5 rounded-full mt-1" style={{ background: color }} />
+                      </div>
+                    </div>
+                    <DeleteButton onClick={() => handleDelete(item._id)} loading={deleting === item._id} />
+                  </div>
+                  <p className="text-xs leading-relaxed" style={{ color: "#8DA0BC" }}>
+                    {item.service?.substring(0, 100)}{(item.service?.length || 0) > 100 ? "..." : ""}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </AdminCard>
+      )}
+    </div>
+  );
 }

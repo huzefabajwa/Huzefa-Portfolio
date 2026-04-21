@@ -1,155 +1,130 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import * as FaIcons from "react-icons/fa";
-import * as AiIcons from "react-icons/ai";
-import * as MdIcons from "react-icons/md";
-import * as RiIcons from "react-icons/ri";
-import * as BiIcons from "react-icons/bi";
-import * as HiIcons from "react-icons/hi";
-import * as IoIcons from "react-icons/io";
-import * as GiIcons from "react-icons/gi";
-import * as TbIcons from "react-icons/tb";
-import * as BsIcons from "react-icons/bs";
-import * as CiIcons from "react-icons/ci";
-import * as CgIcons from "react-icons/cg";
-import * as FiIcons from "react-icons/fi";
-import * as GrIcons from "react-icons/gr";
-import * as ImIcons from "react-icons/im";
-import * as LuIcons from "react-icons/lu";
-import * as PiIcons from "react-icons/pi";
-import * as SiIcons from "react-icons/si";
-import * as SlIcons from "react-icons/sl";
-import * as TfiIcons from "react-icons/tfi";
-import * as VscIcons from "react-icons/vsc";
+import AnimationWrapper from "../animation-wrapper";
+import { TrendingUp, Settings, Users, BarChart2, RefreshCcw, Zap, Database, Globe, Layers } from "lucide-react";
+
+/* ─── CRM-themed service icons ───────────────────────────────────── */
+const ICON_MAP = {
+  // CRM platforms
+  FaSalesforce:          Zap,
+  FaHubspot:             TrendingUp,
+  FaMicrosoft:           Layers,
+  // Integration & automation
+  FaPlug:                RefreshCcw,
+  FaBolt:                Zap,
+  FaChalkboardTeacher:   Users,
+  // Legacy web-dev icons (kept for backwards compat)
+  FaLaptopCode:          Globe,
+  FaServer:              Database,
+  FaCloudUploadAlt:      Settings,
+  FaReact:               Globe,
+  FaNodeJs:              Database,
+  FaMobileAlt:           Layers,
+  FaDesktop:             Globe,
+  FaDatabase:            Database,
+  FaFigma:               Layers,
+  FaTerminal:            Settings,
+  FaMicrochip:           Zap,
+  FaLayerGroup:          Layers,
+  default:               BarChart2,
+};
+
+
 
 export default function ClientServicesView({ data }) {
-    const [mounted, setMounted] = useState(false);
+  return (
+    <section id="services" className="relative py-28" style={{ background: "var(--bg-surface)" }}>
+      {/* Decorative orbs */}
+      <div className="absolute top-20 right-10 w-64 h-64 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(0,161,224,0.05) 0%, transparent 70%)", filter: "blur(50px)" }} />
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+      <div className="max-w-screen-xl mx-auto px-6 lg:px-16">
 
-    if (!mounted) return null; // Prevent hydration errors
+        {/* Heading */}
+        <AnimationWrapper delay={100} className="flex flex-col items-center mb-8">
+          <span className="section-label">What I Offer</span>
+          <h2 className="section-title text-center">My <span>Services</span></h2>
+          <div className="section-divider mx-auto" />
+        </AnimationWrapper>
 
-    // Function to dynamically get an icon component
-    const getIconComponent = (iconName) => {
-        const iconLibraries = { 
-            ...FaIcons, ...AiIcons, ...MdIcons, ...RiIcons, 
-            ...BiIcons, ...HiIcons, ...IoIcons, ...GiIcons, 
-            ...TbIcons, ...BsIcons, ...CiIcons, ...CgIcons,
-            ...FiIcons, ...GrIcons, ...ImIcons, ...LuIcons,
-            ...PiIcons, ...SiIcons, ...SlIcons, ...TfiIcons, ...VscIcons
-        };
-        return iconLibraries[iconName] || FaIcons.FaQuestionCircle; // Default icon
-    };
 
-    // **Framer Motion Variants**
-    const sectionVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" } }
-    };
 
-    const gridVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: { 
-            opacity: 1, 
-            y: 0, 
-            transition: { 
-                staggerChildren: 0.3, // Delays each child animation
-                delayChildren: 0.2, 
-                duration: 0.7, 
-                ease: "easeOut" 
-            } 
-        }
-    };
+        {/* ── Services Grid ────────────────────────────────────────── */}
+        {data && data.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {data.map((item, index) => {
+              const Icon = ICON_MAP[item.fareacticon] || ICON_MAP.default;
+              // Cycle through CRM colors for the cards
+              const colors = ["#00A1E0", "#FF7A59", "#9B59B6", "#8B5CF6", "#00D4AA", "#F2C811"];
+              const cardColor = colors[index % colors.length];
 
-    const cardVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-        hover: { scale: 1.05, transition: { duration: 0.3 } }
-    };
-
-    const iconVariants = {
-        hover: { rotate: 10 }
-    };
-
-    return (
-        <motion.div
-            className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mx-auto mb-6 mt-24"
-            id="services"
-            initial="hidden"
-            whileInView="visible" // Triggers animation when section is in view
-            viewport={{ once: true, amount: 0.2 }} // Ensures smooth scrolling animation
-            variants={sectionVariants}
-        >
-             <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
-                        {/* Background Large Text (Always Centered) */}
-                        <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
-                            SERVICES
-                        </h1>
-
-                        {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
-                        <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
-                            SERVICES
-                        </h2>
-
-                        {/* Underline Effect */}
-                        <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
-                            <div className="absolute w-8 h-1 bg-amber-500"></div>
-                        </div>
+              return (
+                <AnimationWrapper key={index} delay={200 + (index % 3) * 100}>
+                  <div
+                    className="glass-card h-full p-8 flex flex-col items-start group transition-all duration-350"
+                    onMouseOver={e => { e.currentTarget.style.borderColor = `${cardColor}45`; e.currentTarget.style.boxShadow = `0 8px 40px ${cardColor}15`; }}
+                    onMouseOut={e  => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "var(--shadow-card)"; }}
+                  >
+                    {/* Icon */}
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300"
+                      style={{ background: `${cardColor}12`, border: `1px solid ${cardColor}30`, color: cardColor }}
+                    >
+                      <Icon size={28} />
                     </div>
 
-            {/* Animated Grid Container */}
-            <motion.div 
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10"
-                variants={gridVariants}
-                initial="hidden"
-                whileInView="visible" // Animates on scroll
-                viewport={{ once: true, amount: 0.2 }} // Ensures smooth appearance
-            >
-                {data?.map((item, index) => {
-                    const IconComponent = getIconComponent(item.fareacticon);
+                    {/* Color bar */}
+                    <div className="w-8 h-0.5 rounded-full mb-4" style={{ background: cardColor }} />
 
-                    return (
-                        <motion.div
-                            key={index}
-                            className="bg-[#101624] border border-gray-700 shadow-md rounded-lg p-10 flex flex-col items-center text-center text-white w-full h-80"
-                            variants={cardVariants}
-                            whileHover="hover"
-                        >
-                            <div className="cursor-pointer w-full flex flex-col items-center">
-                                {/* Animated Circular Icon */}
-                                <motion.div 
-                                    className="w-20 h-20 flex items-center justify-center rounded-full border border-gray-500 bg-[#101624]"
-                                    variants={iconVariants}
-                                    whileHover="hover"
-                                >
-                                    <IconComponent className="text-5xl text-[#7A8290]" />
-                                </motion.div>
+                    <h3 className="text-lg font-bold mb-3 transition-colors duration-300" style={{ color: "var(--text-primary)" }}>
+                      {item.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed flex-grow" style={{ color: "var(--text-muted)" }}>
+                      {item.service}
+                    </p>
 
-                                {/* Animated Project Title */}
-                                <motion.h3 
-                                    className="text-xl font-semibold mt-4"
-                                    whileHover={{ scale: 1.1 }}
-                                >
-                                    {item.title}
-                                </motion.h3>
-
-                                {/* Animated Project Description */}
-                                <motion.p 
-                                    className="text-gray-400 text-md mt-3 px-4 line-clamp-2"
-                                    whileHover={{ color: "#fbbf24" }}
-                                >
-                                    {item.service}
-                                </motion.p>
-                            </div>
-                        </motion.div>
-                    );
-                })}
-            </motion.div>
-        </motion.div>
-    );
+                    {/* Arrow indicator */}
+                    <div className="mt-6 flex items-center gap-2 text-xs font-semibold transition-all duration-200" style={{ color: cardColor, opacity: 0.7 }}>
+                      <span>Learn More</span>
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
+                    </div>
+                  </div>
+                </AnimationWrapper>
+              );
+            })}
+          </div>
+        ) : (
+          /* Default CRM services if no DB data */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: TrendingUp, title: "Salesforce Implementation",   desc: "End-to-end Salesforce CRM setup, customization, and deployment tailored to your business processes.", color: "#00A1E0" },
+              { icon: Users,      title: "HubSpot Onboarding",          desc: "Full HubSpot platform setup including CRM, Marketing Hub, Sales Hub, and custom workflow automation.", color: "#FF7A59" },
+              { icon: RefreshCcw, title: "CRM Migration",               desc: "Seamless data migration between CRM platforms with zero data loss and minimal business disruption.", color: "#9B59B6" },
+              { icon: BarChart2,  title: "CRM Analytics & Reporting",   desc: "Custom dashboards, reports, and KPI frameworks to give you actionable insights from your CRM data.", color: "#8B5CF6" },
+              { icon: Settings,   title: "Dynamics 365 Consulting",     desc: "Microsoft Dynamics 365 implementation, customization, and Power Platform integration for enterprise teams.", color: "#F2C811" },
+              { icon: Zap,        title: "Workflow Automation",         desc: "Automate repetitive tasks, lead nurturing, and sales processes across your entire CRM ecosystem.", color: "#00D4AA" },
+            ].map((s, i) => (
+              <AnimationWrapper key={i} delay={200 + (i % 3) * 100}>
+                <div
+                  className="glass-card h-full p-8 flex flex-col items-start group"
+                  onMouseOver={e => { e.currentTarget.style.borderColor = `${s.color}45`; e.currentTarget.style.boxShadow = `0 8px 40px ${s.color}15`; e.currentTarget.style.transform = "translateY(-5px)"; }}
+                  onMouseOut={e  => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "var(--shadow-card)"; e.currentTarget.style.transform = "translateY(0)"; }}
+                >
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6" style={{ background: `${s.color}12`, border: `1px solid ${s.color}30`, color: s.color }}>
+                    <s.icon size={28} />
+                  </div>
+                  <div className="w-8 h-0.5 rounded-full mb-4" style={{ background: s.color }} />
+                  <h3 className="text-lg font-bold mb-3" style={{ color: "var(--text-primary)" }}>{s.title}</h3>
+                  <p className="text-sm leading-relaxed flex-grow" style={{ color: "var(--text-muted)" }}>{s.desc}</p>
+                  <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold" style={{ color: s.color, opacity: 0.75 }}>
+                    <span>Learn More</span>
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
+                  </div>
+                </div>
+              </AnimationWrapper>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
 }

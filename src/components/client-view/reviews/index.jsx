@@ -1,101 +1,91 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import AnimationWrapper from "../animation-wrapper";
+import { Star, Quote } from "lucide-react";
 
-export default function ClientProjectView({ data }) {
-    const [mounted, setMounted] = useState(false);
+function StarRating({ rating = 5 }) {
+  return (
+    <div className="flex gap-0.5 mb-4">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star
+          key={n}
+          size={15}
+          fill={n <= rating ? "#FEC544" : "transparent"}
+          stroke={n <= rating ? "#FEC544" : "#3D5170"}
+        />
+      ))}
+    </div>
+  );
+}
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+export default function ClientReviewsView({ data }) {
+  if (!data || data.length === 0) return null;
 
-    if (!mounted) return null;
+  return (
+    <section id="reviews" className="relative py-24" style={{ background: "var(--bg-base)" }}>
+      {/* Radial glow */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(0,161,224,0.04), transparent)" }} />
 
-    const settings = {
-        dots: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 3000,
-        arrows: false,
-        draggable: true, // Ensures proper mouse dragging
-        swipe: true, // Ensures touch swiping
-        responsive: [
-            { breakpoint: 1024, settings: { slidesToShow: 2 } },
-            { breakpoint: 768, settings: { slidesToShow: 1 } }
-        ]
-    };
+      <div className="max-w-screen-xl mx-auto px-6 lg:px-16 relative">
 
-    const renderStars = (rating) => {
-        const totalStars = 5;
-        const filledStars = Math.min(Math.max(Math.round(rating), 1), totalStars);
+        {/* Heading */}
+        <AnimationWrapper delay={100} className="flex flex-col items-center mb-14">
+          <span className="section-label">Client Feedback</span>
+          <h2 className="section-title text-center">What Clients <span>Say</span></h2>
+          <div className="section-divider mx-auto mt-4" />
+        </AnimationWrapper>
 
-        return (
-            <div className="flex mb-4">
-                {[...Array(totalStars)].map((_, i) => (
-                    <span key={i} className={`text-2xl mx-0.5 ${i < filledStars ? "text-[#FDC700]" : "text-gray-500"}`}>
-                        ★
-                    </span>
-                ))}
-            </div>
-        );
-    };
+        {/* Reviews grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {data.map((item, i) => (
+            <AnimationWrapper key={item._id || i} delay={150 + (i % 3) * 80}>
+              <div className="glass-card p-6 h-full flex flex-col relative overflow-hidden group">
+                {/* Quote watermark */}
+                <Quote
+                  size={72}
+                  className="absolute -top-2 -right-2 opacity-[0.04] pointer-events-none"
+                  style={{ color: "var(--sf-blue)" }}
+                />
 
-    return (
-        <div className="max-w-screen-xl sm:mt-14 sm:mb-14 px-6 sm:px-8 mb-6 mx-auto mt-24" id="reviews">
-            {/* Section Header */}
-            <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
-                <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
-                    TESTIMONIALS
-                </h1>
-                <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
-                    TESTIMONIALS
-                </h2>
-                <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
-                    <div className="absolute w-8 h-1 bg-amber-500"></div>
+                {/* Stars */}
+                <StarRating rating={item.rating || 5} />
+
+                {/* Review text */}
+                <p className="text-sm leading-relaxed flex-grow italic mb-5"
+                  style={{ color: "var(--text-muted)" }}>
+                  "{item.review}"
+                </p>
+
+                {/* Divider */}
+                <div className="w-full h-px mb-4" style={{ background: "var(--border)" }} />
+
+                {/* Author */}
+                <div className="flex items-center gap-3">
+                  {/* Avatar initials */}
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold"
+                    style={{
+                      background: `rgba(0,161,224,0.12)`,
+                      border: `1px solid rgba(0,161,224,0.25)`,
+                      color: "var(--sf-blue)"
+                    }}>
+                    {(item.name || "?")[0].toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
+                      {item.name}
+                    </p>
+                    <p className="text-xs" style={{ color: "var(--text-faint)" }}>
+                      {item.company}
+                    </p>
+                  </div>
                 </div>
-            </div>
-
-            {/* Carousel Slider */}
-            <Slider {...settings} className="gap-x-6 mb-10">
-                {data?.map((item, index) => (
-                    <div key={index} className="px-4">
-                        {/* Clickable Box */}
-                        {item.link ? (
-                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="block">
-                                <div className="relative bg-gray-900 shadow-lg border-2 z-0 mb-10 mt-5 border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 hover:scale-105 cursor-pointer">
-                                    {renderStars(item.rating)}
-                                    <h3 className="text-lg text-white font-bold">{item.author}</h3>
-                                    <p className="text-gray-400 text-sm">{item.company}</p>
-                                    <div className="flex items-center mt-3">
-                                        <p className="text-gray-300 text-md italic leading-relaxed line-clamp-4 flex-1">
-                                            "{item.content}"
-                                        </p>
-                                        <span className="text-[#FDC700] text-6xl ml-2">❞</span>
-                                    </div>
-                                </div>
-                            </a>
-                        ) : (
-                            <div className="relative bg-gray-900 shadow-lg border-2 z-0 mb-10 mt-5 border-gray-700 rounded-lg overflow-hidden p-6 min-h-[250px] max-w-screen transition-transform duration-200 cursor-default">
-                                {renderStars(item.rating)}
-                                <h3 className="text-lg text-white font-bold">{item.author}</h3>
-                                <p className="text-gray-400 text-sm">{item.company}</p>
-                                <div className="flex items-center mt-3">
-                                    <p className="text-gray-300 text-md italic leading-relaxed line-clamp-4 flex-1">
-                                        "{item.content}"
-                                    </p>
-                                    <span className="text-[#FDC700] text-6xl ml-2">❞</span>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                ))}
-            </Slider>
+              </div>
+            </AnimationWrapper>
+          ))}
         </div>
-    );
+
+      </div>
+    </section>
+  );
 }

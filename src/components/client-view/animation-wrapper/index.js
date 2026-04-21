@@ -1,16 +1,29 @@
-'use client'
-import { motion } from "framer-motion"
+'use client';
+import { useEffect, useRef } from "react";
 
-export default function AnimationWrapper({ children, className, ...props }){
-    return (
-        <motion.div
-        initial = "offscreen"
-        whileInView={"onscreen"}
-        viewport={{once:true, amount:"0.8"}}
-        className={className}
-        {...props}
-        >
-            {children}
-        </motion.div>
-    )
+export default function AnimationWrapper({ children, className, delay = 0, ...props }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.transitionDelay = `${delay}ms`;
+          el.classList.add("visible");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [delay]);
+
+  return (
+    <div ref={ref} className={`fade-in-up ${className || ""}`} {...props}>
+      {children}
+    </div>
+  );
 }

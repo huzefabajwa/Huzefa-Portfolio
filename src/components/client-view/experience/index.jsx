@@ -1,141 +1,149 @@
-'use client'
-import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css';
-import AnimationWrapper from "../animation-wrapper";
-import { motion } from "framer-motion";
-import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
+"use client";
 
-// Icon for Timeline Dots
-const TimelineIcon = () => (
-    <div className="w-4 h-4 rounded-full hover:bg-amber-400"></div>
-);
+import AnimationWrapper from "../animation-wrapper";
+import { Briefcase, GraduationCap, Award } from "lucide-react";
 
 export default function ClientExperienceAndEducationView({ educationData, experienceData }) {
-    return (
-        <div className="max-w-screen-xl mt-24 mb-6 sm:mt-14 sm:mb-14 px-4 sm:px-8 mx-auto" id="experience">
-                <div className="relative flex flex-col items-center justify-center min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px] my-10">
-                        {/* Background Large Text (Always Centered) */}
-                        <h1 className="absolute text-[12vw] lg:text-9xl font-bold text-gray-800 opacity-20 leading-none whitespace-nowrap">
-                            RESUME
-                        </h1>
+  return (
+    <section id="experience" className="relative py-28 section-grid-bg">
+      {/* Decorative orbs */}
+      <div className="absolute top-40 left-0 w-80 h-80 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(0,161,224,0.05) 0%, transparent 70%)", filter: "blur(60px)" }} />
 
-                        {/* Foreground Smaller Heading (Always Centered & No Wrapping) */}
-                        <h2 className="absolute text-[5vw] sm:text-2xl md:text-4xl lg:text-5xl text-yellow-400 leading-none whitespace-nowrap">
-                            RESUME
-                        </h2>
+      <div className="max-w-screen-xl mx-auto px-6 lg:px-16">
 
-                        {/* Underline Effect */}
-                        <div className="relative mt-30 sm:bottom-0 w-16 h-1 bg-gray-400 mx-auto">
-                            <div className="absolute w-8 h-1 bg-amber-500"></div>
-                        </div>
+        {/* Heading */}
+        <AnimationWrapper delay={100} className="flex flex-col items-center mb-20">
+          <span className="section-label">My Journey</span>
+          <h2 className="section-title text-center">Resume & <span>Expertise</span></h2>
+          <div className="section-divider mx-auto" />
+        </AnimationWrapper>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+
+          {/* ── Experience ────────────────────────────────────────── */}
+          <div>
+            <AnimationWrapper delay={200} className="flex items-center gap-4 mb-10">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "rgba(254,197,68,0.1)", border: "1px solid rgba(254,197,68,0.25)", color: "var(--gold)" }}>
+                <Briefcase size={22} />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Experience</h3>
+                <p className="text-xs tracking-wider uppercase" style={{ color: "var(--text-faint)" }}>Professional History</p>
+              </div>
+            </AnimationWrapper>
+
+            <div className="timeline">
+              {experienceData && experienceData.length > 0 ? (
+                experienceData.map((item, index) => (
+                  <AnimationWrapper key={index} delay={300 + index * 100} className="timeline-item">
+                    <div className="glass-card p-6 rounded-2xl relative group transition-all duration-300"
+                      onMouseOver={e => { e.currentTarget.style.borderColor = "rgba(0,161,224,0.35)"; e.currentTarget.style.boxShadow = "0 8px 40px rgba(0,161,224,0.1)"; }}
+                      onMouseOut={e  => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "var(--shadow-card)"; }}
+                    >
+                      <span className="inline-flex items-center gap-1 px-3 py-1 mb-3 text-xs font-bold uppercase tracking-wider rounded-full" style={{ background: "rgba(254,197,68,0.12)", color: "var(--gold)", border: "1px solid rgba(254,197,68,0.2)" }}>
+                        {item.duration}
+                      </span>
+                      <h4 className="text-lg font-bold mb-1 transition-colors" style={{ color: "var(--text-primary)" }}>{item.position}</h4>
+                      <h5 className="text-sm font-semibold mb-3" style={{ color: "var(--sf-blue)" }}>
+                        {item.company}
+                        {item.location && <span style={{ color: "var(--text-faint)" }}> · {item.location}</span>}
+                      </h5>
+                      <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{item.jobprofile}</p>
                     </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  </AnimationWrapper>
+                ))
+              ) : (
+                // Default CRM experience fallback
+                [
+                  { duration: "2022 – Present", position: "Senior CRM Consultant", company: "Independent", location: "Remote", desc: "Delivering Salesforce, HubSpot, and Dynamics 365 implementations for enterprise clients across multiple industries." },
+                  { duration: "2020 – 2022",    position: "CRM Specialist",        company: "Digital Agency",  location: "Dubai",  desc: "Led CRM onboarding and automation projects for 20+ clients in MENA region." },
+                ].map((item, i) => (
+                  <AnimationWrapper key={i} delay={300 + i * 100} className="timeline-item">
+                    <div className="glass-card p-6 rounded-2xl">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 mb-3 text-xs font-bold uppercase tracking-wider rounded-full" style={{ background: "rgba(254,197,68,0.12)", color: "var(--gold)", border: "1px solid rgba(254,197,68,0.2)" }}>
+                        {item.duration}
+                      </span>
+                      <h4 className="text-lg font-bold mb-1" style={{ color: "var(--text-primary)" }}>{item.position}</h4>
+                      <h5 className="text-sm font-semibold mb-3" style={{ color: "var(--sf-blue)" }}>
+                        {item.company} <span style={{ color: "var(--text-faint)" }}>· {item.location}</span>
+                      </h5>
+                      <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{item.desc}</p>
+                    </div>
+                  </AnimationWrapper>
+                ))
+              )}
+            </div>
+          </div>
 
-                {/* Experience Section */}
-                <div className="flex flex-col gap-5">
-                    <AnimationWrapper className="py-6 sm:py-16">
-                        <div className="flex flex-col justify-center sm:items-start items-center text-center sm:text-left">
-                            <h1 className="mb-4 text-3xl lg:text-4xl xl:text-5xl flex items-center gap-3 xl:ml-4">
-                                <FaBriefcase className="text-gray-500 text-3xl sm:text-4xl" />
-                                {"Experience".split(" ").map((item, index) => (
-                                    <span key={index} className={`${index === 1 ? "text-green-main" : "text-white px-5"}`}>
-                                        {item}{" "}
-                                    </span>
-                                ))}
-                            </h1>
-                        </div>
-                    </AnimationWrapper>
+          {/* ── Education & Certifications ─────────────────────────── */}
+          <div>
+            <AnimationWrapper delay={200} className="flex items-center gap-4 mb-10">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "rgba(108,99,255,0.1)", border: "1px solid rgba(108,99,255,0.25)", color: "var(--accent)" }}>
+                <GraduationCap size={22} />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Education</h3>
+                <p className="text-xs tracking-wider uppercase" style={{ color: "var(--text-faint)" }}>Academic Background</p>
+              </div>
+            </AnimationWrapper>
 
-                    <AnimationWrapper>
-                        <motion.div className="w-full">
-                            <VerticalTimeline layout="1-column-left" lineColor="#ccc">
-                                {experienceData && experienceData.length ? 
-                                    experienceData.map((experienceItem, index) => (
-                                        <VerticalTimelineElement
-                                            key={index}
-                                            className="vertical-timeline-element--work"
-                                            contentStyle={{ background: '#070E1B', color: '#FFFFFF', boxShadow: "none" }}
-                                            contentArrowStyle={{ display: 'none' }} 
-                                            icon={<TimelineIcon />}
-                                            iconStyle={{ 
-                                                backgroundColor: '#070E1B',
-                                                color: '#3B414D',
-                                                width: '10px',
-                                                height: '10px',
-                                                borderRadius: '50%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                marginLeft: '13px',
-                                                marginTop: '-40px',
-                                            }}
-                                        >
-                                            <h3 className="text-amber-400 text-2xl py-1 mt-[-65px]">{experienceItem.position}</h3>
-                                            <h3 className="text-xl text-gray-400 py-1">{experienceItem.duration}</h3>
-                                            <h4 className="text-xl py-1">{experienceItem.company}</h4>
-                                            <h4 className="text-xl py-1">{experienceItem.location}</h4>
-                                            <h4 className="text-lg text-gray-400">{experienceItem.jobprofile}</h4>
-                                        </VerticalTimelineElement>
-                                    )) 
-                                    : null 
-                                }
-                            </VerticalTimeline>
-                        </motion.div>
-                    </AnimationWrapper>
-                </div>  
+            <div className="timeline timeline--education">
+              {educationData && educationData.length > 0 ? (
+                educationData.map((item, index) => (
+                  <AnimationWrapper key={index} delay={300 + index * 100} className="timeline-item">
+                    <div className="glass-card p-6 rounded-2xl"
+                      onMouseOver={e => { e.currentTarget.style.borderColor = "rgba(108,99,255,0.35)"; e.currentTarget.style.boxShadow = "0 8px 40px rgba(108,99,255,0.08)"; }}
+                      onMouseOut={e  => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "var(--shadow-card)"; }}
+                    >
+                      <span className="inline-flex items-center gap-1 px-3 py-1 mb-3 text-xs font-bold uppercase tracking-wider rounded-full" style={{ background: "rgba(108,99,255,0.12)", color: "var(--accent)", border: "1px solid rgba(108,99,255,0.2)" }}>
+                        {item.year}
+                      </span>
+                      <h4 className="text-lg font-bold mb-1" style={{ color: "var(--text-primary)" }}>{item.degree}</h4>
+                      <h5 className="text-sm font-semibold" style={{ color: "var(--text-muted)" }}>{item.college}</h5>
+                    </div>
+                  </AnimationWrapper>
+                ))
+              ) : (
+                <AnimationWrapper delay={300} className="timeline-item">
+                  <div className="glass-card p-6 rounded-2xl">
+                    <span className="inline-flex px-3 py-1 mb-3 text-xs font-bold uppercase tracking-wider rounded-full" style={{ background: "rgba(108,99,255,0.12)", color: "var(--accent)", border: "1px solid rgba(108,99,255,0.2)" }}>2018 – 2022</span>
+                    <h4 className="text-lg font-bold mb-1" style={{ color: "var(--text-primary)" }}>Bachelor of Science in Information Technology</h4>
+                    <h5 className="text-sm font-semibold" style={{ color: "var(--text-muted)" }}>University</h5>
+                  </div>
+                </AnimationWrapper>
+              )}
+            </div>
 
-                {/* Education Section */}
-                <div className="flex flex-col gap-5">
-                    <AnimationWrapper className="py-6 sm:py-16">
-                        <div className="flex flex-col justify-center sm:items-start items-center text-center sm:text-right">
-                            <h1 className="mb-4 text-3xl lg:text-4xl xl:text-5xl flex items-center gap-3 xl:ml-3">
-                                <FaGraduationCap className="text-gray-400 xl:text-5xl sm:text-4xl" />
-                                {"Education".split(" ").map((item, index) => (
-                                    <span key={index} className={`${index === 1 ? "text-green-main" : "text-white px-5"}`}>
-                                        {item}{" "}
-                                    </span>
-                                ))}
-                            </h1>
-                        </div>
-                    </AnimationWrapper>
+            {/* ── CRM Certifications Block ─────────────────────────── */}
+            <AnimationWrapper delay={500} className="mt-8">
+              <div className="flex items-center gap-3 mb-6">
+                <Award size={20} style={{ color: "var(--gold)" }} />
+                <h4 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>CRM Certifications</h4>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { name: "Salesforce Administrator",     org: "Salesforce",   color: "#00A1E0" },
+                  { name: "HubSpot CRM Certified",        org: "HubSpot",      color: "#FF7A59" },
+                  { name: "Dynamics 365 Fundamentals",    org: "Microsoft",    color: "#9B59B6" },
+                  { name: "Power Platform Developer",      org: "Microsoft",    color: "#8B5CF6" },
+                ].map((cert, i) => (
+                  <div key={i} className="glass-card p-4 flex items-start gap-3"
+                    onMouseOver={e => { e.currentTarget.style.borderColor = `${cert.color}40`; }}
+                    onMouseOut={e  => { e.currentTarget.style.borderColor = "var(--border)"; }}
+                  >
+                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: cert.color, boxShadow: `0 0 8px ${cert.color}`, marginTop: 6, flexShrink: 0 }} />
+                    <div>
+                      <p className="text-xs font-bold" style={{ color: "var(--text-primary)" }}>{cert.name}</p>
+                      <p className="text-[10px] mt-0.5" style={{ color: cert.color }}>{cert.org}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </AnimationWrapper>
+          </div>
 
-                    <AnimationWrapper>
-                        <motion.div className="w-full">
-                            <VerticalTimeline layout="1-column-left" lineColor="#ccc">
-                                {educationData && educationData.length ? 
-                                    educationData.map((educationItem, index) => (
-                                        <VerticalTimelineElement
-                                            key={index}
-                                            className="vertical-timeline-element--education"
-                                            contentStyle={{ background: '#070E1B', color: '#FFFFFF', boxShadow: "none" }}
-                                            contentArrowStyle={{ display: 'none' }}
-                                            icon={<TimelineIcon />}
-                                            iconStyle={{ 
-                                                background: '#070E1B',
-                                                color: '#fff',
-                                                width: '10px',
-                                                height: '10px',
-                                                borderRadius: '50%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                marginLeft: '13px',
-                                                marginTop: '-40px',
-                                            }}
-                                        >
-                                            <h3 className="text-amber-400 text-2xl py-1 mt-[-65px]">{educationItem.degree}</h3>
-                                            <h4 className="text-xl mt-[10px] text-gray-400">{educationItem.year}</h4>
-                                            <h4 className="text-xl py-1 mt-[10px]">{educationItem.college}</h4>
-                                        </VerticalTimelineElement>
-                                    )) 
-                                    : null 
-                                }
-                            </VerticalTimeline>
-                        </motion.div>
-                    </AnimationWrapper>
-                </div>  
-
-            </div> 
         </div>
-    )
+      </div>
+    </section>
+  );
 }

@@ -1,18 +1,18 @@
-'use client'
-
 import { Inter } from "next/font/google";
 import "./globals.css";
 import CommonLayout from "@/components/client-view/common-layout";
-import { usePathname } from "next/navigation";
 
 const roboto = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({ children }) {
-  const pathname = usePathname();
+export const metadata = {
+  title: 'Huzefa | Portfolio',
+  description: 'Full Stack Web Developer Portfolio',
+}
 
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${roboto.className} ${pathname === "/" ? "home-page" : ""}`}>
+      <body className={roboto.className}>
         <CommonLayout>
           {children}
         </CommonLayout>

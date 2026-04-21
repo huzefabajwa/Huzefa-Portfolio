@@ -1,70 +1,423 @@
 @import "tailwindcss";
 
-
-@theme {
-  /* Define only CSS variables inside @theme */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.vertical-timeline::before {
-  background: #343536 !important;  /* Change line color */
-  width: 1px !important; 
-  top: 0 !important; /* Adjust thickness (default is 2px) */
-}
-
-
-
-
-/* Dark Mode */
-.dark {
-  --bg-color: #070E1B;
-  --text-color: #ffffff;
-
-  --border-color: #374151;
-}
-
-
-/* Apply Theme Colors */
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-family: var(--font-sans), sans-serif;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-/* Button Styling */
-
-
-
-/* Borders */
-.border {
-  border: 1px solid var(--border-color);
-}
-
-.project-wrapper{
-  display: flex;
-  list-style: none;
-  height: 350px;
-  overflow-x: scroll;
-  padding: 20px 0;
-  flex: 0 0 600px;
-}
-@keyframes twinkle {
-  0% { opacity: 0.3; transform: scale(1); }
-  100% { opacity: 1; transform: scale(1.2); }
-}
-
-.animate-twinkle {
-  animation: twinkle infinite alternate ease-in-out;
-}
+/* ─── CRM Design System ─────────────────────────────────────────── */
 :root {
-  --font-jetbrains: 'JetBrains Mono', monospace;
+  /* Base */
+  --bg-base:      #050D1A;
+  --bg-surface:   #070F20;
+  --bg-card:      #0C1829;
+  --bg-card-hover:#101E32;
+
+  /* Brand Accent */
+  --accent:       #6C63FF;
+  --accent-glow:  rgba(108, 99, 255, 0.4);
+  --gold:         #FEC544;
+  --gold-dim:     rgba(254, 197, 68, 0.15);
+  --teal:         #00D4AA;
+
+  /* CRM Platform Colors */
+  --sf-blue:      #00A1E0;
+  --sf-blue-dim:  rgba(0, 161, 224, 0.15);
+  --hs-orange:    #FF7A59;
+  --hs-orange-dim:rgba(255, 122, 89, 0.15);
+  --d365-purple:  #742774;
+  --d365-purple-dim: rgba(116, 39, 116, 0.15);
+
+  /* Text */
+  --text-primary: #F0F6FF;
+  --text-muted:   #8DA0BC;
+  --text-faint:   #3D5170;
+
+  /* Surface */
+  --border:       rgba(255, 255, 255, 0.06);
+  --border-accent:rgba(108, 99, 255, 0.35);
+
+  /* Geometry */
+  --radius-card:  18px;
+  --radius-pill:  999px;
+
+  /* Shadows */
+  --shadow-card:  0 4px 40px rgba(0, 0, 0, 0.5);
+  --shadow-glow:  0 0 50px rgba(108, 99, 255, 0.18);
+  --shadow-sf:    0 0 30px rgba(0, 161, 224, 0.2);
+  --shadow-hs:    0 0 30px rgba(255, 122, 89, 0.2);
+  --shadow-d365:  0 0 30px rgba(116, 39, 116, 0.2);
 }
+
+/* ─── Base ───────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Subtle Grid Background ─────────────────────────────────────── */
+.section-grid-bg {
+  background-image: 
+    linear-gradient(rgba(108, 99, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108, 99, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ─── Section Headings ───────────────────────────────────────────── */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sf-blue);
+  border: 1px solid rgba(0, 161, 224, 0.3);
+  padding: 5px 16px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 161, 224, 0.08);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.section-title span {
+  background: linear-gradient(135deg, var(--sf-blue) 0%, var(--accent) 50%, var(--teal) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Glass Card ─────────────────────────────────────────────────── */
+.glass-card {
+  background: rgba(12, 24, 41, 0.7);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+  will-change: transform;
+}
+
+.glass-card:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-5px);
+}
+
+/* ─── Timeline ───────────────────────────────────────────────────── */
+/*
+  Layout math:
+    .timeline            padding-left: 36px
+    .timeline::before    left: 10px, width: 2px  → line CENTER at x = 11px (from .timeline edge)
+    .timeline-item       left edge is at x = 36px (inside the padding)
+    dot width = 12px, so to center it:  left = (11 - 36) - 6 = -31px
+*/
+.timeline {
+  position: relative;
+  padding-left: 36px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;           /* line's LEFT edge */
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--sf-blue) 8%,
+    var(--accent) 50%,
+    var(--teal) 92%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  border-radius: 2px;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 32px;
+}
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+/* Dot — center must land on line center (x = 11px from .timeline = x = -25px from item) */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -31px;          /* -25px (line center relative to item) - 6px (half of 12px dot) */
+  top: 24px;            /* vertically align with the card heading row */
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--sf-blue);
+  box-shadow:
+    0 0 0 3px rgba(0, 161, 224, 0.15),
+    0 0 14px rgba(0, 161, 224, 0.55);
+  z-index: 1;
+}
+
+/* Alternate dot color for education column */
+.timeline--education .timeline-item::before {
+  background: var(--accent);
+  box-shadow:
+    0 0 0 3px rgba(108, 99, 255, 0.15),
+    0 0 14px rgba(108, 99, 255, 0.55);
+}
+
+/* ─── Skill Bar ──────────────────────────────────────────────────── */
+.skill-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--sf-blue), var(--accent));
+  transform-origin: left;
+  transition: width 1.2s ease;
+}
+
+/* ─── Platform Badge ─────────────────────────────────────────────── */
+.platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px 5px 8px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 4px; }
+
+/* ─── Fade In Up ─────────────────────────────────────────────────── */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── CRM Marquee ────────────────────────────────────────────────── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  gap: 48px;
+  animation: marquee 20s linear infinite;
+  width: max-content;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ─── Loading Animation ──────────────────────────────────────────── */
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes spin-reverse { to { transform: rotate(-360deg); } }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+@keyframes reveal-up {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
+
+/* ─── Contact Form ───────────────────────────────────────────────── */
+.form-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.form-input::placeholder { color: var(--text-faint); }
+.form-input:focus {
+  border-color: var(--sf-blue);
+  box-shadow: 0 0 0 3px rgba(0, 161, 224, 0.12);
+}
+
+/* ─── Section Divider ────────────────────────────────────────────── */
+.section-divider {
+  width: 64px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--sf-blue), var(--accent));
+  margin-top: 16px;
+}
+
+/* ─── Prose CRM (Quill HTML output styling) ───────────────────────── */
+.prose-crm {
+  color: var(--text-muted);
+  line-height: 1.8;
+  font-size: 0.975rem;
+}
+.prose-crm h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 1.5rem 0 0.75rem;
+}
+.prose-crm h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 1.25rem 0 0.5rem;
+}
+.prose-crm p {
+  margin-bottom: 0.85rem;
+}
+.prose-crm strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+.prose-crm em {
+  color: var(--sf-blue);
+  font-style: italic;
+}
+.prose-crm u {
+  text-decoration-color: var(--sf-blue);
+  text-underline-offset: 3px;
+}
+.prose-crm ul, .prose-crm ol {
+  margin: 0.75rem 0 0.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.prose-crm ul li {
+  list-style: none;
+  padding-left: 1rem;
+  position: relative;
+}
+.prose-crm ul li::before {
+  content: '•';
+  position: absolute;
+  left: -0.25rem;
+  color: var(--sf-blue);
+  font-weight: 700;
+}
+.prose-crm ol li {
+  list-style: decimal;
+  color: var(--text-muted);
+}
+.prose-crm blockquote {
+  border-left: 3px solid var(--sf-blue);
+  padding: 0.5rem 0 0.5rem 1rem;
+  margin: 1rem 0;
+  background: rgba(0,161,224,0.05);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.prose-crm pre, .prose-crm code {
+  background: rgba(0,161,224,0.07);
+  color: var(--teal);
+  border-radius: 6px;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.875rem;
+}
+.prose-crm pre {
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  border: 1px solid rgba(0,161,224,0.12);
+}
+.prose-crm code {
+  padding: 0.15rem 0.4rem;
+}
+.prose-crm a {
+  color: var(--sf-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-crm a:hover {
+  color: var(--accent);
+}
+/* Quill highlight colors */
+.prose-crm [style*="background-color"] {
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* ─── Techy Arrow Pointer Cursor ─────────────────────────────────── */
+*, *::before, *::after { cursor: none !important; }
+
+#crm-cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 22px;
+  height: 28px;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+  /* Sharp techy arrow pointer SVG — white fill, blue stroke + glow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='28' viewBox='0 0 22 28' fill='none'%3E%3Cpath d='M2 2L2 22L8 17L12 26L14.5 25L10.5 16L18 16L2 2Z' fill='%230D1F35' stroke='%2300A1E0' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: drop-shadow(0 0 4px rgba(0,161,224,0.5));
+  transition: filter 0.15s ease, opacity 0.2s ease;
+}
+#crm-cursor.cursor-hover {
+  filter: drop-shadow(0 0 8px rgba(0,161,224,0.95)) drop-shadow(0 0 14px rgba(0,161,224,0.4));
+  /* Swap to accent-colored arrow on hover */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='28' viewBox='0 0 22 28' fill='none'%3E%3Cpath d='M2 2L2 22L8 17L12 26L14.5 25L10.5 16L18 16L2 2Z' fill='%2300A1E0' stroke='%23ffffff' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Lagging aura dot */
+#crm-cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  will-change: transform;
+  background: rgba(0,161,224,0.15);
+  border: 1px solid rgba(0,161,224,0.35);
+  box-shadow: 0 0 10px rgba(0,161,224,0.2);
+  transition: opacity 0.2s ease;
+}
+#crm-cursor-ring.aura-hover {
+  background: rgba(0,161,224,0.25);
+  border-color: rgba(0,161,224,0.6);
+  box-shadow: 0 0 16px rgba(0,161,224,0.4);
+}
+
