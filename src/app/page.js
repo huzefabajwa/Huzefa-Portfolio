@@ -4,9 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import dynamic from "next/dynamic";
 import LoadingScreen from "@/components/LoadingScreen";
 import useSWR from "swr";
-
-// ── Hero loads with SSR disabled but does NOT block page render
-const ClientHomeView               = dynamic(() => import("@/components/client-view/home"),       { ssr: false });
+import ClientHomeView from "@/components/client-view/home";
 
 // ── Below-fold sections — lazy, never block the hero
 const ClientAboutView              = dynamic(() => import("@/components/client-view/about"),       { ssr: false });
@@ -15,12 +13,10 @@ const ClientExperienceAndEducation = dynamic(() => import("@/components/client-v
 const ClientProjectView            = dynamic(() => import("@/components/client-view/projects"),    { ssr: false });
 const ClientContactView            = dynamic(() => import("@/components/client-view/contact"),     { ssr: false });
 
-// ── SWR fetcher — 5 s timeout per call so one slow API never blocks all ──
-const fetcher = (url) =>
-  Promise.race([
-    fetch(url).then((r) => r.json()).then((d) => d.data ?? null),
-    new Promise((resolve) => setTimeout(() => resolve(null), 5000)),
-  ]);
+// ── SWR fetcher ──
+// Removed the 5s timeout: if MongoDB is cold, we wait for it.
+// This prevents falling back to placeholder data on first load.
+const fetcher = (url) => fetch(url).then((r) => r.json()).then((d) => d.data ?? null);
 
 // ── Thin skeleton shown while individual below-fold sections load ──
 function SectionSkeleton() {
@@ -33,7 +29,7 @@ function SectionSkeleton() {
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  // loading screen visible only while hero data + initial mount settle (max 4 s)
+  // loading screen visible only while hero data + initial mount settle
   const [showLoader, setShowLoader] = useState(true);
 
   // ── Data fetching — all sections fetch in parallel ──────────────
@@ -72,14 +68,12 @@ export default function Home() {
 
       <div style={{ backgroundColor: "var(--bg-base)" }} className="min-h-screen w-full overflow-x-hidden">
 
-        {/* ── Hero — renders first, immediately ── */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <ClientHomeView
-            data={homeSectionData || []}
-            platformsData={platformsData || []}
-            aboutData={aboutData?.[0] || {}}
-          />
-        </Suspense>
+        {/* ── Hero — renders first, immediately (statically imported) ── */}
+        <ClientHomeView
+          data={homeSectionData || []}
+          platformsData={platformsData || []}
+          aboutData={aboutData?.[0] || {}}
+        />
 
         {/* ── About ── */}
         <Suspense fallback={<SectionSkeleton />}>
