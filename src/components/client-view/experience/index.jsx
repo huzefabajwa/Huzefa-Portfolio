@@ -114,32 +114,7 @@ export default function ClientExperienceAndEducationView({ educationData, experi
               )}
             </div>
 
-            {/* ── CRM Certifications Block ─────────────────────────── */}
-            <AnimationWrapper delay={500} className="mt-8">
-              <div className="flex items-center gap-3 mb-6">
-                <Award size={20} style={{ color: "var(--gold)" }} />
-                <h4 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>CRM Certifications</h4>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { name: "Salesforce Administrator",     org: "Salesforce",   color: "#00A1E0" },
-                  { name: "HubSpot CRM Certified",        org: "HubSpot",      color: "#FF7A59" },
-                  { name: "Dynamics 365 Fundamentals",    org: "Microsoft",    color: "#9B59B6" },
-                  { name: "Power Platform Developer",      org: "Microsoft",    color: "#8B5CF6" },
-                ].map((cert, i) => (
-                  <div key={i} className="glass-card p-4 flex items-start gap-3"
-                    onMouseOver={e => { e.currentTarget.style.borderColor = `${cert.color}40`; }}
-                    onMouseOut={e  => { e.currentTarget.style.borderColor = "var(--border)"; }}
-                  >
-                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: cert.color, boxShadow: `0 0 8px ${cert.color}`, marginTop: 6, flexShrink: 0 }} />
-                    <div>
-                      <p className="text-xs font-bold" style={{ color: "var(--text-primary)" }}>{cert.name}</p>
-                      <p className="text-[10px] mt-0.5" style={{ color: cert.color }}>{cert.org}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </AnimationWrapper>
+
           </div>
 
         </div>

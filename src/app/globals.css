@@ -378,8 +378,10 @@ body {
 
 /* ─── Techy Arrow Pointer Cursor ─────────────────────────────────── */
 /* Scoped: admin panel (/admin) keeps normal cursors; portfolio uses custom */
-body:not(.admin-page) *, body:not(.admin-page) *::before, body:not(.admin-page) *::after {
-  cursor: none !important;
+@media (min-width: 768px) {
+  body:not(.admin-page) *, body:not(.admin-page) *::before, body:not(.admin-page) *::after {
+    cursor: none !important;
+  }
 }
 
 #crm-cursor {
@@ -397,6 +399,7 @@ body:not(.admin-page) *, body:not(.admin-page) *::before, body:not(.admin-page) 
   filter: drop-shadow(0 0 4px rgba(0,161,224,0.5));
   transition: filter 0.15s ease, opacity 0.2s ease;
 }
+
 #crm-cursor.cursor-hover {
   filter: drop-shadow(0 0 8px rgba(0,161,224,0.95)) drop-shadow(0 0 14px rgba(0,161,224,0.4));
   /* Swap to accent-colored arrow on hover */
@@ -418,9 +421,16 @@ body:not(.admin-page) *, body:not(.admin-page) *::before, body:not(.admin-page) 
   box-shadow: 0 0 10px rgba(0,161,224,0.2);
   transition: opacity 0.2s ease;
 }
+
 #crm-cursor-ring.aura-hover {
   background: rgba(0,161,224,0.25);
   border-color: rgba(0,161,224,0.6);
   box-shadow: 0 0 16px rgba(0,161,224,0.4);
+}
+
+@media (max-width: 767px) {
+  #crm-cursor, #crm-cursor-ring {
+    display: none !important;
+  }
 }
 
