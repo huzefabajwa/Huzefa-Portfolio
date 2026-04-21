@@ -21,12 +21,12 @@ export default function ClientContactView() {
     const body    = encodeURIComponent(
       `Hello Huzefa,\n\n${form.message}\n\nBest regards,\n${form.name}\n${form.email}`
     );
-    window.open(`mailto:huzefabajwa@gmail.com?subject=${subject}&body=${body}`, "_blank");
+    window.open(`mailto:huzefabajwa62@gmail.com?subject=${subject}&body=${body}`, "_blank");
     setTimeout(() => setStatus("sent"), 400);
   };
 
   const contactItems = [
-    { icon: <Mail size={18} />,     label: "Email",    value: "huzefabajwa@gmail.com",   href: "mailto:huzefabajwa@gmail.com", color: "var(--sf-blue)" },
+    { icon: <Mail size={18} />,     label: "Email",    value: "huzefabajwa62@gmail.com",   href: "mailto:huzefabajwa62@gmail.com", color: "var(--sf-blue)" },
     { icon: <MapPin size={18} />,   label: "Location", value: "Available Worldwide · Remote", color: "var(--hs-orange)" },
     { icon: <Phone size={18} />,    label: "Response", value: "Usually within 24 hours", color: "var(--d365-purple)" },
   ];
