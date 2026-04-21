@@ -5,74 +5,118 @@ import dynamic from "next/dynamic";
 import LoadingScreen from "@/components/LoadingScreen";
 import useSWR from "swr";
 
-// Lazy load all sections
+// ── Hero loads with SSR disabled but does NOT block page render
 const ClientHomeView               = dynamic(() => import("@/components/client-view/home"),       { ssr: false });
+
+// ── Below-fold sections — lazy, never block the hero
 const ClientAboutView              = dynamic(() => import("@/components/client-view/about"),       { ssr: false });
+const ClientServicesView           = dynamic(() => import("@/components/client-view/services"),    { ssr: false });
 const ClientExperienceAndEducation = dynamic(() => import("@/components/client-view/experience"), { ssr: false });
 const ClientProjectView            = dynamic(() => import("@/components/client-view/projects"),    { ssr: false });
 const ClientContactView            = dynamic(() => import("@/components/client-view/contact"),     { ssr: false });
-const ClientServicesView           = dynamic(() => import("@/components/client-view/services"),    { ssr: false });
 
-// Fetcher with 5-second timeout
+// ── SWR fetcher — 5 s timeout per call so one slow API never blocks all ──
 const fetcher = (url) =>
   Promise.race([
-    fetch(url).then((res) => res.json()).then((data) => data.data ?? null),
+    fetch(url).then((r) => r.json()).then((d) => d.data ?? null),
     new Promise((resolve) => setTimeout(() => resolve(null), 5000)),
   ]);
 
+// ── Thin skeleton shown while individual below-fold sections load ──
+function SectionSkeleton() {
+  return (
+    <div style={{ minHeight: 320, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ width: 40, height: 40, border: "2px solid rgba(0,161,224,0.3)", borderTopColor: "#00A1E0", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
+    </div>
+  );
+}
+
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [timedOut, setTimedOut] = useState(false);
+  // loading screen visible only while hero data + initial mount settle (max 4 s)
+  const [showLoader, setShowLoader] = useState(true);
 
-  const { data: homeSectionData,  isLoading: loadingHome }      = useSWR("/api/home/get",       fetcher);
-  const { data: aboutData,        isLoading: loadingAbout }      = useSWR("/api/about/get",      fetcher);
-  const { data: experienceData,   isLoading: loadingExperience } = useSWR("/api/experience/get", fetcher);
-  const { data: educationData,    isLoading: loadingEducation }  = useSWR("/api/education/get",  fetcher);
-  const { data: projectsData,     isLoading: loadingProjects }   = useSWR("/api/projects/get",   fetcher);
-  const { data: servicesData,     isLoading: loadingServices }   = useSWR("/api/services/get",   fetcher);
-  const { data: platformsData,    isLoading: loadingPlatforms }  = useSWR("/api/platforms/get",  fetcher);
+  // ── Data fetching — all sections fetch in parallel ──────────────
+  const { data: homeSectionData  } = useSWR("/api/home/get",       fetcher);
+  const { data: aboutData        } = useSWR("/api/about/get",      fetcher);
+  const { data: experienceData   } = useSWR("/api/experience/get", fetcher);
+  const { data: educationData    } = useSWR("/api/education/get",  fetcher);
+  const { data: projectsData     } = useSWR("/api/projects/get",   fetcher);
+  const { data: servicesData     } = useSWR("/api/services/get",   fetcher);
+  const { data: platformsData    } = useSWR("/api/platforms/get",  fetcher);
 
   useEffect(() => {
     setMounted(true);
-    const t = setTimeout(() => setTimedOut(true), 6000);
-    return () => clearTimeout(t);
   }, []);
 
-  const isLoading =
-    !timedOut &&
-    (!mounted || loadingHome || loadingAbout || loadingExperience ||
-     loadingEducation || loadingProjects || loadingServices || loadingPlatforms);
+  // Hide loader as soon as hero data arrives OR after 3.5 s max — whichever is first
+  useEffect(() => {
+    if (!mounted) return;
+    // If hero data already available, dismiss loader quickly
+    if (homeSectionData !== undefined) {
+      const t = setTimeout(() => setShowLoader(false), 400);
+      return () => clearTimeout(t);
+    }
+    // Hard cap — never wait more than 3.5 s total
+    const cap = setTimeout(() => setShowLoader(false), 3500);
+    return () => clearTimeout(cap);
+  }, [mounted, homeSectionData]);
 
-  if (isLoading) return <LoadingScreen isLoading />;
+  // ── Loading screen ───────────────────────────────────────────────
+  if (showLoader) {
+    return <LoadingScreen isLoading />;
+  }
 
   return (
-    <div style={{ backgroundColor: "var(--bg-base)" }} className="min-h-screen w-full overflow-x-hidden">
+    <>
+      {/* Spin keyframe injected inline — minimal, no extra CSS file needed */}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
 
-      <Suspense fallback={<LoadingScreen isLoading />}>
-        <ClientHomeView data={homeSectionData || []} platformsData={platformsData || []} />
-      </Suspense>
+      <div style={{ backgroundColor: "var(--bg-base)" }} className="min-h-screen w-full overflow-x-hidden">
 
-      <Suspense fallback={null}>
-        <ClientAboutView data={aboutData?.[0] || {}} platformsData={platformsData || []} />
-      </Suspense>
+        {/* ── Hero — renders first, immediately ── */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <ClientHomeView
+            data={homeSectionData || []}
+            platformsData={platformsData || []}
+          />
+        </Suspense>
 
-      <Suspense fallback={null}>
-        <ClientServicesView data={servicesData || []} platformsData={platformsData || []} />
-      </Suspense>
+        {/* ── About ── */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <ClientAboutView
+            data={aboutData?.[0] || {}}
+            platformsData={platformsData || []}
+          />
+        </Suspense>
 
-      <Suspense fallback={null}>
-        <ClientExperienceAndEducation
-          educationData={educationData || []}
-          experienceData={experienceData || []}
-        />
-      </Suspense>
+        {/* ── Services ── */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <ClientServicesView
+            data={servicesData || []}
+            platformsData={platformsData || []}
+          />
+        </Suspense>
 
-      <Suspense fallback={null}>
-        <ClientProjectView data={projectsData || []} />
-      </Suspense>
+        {/* ── Experience & Education ── */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <ClientExperienceAndEducation
+            educationData={educationData || []}
+            experienceData={experienceData || []}
+          />
+        </Suspense>
 
-      <ClientContactView />
+        {/* ── Projects ── */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <ClientProjectView data={projectsData || []} />
+        </Suspense>
 
-    </div>
+        {/* ── Contact ── */}
+        <Suspense fallback={null}>
+          <ClientContactView />
+        </Suspense>
+
+      </div>
+    </>
   );
 }

@@ -52,9 +52,10 @@ const CRM_PLATFORMS = [
 
 export default function ClientAboutView({ data, platformsData }) {
   const stats = [
-    { label: "Clients Served",    value: `${data?.noofclients || "50"}+`,    color: "var(--sf-blue)" },
-    { label: "Projects Delivered",value: `${data?.noofprojects || "100"}+`,  color: "var(--hs-orange)" },
-    { label: "Years Experience",  value: `${data?.yearsofexperience || "5"}+`,color: "var(--d365-purple)" },
+    { label: "Clients Served",      value: `${data?.noofclients      || "50"}+`,  color: "var(--sf-blue)" },
+    { label: "Projects Delivered",  value: `${data?.noofprojects     || "100"}+`, color: "var(--hs-orange)" },
+    { label: "Years Experience",    value: `${data?.yearsofexperience|| "5"}+`,   color: "var(--d365-purple)" },
+    { label: "Platforms Mastered",  value: `${data?.noofplatforms    || platformsData?.length || "3"}+`, color: "var(--teal)" },
   ];
 
   const skills = (data?.skills || "").split(",").map(s => {
@@ -112,7 +113,7 @@ export default function ClientAboutView({ data, platformsData }) {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mt-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
               {stats.map((s, i) => (
                 <AnimationWrapper key={i} delay={300 + i * 80}>
                   <div className="glass-card p-5 flex flex-col items-center text-center">

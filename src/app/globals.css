@@ -377,7 +377,10 @@ body {
 }
 
 /* ─── Techy Arrow Pointer Cursor ─────────────────────────────────── */
-*, *::before, *::after { cursor: none !important; }
+/* Scoped: admin panel (/admin) keeps normal cursors; portfolio uses custom */
+body:not(.admin-page) *, body:not(.admin-page) *::before, body:not(.admin-page) *::after {
+  cursor: none !important;
+}
 
 #crm-cursor {
   position: fixed;

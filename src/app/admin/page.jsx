@@ -17,10 +17,10 @@ import { addData, getData, updateData, login } from "@/services";
 
 // ── Initial form states ──────────────────────────────────────────
 const INIT = {
-  home:       { heading:"", summary:"", hireme:"", upwork:"", slack:"", github:"", linkedin:"", stack:"" },
+  home:       { heading:"", summary:"", hireme:"", upwork:"", slack:"", github:"", linkedin:"", stack:"", imageUrl:"" },
   services:   { title:"", service:"", fareacticon:"" },
   reviews:    { author:"", content:"", company:"", rating:0, link:"" },
-  about:      { aboutme:"", noofprojects:"", yearsofexperience:"", noofclients:"", skills:"", progress:"" },
+  about:      { aboutme:"", noofprojects:"", yearsofexperience:"", noofclients:"", noofplatforms:"", skills:"", progress:"" },
   experience: { position:"", company:"", duration:"", location:"", jobprofile:"" },
   education:  { degree:"", year:"", college:"" },
   projects:   { name:"", application:"", github:"", imageUrl:"", images:[], description:"", shortdescription:"", playstore:"", ios:"", techstack:"", weburl:"", projecttype:"", tags:[], thumbnailPosition:"center" },
@@ -102,15 +102,19 @@ export default function AdminPage() {
       projects: projectForm, reviews: reviewsForm, platforms: platformsForm,
     };
 
+    // Singleton tabs: always upsert (PUT) regardless of `update` flag
+    const SINGLETON_TABS = ["home", "about"];
+    const isSingleton = SINGLETON_TABS.includes(currentTab);
+
     const toastId = toast.loading("Saving...");
     try {
-      const response = update
+      const response = (update || isSingleton)
         ? await updateData(currentTab, formMap[currentTab])
         : await addData(currentTab, formMap[currentTab]);
 
       if (response?.success) {
         toast.success("Saved successfully! ✓", { id: toastId });
-        resetFormData();
+        if (!isSingleton) resetFormData();
         await extractAllData();
       } else {
         toast.error("Failed to save. Please try again.", { id: toastId });

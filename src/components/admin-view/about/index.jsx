@@ -1,8 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { AdminCard, AdminInput, AdminTextarea, SaveButton, DeleteButton } from "../ui";
-import { TrendingUp, Users, FolderOpen } from "lucide-react";
+import { AdminCard, AdminTextarea, SaveButton } from "../ui";
+import { TrendingUp, Users, FolderOpen, Layout, Loader2, Upload, X } from "lucide-react";
+
+/* ─── Stat Card ───────────────────────────────────────────────────── */
+function StatInput({ icon: Icon, label, name, value, onChange, color, bg, border }) {
+  return (
+    <div className="rounded-xl p-4 flex flex-col gap-3" style={{ background: bg, border: `1px solid ${border}` }}>
+      <div className="flex items-center gap-2" style={{ color }}>
+        <Icon size={16} />
+        <span className="text-xs font-bold uppercase tracking-wider">{label}</span>
+      </div>
+      <input
+        type="number" name={name} value={value || ""}
+        onChange={e => onChange(e.target.name, e.target.value)}
+        className="w-full px-3 py-2.5 rounded-lg text-2xl font-black outline-none"
+        style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${border}`, color, fontFamily: "inherit" }}
+        onFocus={e => { e.target.style.borderColor = color; }}
+        onBlur={e  => { e.target.style.borderColor = border; }}
+        placeholder="0"
+      />
+    </div>
+  );
+}
 
 export default function AdminAboutView({ formData, setFormData, handleSaveData }) {
   const [saving, setSaving] = useState(false);
@@ -22,55 +43,22 @@ export default function AdminAboutView({ formData, setFormData, handleSaveData }
           hint="This appears as a featured quote in the About section" />
       </AdminCard>
 
-      <AdminCard title="Stats & Numbers" subtitle="Key metrics displayed as stat chips">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="rounded-xl p-4 flex flex-col gap-3" style={{ background: "rgba(0,161,224,0.06)", border: "1px solid rgba(0,161,224,0.15)" }}>
-            <div className="flex items-center gap-2" style={{ color: "#00A1E0" }}>
-              <Users size={16} />
-              <span className="text-xs font-bold uppercase tracking-wider">Clients Served</span>
-            </div>
-            <input type="number" name="noofclients" value={formData.noofclients || ""}
-              onChange={e => update(e.target.name, e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg text-2xl font-black outline-none"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(0,161,224,0.2)", color: "#00A1E0", fontFamily: "inherit" }}
-              onFocus={e => { e.target.style.borderColor = "#00A1E0"; }}
-              onBlur={e => { e.target.style.borderColor = "rgba(0,161,224,0.2)"; }}
-              placeholder="50" />
-          </div>
-          <div className="rounded-xl p-4 flex flex-col gap-3" style={{ background: "rgba(255,122,89,0.06)", border: "1px solid rgba(255,122,89,0.15)" }}>
-            <div className="flex items-center gap-2" style={{ color: "#FF7A59" }}>
-              <FolderOpen size={16} />
-              <span className="text-xs font-bold uppercase tracking-wider">Projects Done</span>
-            </div>
-            <input type="number" name="noofprojects" value={formData.noofprojects || ""}
-              onChange={e => update(e.target.name, e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg text-2xl font-black outline-none"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,122,89,0.2)", color: "#FF7A59", fontFamily: "inherit" }}
-              onFocus={e => { e.target.style.borderColor = "#FF7A59"; }}
-              onBlur={e => { e.target.style.borderColor = "rgba(255,122,89,0.2)"; }}
-              placeholder="100" />
-          </div>
-          <div className="rounded-xl p-4 flex flex-col gap-3" style={{ background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.15)" }}>
-            <div className="flex items-center gap-2" style={{ color: "#8B5CF6" }}>
-              <TrendingUp size={16} />
-              <span className="text-xs font-bold uppercase tracking-wider">Years Experience</span>
-            </div>
-            <input type="number" name="yearsofexperience" value={formData.yearsofexperience || ""}
-              onChange={e => update(e.target.name, e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg text-2xl font-black outline-none"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(139,92,246,0.2)", color: "#8B5CF6", fontFamily: "inherit" }}
-              onFocus={e => { e.target.style.borderColor = "#8B5CF6"; }}
-              onBlur={e => { e.target.style.borderColor = "rgba(139,92,246,0.2)"; }}
-              placeholder="5" />
-          </div>
+      <AdminCard title="Stats & Numbers" subtitle="Key metrics displayed as stat chips on the portfolio">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatInput icon={Users}      label="Clients Served"    name="noofclients"      value={formData.noofclients}      onChange={update} color="#00A1E0" bg="rgba(0,161,224,0.06)"    border="rgba(0,161,224,0.2)" />
+          <StatInput icon={FolderOpen} label="Projects Done"     name="noofprojects"     value={formData.noofprojects}     onChange={update} color="#FF7A59" bg="rgba(255,122,89,0.06)"   border="rgba(255,122,89,0.2)" />
+          <StatInput icon={TrendingUp} label="Years Experience"  name="yearsofexperience"value={formData.yearsofexperience}onChange={update} color="#8B5CF6" bg="rgba(139,92,246,0.06)"   border="rgba(139,92,246,0.2)" />
+          <StatInput icon={Layout}     label="Platforms Served"  name="noofplatforms"    value={formData.noofplatforms}    onChange={update} color="#00D4AA" bg="rgba(0,212,170,0.06)"    border="rgba(0,212,170,0.2)" />
         </div>
+        <p className="text-xs mt-3" style={{ color: "#3D5170" }}>
+          These numbers appear with a "+" suffix on the portfolio (e.g. 50 → "50+")
+        </p>
       </AdminCard>
 
       <AdminCard title="Skills & Expertise" subtitle='Format: "Skill Name 85" (name then percentage, comma-separated)'>
         <AdminTextarea label="Skills" name="skills" value={formData.skills} onChange={update}
           rows={5} placeholder="Salesforce CRM 95, HubSpot 90, Dynamics 365 88, Power Platform 82, CRM Strategy 93"
           hint='Each entry becomes a skill bar. Format: "Name 90" means 90% proficiency.' />
-        {/* Preview */}
         {formData.skills && (
           <div className="mt-4 flex flex-col gap-3">
             <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#3D5170" }}>Live Preview</p>

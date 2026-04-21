@@ -1,38 +1,38 @@
 import connectToDb from "@/database";
 import About from "@/models/About";
-
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic";
+
 export async function PUT(req) {
     try {
         await connectToDb();
-        const extractData = await req.json();
-        const{_id,aboutme,noofprojects,yearsofexperience,noofclients,skills,progress} = extractData;
-        const updateData = await About.findByIdAndUpdate(
-            {
-                _id: _id
-            },
-            {_id,aboutme,noofprojects,yearsofexperience,noofclients,skills,progress},
-            {new: true}
-        );
-        if (updateData) {
-            return NextResponse.json({
-                success : true,
-                message: "Updated Succesfully",
-            });
+        const body = await req.json();
+        const { _id, aboutme, noofprojects, yearsofexperience, noofclients, noofplatforms, skills } = body;
+
+        let result;
+        if (_id) {
+            // Update existing document by ID
+            result = await About.findByIdAndUpdate(
+                _id,
+                { aboutme, noofprojects, yearsofexperience, noofclients, noofplatforms, skills },
+                { new: true }
+            );
+        } else {
+            // Upsert: update the first document or create one if none exists
+            result = await About.findOneAndUpdate(
+                {},
+                { aboutme, noofprojects, yearsofexperience, noofclients, noofplatforms, skills },
+                { new: true, upsert: true }
+            );
         }
-        else{
-            return NextResponse.json({
-                success: false,
-                message:"Please try again"
-            });
+
+        if (result) {
+            return NextResponse.json({ success: true, message: "Updated successfully" });
         }
+        return NextResponse.json({ success: false, message: "Update failed" }, { status: 400 });
     } catch (e) {
-        console.log(e);
-        return NextResponse.json({
-            success: false,
-            message:"Please try again"
-        });
+        console.error("[about/update]", e);
+        return NextResponse.json({ success: false, message: "Server error" }, { status: 500 });
     }
 }

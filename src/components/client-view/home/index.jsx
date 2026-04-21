@@ -535,16 +535,24 @@ export default function ClientHomeView({ data, platformsData, onLoaded }) {
               e.currentTarget.style.boxShadow = "0 28px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,161,224,0.15)";
             }}
           >
-            {/* Check if we have a real photo; show premium CRM monogram as fallback */}
-            <Image
-              src={talhabajwa}
-              alt="Huzefa Bajwa — CRM Consultant"
-              fill
-              quality={95}
-              className="object-cover object-top"
-              priority
-              onError={e => { e.currentTarget.style.display = "none"; }}
-            />
+            {/* DB photo takes priority; fall back to bundled photo */}
+            {d.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={d.imageUrl}
+                alt="Huzefa Bajwa — CRM Consultant"
+                className="w-full h-full object-cover object-top"
+              />
+            ) : (
+              <Image
+                src={talhabajwa}
+                alt="Huzefa Bajwa — CRM Consultant"
+                fill
+                quality={95}
+                className="object-cover object-top"
+                priority
+              />
+            )}
             {/* Gradient overlay */}
             <div className="absolute inset-x-0 bottom-0 h-1/3" style={{
               background: "linear-gradient(to top, rgba(5,13,26,0.75), transparent)",
