@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { AdminCard, AdminInput, AdminTextarea, SaveButton, DeleteButton, StatusBadge } from "../ui";
-import { Plus, Briefcase, MapPin, Calendar, Building } from "lucide-react";
+import { Edit2, Plus, Briefcase, MapPin, Calendar, Building, ArrowUp, ArrowDown } from "lucide-react";
 
-export default function AdminExperienceView({ formData, setFormData, handleSaveData, data, setAllData }) {
+export default function AdminExperienceView({ formData, setFormData, handleSaveData, data, setAllData, setUpdate }) {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(null);
   const update = (name, value) => setFormData(prev => ({ ...prev, [name]: value }));
@@ -33,6 +33,29 @@ export default function AdminExperienceView({ formData, setFormData, handleSaveD
     setDeleting(null);
   }
 
+  const sortedData = data ? [...data].sort((a, b) => (a.order || 0) - (b.order || 0)) : [];
+
+  async function moveItem(index, direction) {
+    if (direction === -1 && index === 0) return;
+    if (direction === 1 && index === sortedData.length - 1) return;
+
+    const newSorted = [...sortedData];
+    const temp = newSorted[index];
+    newSorted[index] = newSorted[index + direction];
+    newSorted[index + direction] = temp;
+
+    const updatedItems = newSorted.map((item, i) => ({ ...item, order: i }));
+    setAllData(prev => ({ ...prev, experience: updatedItems }));
+
+    try {
+      await fetch("/api/experience/reorder", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedItems.map(item => ({ _id: item._id, order: item.order }))),
+      });
+    } catch(e) { console.error(e) }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       {/* Add New */}
@@ -53,15 +76,15 @@ export default function AdminExperienceView({ formData, setFormData, handleSaveD
           </div>
         </div>
         <div className="flex justify-end mt-5">
-          <SaveButton onClick={save} loading={saving} label="Add Experience" />
+          <SaveButton onClick={save} loading={saving} label={formData._id ? "Update Experience" : "Add Experience"} />
         </div>
       </AdminCard>
 
       {/* List */}
-      {data && data.length > 0 && (
+      {sortedData && sortedData.length > 0 && (
         <AdminCard title="Experience Timeline" subtitle="Your career history shown on the portfolio">
           <div className="flex flex-col gap-4">
-            {data.map((item, i) => (
+            {sortedData.map((item, i) => (
               <div key={item._id || i} className="rounded-xl p-5 flex flex-col gap-3 group"
                 style={{ background: "rgba(255,122,89,0.04)", border: "1px solid rgba(255,122,89,0.12)" }}>
                 <div className="flex items-start justify-between gap-4">
@@ -90,7 +113,21 @@ export default function AdminExperienceView({ formData, setFormData, handleSaveD
                       </p>
                     )}
                   </div>
-                  <DeleteButton onClick={() => handleDelete(item._id)} loading={deleting === item._id} />
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => moveItem(i, -1)} disabled={i === 0}
+                      className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-slate-300 transition-colors disabled:opacity-30">
+                      <ArrowUp size={16} />
+                    </button>
+                    <button onClick={() => moveItem(i, 1)} disabled={i === sortedData.length - 1}
+                      className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-slate-300 transition-colors disabled:opacity-30">
+                      <ArrowDown size={16} />
+                    </button>
+                    <button onClick={() => { setFormData(item); setUpdate(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-slate-300 transition-colors">
+                      <Edit2 size={16} />
+                    </button>
+                    <DeleteButton onClick={() => handleDelete(item._id)} loading={deleting === item._id} />
+                  </div>
                 </div>
               </div>
             ))}

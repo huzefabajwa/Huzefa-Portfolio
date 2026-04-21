@@ -4,6 +4,9 @@ import AnimationWrapper from "../animation-wrapper";
 import { Briefcase, GraduationCap, Award } from "lucide-react";
 
 export default function ClientExperienceAndEducationView({ educationData, experienceData }) {
+  const sortedEdu = educationData ? [...educationData].sort((a, b) => (a.order || 0) - (b.order || 0)) : [];
+  const sortedExp = experienceData ? [...experienceData].sort((a, b) => (a.order || 0) - (b.order || 0)) : [];
+
   return (
     <section id="experience" className="relative py-28 section-grid-bg">
       {/* Decorative orbs */}
@@ -33,8 +36,8 @@ export default function ClientExperienceAndEducationView({ educationData, experi
             </AnimationWrapper>
 
             <div className="timeline">
-              {experienceData && experienceData.length > 0 ? (
-                experienceData.map((item, index) => (
+              {sortedExp && sortedExp.length > 0 ? (
+                sortedExp.map((item, index) => (
                   <AnimationWrapper key={index} delay={300 + index * 100} className="timeline-item">
                     <div className="glass-card p-6 rounded-2xl relative group transition-all duration-300"
                       onMouseOver={e => { e.currentTarget.style.borderColor = "rgba(0,161,224,0.35)"; e.currentTarget.style.boxShadow = "0 8px 40px rgba(0,161,224,0.1)"; }}
@@ -88,8 +91,8 @@ export default function ClientExperienceAndEducationView({ educationData, experi
             </AnimationWrapper>
 
             <div className="timeline timeline--education">
-              {educationData && educationData.length > 0 ? (
-                educationData.map((item, index) => (
+              {sortedEdu && sortedEdu.length > 0 ? (
+                sortedEdu.map((item, index) => (
                   <AnimationWrapper key={index} delay={300 + index * 100} className="timeline-item">
                     <div className="glass-card p-6 rounded-2xl"
                       onMouseOver={e => { e.currentTarget.style.borderColor = "rgba(108,99,255,0.35)"; e.currentTarget.style.boxShadow = "0 8px 40px rgba(108,99,255,0.08)"; }}

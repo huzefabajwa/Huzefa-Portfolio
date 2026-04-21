@@ -7,9 +7,11 @@ const ExperienceSchema = new mongoose.Schema(
         company: String, 
         duration: String,
         location: String,
-        jobprofile:String
+        jobprofile:String,
+        order: { type: Number, default: 0 }
     },
     {timestamps:true}
 );
-const Experience = mongoose.models.Experience || mongoose.model("Experience", ExperienceSchema);
+delete mongoose.models.Experience;
+const Experience = mongoose.model("Experience", ExperienceSchema);
 export default Experience;

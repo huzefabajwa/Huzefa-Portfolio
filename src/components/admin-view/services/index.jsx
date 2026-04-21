@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { AdminCard, AdminInput, AdminTextarea, SaveButton, DeleteButton, StatusBadge } from "../ui";
-import { TrendingUp, Zap, Settings } from "lucide-react";
+import { Edit2, TrendingUp, Zap, Settings } from "lucide-react";
 
 const CRM_ICONS = [
   "TrendingUp", "Settings", "Users", "BarChart2", "RefreshCcw",
   "Zap", "Database", "Globe", "Layers", "Shield", "Award", "Target"
 ];
 
-export default function AdminServicesView({ formData, setFormData, handleSaveData, data, setAllData }) {
+export default function AdminServicesView({ formData, setFormData, handleSaveData, data, setAllData, setUpdate }) {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(null);
   const update = (name, value) => setFormData(prev => ({ ...prev, [name]: value }));
@@ -65,7 +65,7 @@ export default function AdminServicesView({ formData, setFormData, handleSaveDat
           </div>
         </div>
         <div className="flex justify-end mt-5">
-          <SaveButton onClick={save} loading={saving} label="Add Service" />
+          <SaveButton onClick={save} loading={saving} label={formData._id ? "Update Service" : "Add Service"} />
         </div>
       </AdminCard>
 
@@ -88,7 +88,13 @@ export default function AdminServicesView({ formData, setFormData, handleSaveDat
                         <div className="w-5 h-0.5 rounded-full mt-1" style={{ background: color }} />
                       </div>
                     </div>
-                    <DeleteButton onClick={() => handleDelete(item._id)} loading={deleting === item._id} />
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => { setFormData(item); setUpdate(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                        className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-slate-300 transition-colors">
+                        <Edit2 size={16} />
+                      </button>
+                      <DeleteButton onClick={() => handleDelete(item._id)} loading={deleting === item._id} />
+                    </div>
                   </div>
                   <p className="text-xs leading-relaxed" style={{ color: "#8DA0BC" }}>
                     {item.service?.substring(0, 100)}{(item.service?.length || 0) > 100 ? "..." : ""}
