@@ -4,44 +4,25 @@ import { useEffect, useState } from "react";
 
 /* ─── Platform definitions ─── */
 const PLATFORMS = [
-  {
-    id:    "sf",
-    label: "Salesforce",
-    color: "#00A1E0",
-    logo:  "/salesforce-logo.png",
-    start: 0,
-    end:   60,
-  },
-  {
-    id:    "hs",
-    label: "HubSpot",
-    color: "#FF7A59",
-    logo:  "/hubspot-logo.png",
-    start: 20,
-    end:   80,
-  },
-  {
-    id:    "pa",
-    label: "Power Apps",
-    color: "#8B5CF6",
-    logo:  "/powerapps-logo.png",
-    start: 40,
-    end:   100,
-  },
+  { id: "sf", label: "Salesforce",   color: "#00A1E0", logo: "/salesforce-logo.png", start: 0,  end: 50 },
+  { id: "hs", label: "HubSpot",      color: "#FF7A59", logo: "/hubspot-logo.png",    start: 25, end: 75 },
+  { id: "pa", label: "Power Apps",   color: "#8B5CF6", logo: "/powerapps-logo.png",  start: 50, end: 100 },
 ];
 
-const STATUS = [
-  [0,  "Initialising..."],
-  [15, "Connecting to Salesforce..."],
-  [35, "Loading HubSpot..."],
-  [55, "Syncing Power Platform..."],
-  [80, "Configuring dashboard..."],
-  [95, "Almost ready..."],
-  [100,"Portfolio ready ✦"],
+const TERMINAL_LOGS = [
+  [0,  "> INITIALIZING SYSTEM KERNEL..."],
+  [5,  "> SECURE CONNECTION ESTABLISHED"],
+  [15, "> SYNCING SALESFORCE METADATA [100%]"],
+  [25, "> HYDRATING HUBSPOT WORKFLOWS..."],
+  [40, "> COMPILING CRM ARCHITECTURE..."],
+  [55, "> OPTIMIZING POWER PLATFORM NODES..."],
+  [75, "> DEPLOYING DIGITAL TRANSFORMATION..."],
+  [90, "> FINALIZING UI MODULES..."],
+  [100,"> SYSTEM READY. LAUNCHING PORTFOLIO ✦"],
 ];
 
-/* ── Individual logo card ── */
-function LogoCard({ p, total, visible, delay }) {
+/* ── Individual sleek glass node ── */
+function PlatformNode({ p, total, visible, delay }) {
   const range = p.end - p.start;
   const fill  = total < p.start ? 0
               : total > p.end   ? 100
@@ -50,127 +31,137 @@ function LogoCard({ p, total, visible, delay }) {
 
   return (
     <div style={{
-      opacity:   visible ? 1 : 0,
-      transform: visible ? "none" : "translateY(16px)",
-      transition: `opacity 0.5s ${delay}s ease, transform 0.5s ${delay}s ease`,
+      opacity: visible ? 1 : 0,
+      transform: visible ? "none" : "translateY(24px) scale(0.95)",
+      transition: `opacity 0.7s ${delay}s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s ${delay}s cubic-bezier(0.16, 1, 0.3, 1)`,
+      display: "flex", flexDirection: "column", alignItems: "center", gap: 12
     }}>
-      {/* Card shell */}
+      {/* Hex/Glass Orb */}
       <div style={{
-        width: 110,
-        background: fill > 0 ? `${p.color}0A` : "rgba(255,255,255,0.02)",
-        border: `1px solid ${fill > 0 ? p.color + "28" : "rgba(255,255,255,0.05)"}`,
-        borderRadius: 16,
-        padding: "20px 16px 16px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 12,
         position: "relative",
-        transition: "all 0.4s ease",
-        boxShadow: fill > 0 ? `0 0 28px ${p.color}18` : "none",
+        width: 80, height: 80,
+        borderRadius: 24,
+        background: "rgba(10, 15, 30, 0.6)",
+        backdropFilter: "blur(12px)",
+        border: `1px solid ${fill > 0 ? p.color + "40" : "rgba(255,255,255,0.05)"}`,
+        boxShadow: fill > 0 ? `0 8px 32px ${p.color}20, inset 0 0 20px ${p.color}10` : "0 8px 32px rgba(0,0,0,0.4)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        overflow: "hidden",
+        transition: "all 0.5s ease"
       }}>
-
-        {/* Done badge */}
-        {done && (
+        {/* Animated glow rotating around border */}
+        {fill > 0 && !done && (
           <div style={{
-            position: "absolute", top: -8, right: -8,
-            width: 18, height: 18, borderRadius: "50%",
-            background: p.color, display: "flex",
-            alignItems: "center", justifyContent: "center",
-            animation: "pop 0.3s cubic-bezier(0.34,1.56,0.64,1)",
-            boxShadow: `0 0 8px ${p.color}`,
-          }}>
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"/>
-            </svg>
-          </div>
+            position: "absolute", width: "150%", height: "150%",
+            background: `conic-gradient(from 0deg, transparent 0%, transparent 80%, ${p.color} 100%)`,
+            animation: "spinRotate 2s linear infinite",
+            opacity: 0.5
+          }} />
         )}
 
-        {/* Logo with fill-up reveal */}
-        <div style={{ width: 48, height: 48, position: "relative" }}>
-          {/* Ghost */}
+        {/* Inner dark circle to mask the rotating conic gradient */}
+        <div style={{
+          position: "absolute", inset: 2, borderRadius: 22,
+          background: "#080C17", zIndex: 1
+        }} />
+
+        {/* Background fill wave */}
+        <div style={{
+          position: "absolute", bottom: 0, left: 0, right: 0,
+          height: `${fill}%`, background: `linear-gradient(180deg, ${p.color}40 0%, ${p.color}10 100%)`,
+          zIndex: 2, transition: "height 0.3s ease",
+          borderTop: fill > 0 && fill < 100 ? `1px solid ${p.color}` : "none",
+        }} />
+
+        {/* Logo */}
+        <div style={{ position: "relative", zIndex: 3, width: 36, height: 36 }}>
+          {/* Ghost Image */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={p.logo} alt={p.label} style={{
+          <img src={p.logo} alt="" style={{
             width: "100%", height: "100%", objectFit: "contain",
-            position: "absolute", inset: 0,
-            filter: "grayscale(1) brightness(0.18)",
+            position: "absolute", filter: "grayscale(1) opacity(0.2)"
           }} />
-          {/* Filled portion */}
+          
+          {/* Filled Image */}
           <div style={{
-            position: "absolute", left: 0, right: 0,
-            bottom: 0, height: `${fill}%`,
-            overflow: "hidden",
-            transition: "height 0.3s ease",
+            position: "absolute", bottom: 0, left: 0, right: 0,
+            height: `${fill}%`, overflow: "hidden", transition: "height 0.3s ease"
           }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.logo} alt="" style={{
-              width: 48, height: 48, objectFit: "contain",
+            <img src={p.logo} alt={p.label} style={{
+              width: 36, height: 36, objectFit: "contain",
               position: "absolute", bottom: 0,
-              filter: fill > 0 ? `drop-shadow(0 0 6px ${p.color}88)` : "none",
+              filter: `drop-shadow(0 0 8px ${p.color}80)`
             }} />
           </div>
         </div>
 
-        {/* Thin progress bar */}
-        <div style={{ width: "100%", height: 2, borderRadius: 2, background: "rgba(255,255,255,0.05)" }}>
+        {/* Done Checkmark */}
+        {done && (
           <div style={{
-            height: "100%", borderRadius: 2,
-            width: `${fill}%`,
-            background: p.color,
-            transition: "width 0.3s ease",
-            boxShadow: fill > 0 ? `0 0 6px ${p.color}` : "none",
-          }} />
-        </div>
+            position: "absolute", top: -6, right: -6, zIndex: 4,
+            width: 20, height: 20, borderRadius: "50%", background: p.color,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: `0 0 12px ${p.color}`, animation: "pop 0.4s cubic-bezier(0.34,1.56,0.64,1)"
+          }}>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <polyline points="2,5 4,7 8,3" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        )}
+      </div>
 
-        {/* Label */}
+      {/* Label and % */}
+      <div style={{ textAlign: "center" }}>
         <p style={{
-          fontSize: "0.68rem", fontWeight: 700,
-          color: fill > 0 ? p.color : "rgba(255,255,255,0.2)",
-          transition: "color 0.4s ease",
-          margin: 0,
+          fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em",
+          color: done ? p.color : "rgba(255,255,255,0.4)", margin: 0, transition: "color 0.4s ease"
         }}>{p.label}</p>
+        <p style={{
+          fontSize: "0.6rem", color: "rgba(255,255,255,0.2)", fontFamily: "monospace", margin: "2px 0 0"
+        }}>{fill}%</p>
       </div>
     </div>
   );
 }
 
-/* ── Main component ── */
+/* ── Main Loading Screen ── */
 export default function LoadingScreen({ isLoading }) {
-  const [progress, setProgress]  = useState(0);
-  const [visible,  setVisible]   = useState(false);
-  const [status,   setStatus]    = useState(STATUS[0][1]);
-  const [exit,     setExit]      = useState(false);
-  const [gone,     setGone]      = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [visible,  setVisible]  = useState(false);
+  const [log,      setLog]      = useState(TERMINAL_LOGS[0][1]);
+  const [exit,     setExit]     = useState(false);
+  const [gone,     setGone]     = useState(false);
 
-  /* Drive progress */
   useEffect(() => {
     if (!isLoading) return;
-    const tc = setTimeout(() => setVisible(true), 200);
+    const tc = setTimeout(() => setVisible(true), 100);
 
     let val = 0;
     const iv = setInterval(() => {
-      val += Math.random() * 5 + 2;
+      val += Math.random() * 4 + 1; // Slower, smoother increment
       if (val >= 100) { val = 100; clearInterval(iv); }
       const n = Math.round(val);
       setProgress(n);
-      for (let i = STATUS.length - 1; i >= 0; i--) {
-        if (n >= STATUS[i][0]) { setStatus(STATUS[i][1]); break; }
+      
+      // Update terminal log
+      for (let i = TERMINAL_LOGS.length - 1; i >= 0; i--) {
+        if (n >= TERMINAL_LOGS[i][0]) { setLog(TERMINAL_LOGS[i][1]); break; }
       }
-    }, 75);
+    }, 60);
 
     return () => { clearTimeout(tc); clearInterval(iv); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  /* Exit when site is ready */
   useEffect(() => {
-    if (!isLoading && progress >= 95) {
+    if (!isLoading && progress >= 90) {
       setProgress(100);
-      setStatus("Portfolio ready ✦");
+      setLog("> SYSTEM READY. LAUNCHING PORTFOLIO ✦");
       const t = setTimeout(() => {
         setExit(true);
-        setTimeout(() => setGone(true), 650);
-      }, 500);
+        setTimeout(() => setGone(true), 800);
+      }, 600);
       return () => clearTimeout(t);
     }
   }, [isLoading, progress]);
@@ -179,108 +170,133 @@ export default function LoadingScreen({ isLoading }) {
 
   return (
     <div style={{
-      position: "fixed", inset: 0, zIndex: 999,
-      background: "#060E1C",
-      display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center",
-      gap: 0,
-      opacity:   exit ? 0 : 1,
-      transform: exit ? "scale(1.03)" : "scale(1)",
-      transition: exit ? "opacity 0.65s ease, transform 0.65s ease" : "none",
+      position: "fixed", inset: 0, zIndex: 9999,
+      backgroundColor: "#030712", // ultra dark premium background
+      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+      opacity: exit ? 0 : 1,
+      transform: exit ? "scale(1.05)" : "scale(1)",
+      transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
       overflow: "hidden",
     }}>
 
-      {/* Subtle grid */}
+      {/* ── Background Effects ── */}
+      {/* Moving Dot Grid */}
       <div style={{
-        position: "absolute", inset: 0, pointerEvents: "none",
-        backgroundImage: "linear-gradient(rgba(0,161,224,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,161,224,0.035) 1px,transparent 1px)",
-        backgroundSize: "60px 60px",
+        position: "absolute", inset: "-50%", pointerEvents: "none",
+        backgroundImage: "radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)",
+        backgroundSize: "40px 40px",
+        animation: "panGrid 40s linear infinite",
+        opacity: visible ? 1 : 0, transition: "opacity 2s ease"
       }} />
 
-      {/* Ambient blobs */}
-      <div style={{ position:"absolute", top:"-20%", left:"-10%", width:600, height:600, borderRadius:"50%", background:"radial-gradient(circle,rgba(0,161,224,0.06) 0%,transparent 60%)", filter:"blur(70px)", pointerEvents:"none" }} />
-      <div style={{ position:"absolute", bottom:"-20%", right:"-10%", width:500, height:500, borderRadius:"50%", background:"radial-gradient(circle,rgba(139,92,246,0.06) 0%,transparent 60%)", filter:"blur(70px)", pointerEvents:"none" }} />
+      {/* Giant Ambient Glowing Orbs */}
+      <div style={{ position:"absolute", top:"-10%", left:"-10%", width:"50vw", height:"50vw", background:"radial-gradient(circle, rgba(0,161,224,0.08) 0%, transparent 60%)", filter:"blur(80px)", mixBlendMode:"screen", animation:"pulseOrb 8s ease-in-out infinite alternate" }} />
+      <div style={{ position:"absolute", bottom:"-10%", right:"-10%", width:"50vw", height:"50vw", background:"radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 60%)", filter:"blur(80px)", mixBlendMode:"screen", animation:"pulseOrb 10s ease-in-out infinite alternate-reverse" }} />
 
-      {/* ── Identity ── */}
-      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", marginBottom: 44, animation: "fadeUp 0.6s ease" }}>
-        {/* Three logo row */}
-        <div style={{ display:"flex", gap: 10, marginBottom: 16 }}>
-          {PLATFORMS.map(p => (
-            <div key={p.id} style={{
-              width: 32, height: 32, borderRadius: 8,
-              background: `${p.color}12`,
-              border: `1px solid ${p.color}25`,
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.logo} alt={p.label} style={{ width: 18, height: 18, objectFit: "contain" }} />
-            </div>
+      {/* ── Center Content ── */}
+      <div style={{
+        position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center",
+        width: "100%", maxWidth: 600, padding: 24
+      }}>
+
+        {/* Top Identity Title */}
+        <div style={{
+          opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(-20px)",
+          transition: "all 1s cubic-bezier(0.16, 1, 0.3, 1)",
+          marginBottom: 60, textAlign: "center"
+        }}>
+          <h1 style={{
+            margin: 0, fontSize: "2.5rem", fontWeight: 900, letterSpacing: "0.2em",
+            textTransform: "uppercase", color: "transparent",
+            WebkitTextStroke: "1px rgba(255,255,255,0.1)",
+            position: "relative"
+          }}>
+            {/* The outline text */}
+            HUZEFA
+            {/* The filled text that grows with progress */}
+            <span style={{
+              position: "absolute", left: 0, top: 0, overflow: "hidden",
+              width: `${progress}%`, transition: "width 0.2s ease",
+              background: "linear-gradient(90deg, #00A1E0, #8B5CF6, #FF7A59)",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+              WebkitTextStroke: "0px", whiteSpace: "nowrap"
+            }}>HUZEFA</span>
+          </h1>
+          <p style={{
+            margin: "12px 0 0", fontSize: "0.7rem", letterSpacing: "0.4em",
+            textTransform: "uppercase", color: "#00A1E0", fontWeight: 700,
+            textShadow: "0 0 12px rgba(0,161,224,0.5)"
+          }}>CRM Systems Architect</p>
+        </div>
+
+        {/* Platform Nodes (The 3 circles) */}
+        <div style={{ display:"flex", gap: 32, marginBottom: 70 }}>
+          {PLATFORMS.map((p, i) => (
+            <PlatformNode key={p.id} p={p} total={progress} visible={visible} delay={0.2 + i * 0.15} />
           ))}
         </div>
 
-        <h1 style={{
-          margin: 0,
-          fontSize: "1.75rem", fontWeight: 900,
-          letterSpacing: "-0.045em",
-          background: "linear-gradient(90deg, #fff 40%, rgba(0,161,224,0.7) 100%)",
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-          lineHeight: 1,
+        {/* Global Progress Bar */}
+        <div style={{
+          width: "100%", maxWidth: 400,
+          opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(20px)",
+          transition: "all 1s 0.6s cubic-bezier(0.16, 1, 0.3, 1)"
         }}>
-          Huzefa<span style={{ color: "#00A1E0", WebkitTextFillColor: "#00A1E0" }}>.</span>
-        </h1>
-        <p style={{
-          margin: "6px 0 0", fontSize: "0.6rem",
-          letterSpacing: "0.3em", textTransform: "uppercase",
-          color: "rgba(0,161,224,0.7)", fontWeight: 700,
-        }}>CRM Consultant</p>
-      </div>
+          {/* Percentage */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+            <span style={{ fontSize: "2rem", fontWeight: 300, color: "#fff", fontVariantNumeric: "tabular-nums", letterSpacing: "-0.02em" }}>
+              {progress}<span style={{ color: "rgba(255,255,255,0.2)", fontSize: "1.2rem" }}>%</span>
+            </span>
+          </div>
 
-      {/* ── Platform cards ── */}
-      <div style={{ display:"flex", gap: 14, marginBottom: 40 }}>
-        {PLATFORMS.map((p, i) => (
-          <LogoCard key={p.id} p={p} total={progress} visible={visible} delay={i * 0.1} />
-        ))}
-      </div>
-
-      {/* ── Global progress bar ── */}
-      <div style={{ width: "min(360px, 78vw)", display:"flex", flexDirection:"column", gap: 8 }}>
-        {/* Track */}
-        <div style={{ height: 2, borderRadius: 2, background: "rgba(255,255,255,0.05)", overflow:"hidden" }}>
-          <div style={{
-            height: "100%", borderRadius: 2,
-            width: `${progress}%`,
-            background: "linear-gradient(90deg, #00A1E0, #8B5CF6, #FF7A59)",
-            transition: "width 0.2s ease",
-            boxShadow: "0 0 10px rgba(0,161,224,0.4)",
-            position: "relative", overflow: "hidden",
-          }}>
-            {/* shimmer */}
+          {/* Glowing Track */}
+          <div style={{ height: 3, background: "rgba(255,255,255,0.05)", borderRadius: 4, position: "relative", overflow: "hidden" }}>
             <div style={{
-              position:"absolute", inset:0,
-              background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)",
-              animation: "shimmer 1.5s linear infinite",
+              position: "absolute", top: 0, bottom: 0, left: 0,
+              width: `${progress}%`, transition: "width 0.15s ease",
+              background: "linear-gradient(90deg, #00A1E0, #8B5CF6)",
+              boxShadow: "0 0 15px rgba(139,92,246,0.6)"
             }} />
+          </div>
+
+          {/* Terminal Log Output */}
+          <div style={{
+            marginTop: 16, height: 20, display: "flex", alignItems: "center", justifyContent: "center"
+          }}>
+            <span style={{
+              fontFamily: "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace",
+              fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", letterSpacing: "0.05em",
+              animation: "pulseText 1.5s infinite"
+            }}>
+              {log}
+            </span>
           </div>
         </div>
 
-        {/* Status + % */}
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <span style={{ fontSize:"0.68rem", color:"rgba(255,255,255,0.3)", letterSpacing:"0.04em" }}>
-            {status}
-          </span>
-          <span style={{ fontSize:"0.72rem", fontWeight: 800, color:"#00A1E0", fontVariantNumeric:"tabular-nums" }}>
-            {progress}%
-          </span>
-        </div>
       </div>
 
+      {/* Global Styles specific to Loading Screen */}
       <style>{`
-        @keyframes shimmer { from{transform:translateX(-100%)} to{transform:translateX(400%)} }
-        @keyframes pop {
-          0%{transform:scale(0);opacity:0} 70%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1}
+        @keyframes panGrid {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(40px); }
         }
-        @keyframes fadeUp {
-          from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none}
+        @keyframes spinRotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes pulseOrb {
+          0% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+          100% { transform: scale(1.1) translate(2%, 2%); opacity: 1; }
+        }
+        @keyframes pop {
+          0% { transform: scale(0); opacity: 0; }
+          60% { transform: scale(1.2); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes pulseText {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.8; }
         }
       `}</style>
     </div>
