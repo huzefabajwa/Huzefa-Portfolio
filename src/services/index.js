@@ -72,64 +72,20 @@ export async function getProjectById(projectId) {
     }
 }
 
-export async function handleDelete(id){
+// ✅ Generic Delete Data Function
+export async function deleteData(currentTab, id) {
     try {
-        const res = await fetch(`/api/education/delete`, {
+        const response = await fetch(`/api/${currentTab}/delete`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({id}),
+            body: JSON.stringify({ id }),
         });
-        return res.json();
+        const result = await response.json();
+        return result;
     } catch (e) {
-        console.error("Error Deleting item",e);
-        return { success: false, message: "failed to delete item"}
-    }
-}
-export async function ExperienceDelete(id){
-    try {
-        const res = await fetch(`/api/experience/delete`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({id}),
-        });
-        return res.json();
-    } catch (e) {
-        console.error("Error Deleting item",e);
-        return { success: false, message: "failed to delete item"}
-    }
-}
-export async function ReviewsDelete(id){
-    try {
-        const res = await fetch(`/api/reviews/delete`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({id}),
-        });
-        return res.json();
-    } catch (e) {
-        console.error("Error Deleting item",e);
-        return { success: false, message: "failed to delete item"}
-    }
-}
-
-export async function ServicesDelete(id){
-    try {
-        const res = await fetch(`/api/services/delete`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({id}),
-        });
-        return res.json();
-    } catch (e) {
-        console.error("Error Deleting item",e);
-        return { success: false, message: "failed to delete item"}
+        console.error(`Error Deleting from ${currentTab}`, e);
+        return { success: false, message: "failed to delete item" };
     }
 }

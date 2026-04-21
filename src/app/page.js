@@ -49,18 +49,16 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  // Hide loader as soon as hero data arrives OR after 3.5 s max — whichever is first
+  const heroReady = homeSectionData !== undefined && platformsData !== undefined && aboutData !== undefined;
+
+  // Hide loader as soon as hero data arrives
   useEffect(() => {
     if (!mounted) return;
-    // If hero data already available, dismiss loader quickly
-    if (homeSectionData !== undefined) {
-      const t = setTimeout(() => setShowLoader(false), 400);
+    if (heroReady) {
+      const t = setTimeout(() => setShowLoader(false), 200);
       return () => clearTimeout(t);
     }
-    // Hard cap — never wait more than 3.5 s total
-    const cap = setTimeout(() => setShowLoader(false), 3500);
-    return () => clearTimeout(cap);
-  }, [mounted, homeSectionData]);
+  }, [mounted, heroReady]);
 
   // ── Loading screen ───────────────────────────────────────────────
   if (showLoader) {
@@ -79,36 +77,45 @@ export default function Home() {
           <ClientHomeView
             data={homeSectionData || []}
             platformsData={platformsData || []}
+            aboutData={aboutData?.[0] || {}}
           />
         </Suspense>
 
         {/* ── About ── */}
         <Suspense fallback={<SectionSkeleton />}>
-          <ClientAboutView
-            data={aboutData?.[0] || {}}
-            platformsData={platformsData || []}
-          />
+          {aboutData === undefined ? <SectionSkeleton /> : (
+            <ClientAboutView
+              data={aboutData?.[0] || {}}
+              platformsData={platformsData || []}
+            />
+          )}
         </Suspense>
 
         {/* ── Services ── */}
         <Suspense fallback={<SectionSkeleton />}>
-          <ClientServicesView
-            data={servicesData || []}
-            platformsData={platformsData || []}
-          />
+          {servicesData === undefined ? <SectionSkeleton /> : (
+            <ClientServicesView
+              data={servicesData || []}
+              platformsData={platformsData || []}
+            />
+          )}
         </Suspense>
 
         {/* ── Experience & Education ── */}
         <Suspense fallback={<SectionSkeleton />}>
-          <ClientExperienceAndEducation
-            educationData={educationData || []}
-            experienceData={experienceData || []}
-          />
+          {(experienceData === undefined || educationData === undefined) ? <SectionSkeleton /> : (
+            <ClientExperienceAndEducation
+              educationData={educationData || []}
+              experienceData={experienceData || []}
+            />
+          )}
         </Suspense>
 
         {/* ── Projects ── */}
         <Suspense fallback={<SectionSkeleton />}>
-          <ClientProjectView data={projectsData || []} />
+          {projectsData === undefined ? <SectionSkeleton /> : (
+            <ClientProjectView data={projectsData || []} />
+          )}
         </Suspense>
 
         {/* ── Contact ── */}

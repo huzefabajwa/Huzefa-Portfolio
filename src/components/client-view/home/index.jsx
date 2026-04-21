@@ -310,7 +310,7 @@ function StatChip({ value, label, color }) {
 }
 
 /* ─── Hero Section ───────────────────────────────────────────────── */
-export default function ClientHomeView({ data, platformsData, onLoaded }) {
+export default function ClientHomeView({ data, platformsData, aboutData, onLoaded }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
@@ -319,10 +319,19 @@ export default function ClientHomeView({ data, platformsData, onLoaded }) {
   }, [mounted, onLoaded]);
 
   const d          = data?.[0] || {};
+  const ab         = aboutData || {};
   const hireMeLink = d.hireme || "#";
+  const roleTitle  = d.roleTitle || "CRM Consultant & Digital Transformation Expert";
   const summaryParts = (
     d.summary || "Salesforce Consultant,HubSpot Specialist,Dynamics 365 Expert,CRM Architect"
   ).split(",");
+
+  // Hero stat chips — read from aboutData (same DB as About section)
+  const heroStats = [
+    { value: ab.noofclients       ? `${ab.noofclients}+`       : "50+",  label: "Clients",   color: "var(--sf-blue)"    },
+    { value: ab.noofplatforms     ? `${ab.noofplatforms}+`     : "3+",   label: "Platforms", color: "var(--hs-orange)"  },
+    { value: ab.yearsofexperience ? `${ab.yearsofexperience}+` : "5+",   label: "Years",     color: "var(--d365-purple)"},
+  ];
 
   const platforms = (platformsData && platformsData.length > 0) ? platformsData : [
     { name: "Salesforce", color: "#00A1E0", logoUrl: "/salesforce-logo.png" },
@@ -392,11 +401,11 @@ export default function ClientHomeView({ data, platformsData, onLoaded }) {
             {d.heading || "Huzefa Bajwa"}
           </h1>
 
-          {/* CRM Role identifier — always visible, enterprise feel */}
+          {/* CRM Role identifier — editable from Admin > Hero */}
           <div className="mt-3 flex items-center gap-2">
             <div style={{ width: 3, height: 18, background: "var(--sf-blue)", borderRadius: 4 }} />
             <span className="text-sm font-semibold tracking-wide" style={{ color: "var(--sf-blue)" }}>
-              CRM Consultant &amp; Digital Transformation Expert
+              {roleTitle}
             </span>
           </div>
 
@@ -420,16 +429,16 @@ export default function ClientHomeView({ data, platformsData, onLoaded }) {
             {d.aboutme || "Helping businesses streamline operations and accelerate growth through strategic CRM implementation and digital transformation."}
           </p>
 
-          {/* Stat chips */}
+          {/* Stat chips — values from DB (aboutData) */}
           <motion.div
             className="mt-7 flex flex-wrap gap-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
-            <StatChip value="50+" label="Clients"   color="var(--sf-blue)"    />
-            <StatChip value="3"   label="Platforms" color="var(--hs-orange)"  />
-            <StatChip value="5+"  label="Years"     color="var(--d365-purple)"/>
+            {heroStats.map((s, i) => (
+              <StatChip key={i} value={s.value} label={s.label} color={s.color} />
+            ))}
           </motion.div>
 
           {/* CTA + Socials */}

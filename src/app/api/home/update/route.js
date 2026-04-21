@@ -8,20 +8,23 @@ export async function PUT(req) {
     try {
         await connectToDb();
         const body = await req.json();
-        const { _id, heading, summary, hireme, upwork, slack, github, linkedin, stack, imageUrl } = body;
+        const { _id, heading, summary, roleTitle, hireme, upwork, slack, github, linkedin, stack, imageUrl } = body;
 
-        const update = { heading, summary, hireme, upwork, slack, github, linkedin, stack, imageUrl };
+        const updatePayload = { heading, summary, roleTitle, hireme, upwork, slack, github, linkedin, stack, imageUrl };
+
+        // Remove undefined keys so we don't accidentally null out fields not sent
+        Object.keys(updatePayload).forEach(k => updatePayload[k] === undefined && delete updatePayload[k]);
 
         let result;
         if (_id) {
-            result = await Home.findByIdAndUpdate(_id, update, { new: true });
+            result = await Home.findByIdAndUpdate(_id, { $set: updatePayload }, { new: true });
         } else {
-            // Upsert singleton
-            result = await Home.findOneAndUpdate({}, update, { new: true, upsert: true });
+            // Upsert singleton — create if doesn't exist
+            result = await Home.findOneAndUpdate({}, { $set: updatePayload }, { new: true, upsert: true });
         }
 
         if (result) {
-            return NextResponse.json({ success: true, message: "Updated successfully" });
+            return NextResponse.json({ success: true, message: "Saved successfully" });
         }
         return NextResponse.json({ success: false, message: "Update failed" }, { status: 400 });
     } catch (e) {

@@ -17,7 +17,7 @@ import { addData, getData, updateData, login } from "@/services";
 
 // ── Initial form states ──────────────────────────────────────────
 const INIT = {
-  home:       { heading:"", summary:"", hireme:"", upwork:"", slack:"", github:"", linkedin:"", stack:"", imageUrl:"" },
+  home:       { heading:"", summary:"", roleTitle:"", hireme:"", upwork:"", slack:"", github:"", linkedin:"", stack:"", imageUrl:"" },
   services:   { title:"", service:"", fareacticon:"" },
   reviews:    { author:"", content:"", company:"", rating:0, link:"" },
   about:      { aboutme:"", noofprojects:"", yearsofexperience:"", noofclients:"", noofplatforms:"", skills:"", progress:"" },
