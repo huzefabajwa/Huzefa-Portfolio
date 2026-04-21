@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { AdminCard, SaveButton, DeleteButton, StatusBadge } from "../ui";
-import { FolderOpen, Github, Globe, Smartphone, X, Upload, Plus, Tag, Image as ImageIcon, ExternalLink, Loader2 } from "lucide-react";
+import { FolderOpen, Github, Globe, Smartphone, X, Upload, Plus, Tag, Image as ImageIcon, ExternalLink, Loader2, Edit2 } from "lucide-react";
 
 // Custom Quill wrapper — avoids react-quill's broken ReactDOM.findDOMNode in React 18
 const QuillEditor = dynamic(() => import("../QuillEditor"), {
@@ -215,7 +215,7 @@ function TagsInput({ value = [], onChange }) {
 const GALLERY_ACCENTS = ["#00A1E0", "#FF7A59", "#8B5CF6", "#00D4AA"];
 
 /* ─── Main component ────────────────────────────────────────────── */
-export default function AdminProjectView({ formData, setFormData, handleSaveData, data, setData }) {
+export default function AdminProjectView({ formData, setFormData, handleSaveData, data, setData, setUpdate }) {
   const [saving,   setSaving]   = useState(false);
   const [deleting, setDeleting] = useState(null);
 
@@ -404,7 +404,17 @@ export default function AdminProjectView({ formData, setFormData, handleSaveData
                         <p className="font-bold text-sm truncate" style={{ color: "#F0F6FF" }}>{item.name}</p>
                         <p className="text-xs mt-0.5" style={{ color: "#00D4AA" }}>{item.projecttype}</p>
                       </div>
-                      <DeleteButton onClick={() => handleDelete(item._id)} loading={deleting === item._id} />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => { setFormData(item); setUpdate(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          className="p-1.5 rounded-lg transition-all"
+                          style={{ background: "rgba(0,161,224,0.1)", color: "#00A1E0" }}
+                          title="Edit Project"
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                        <DeleteButton onClick={() => handleDelete(item._id)} loading={deleting === item._id} />
+                      </div>
                     </div>
                     {item.tags && item.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-1">

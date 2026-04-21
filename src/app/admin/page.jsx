@@ -140,8 +140,8 @@ export default function AdminPage() {
     services: <AdminServicesView formData={servicesForm} setFormData={setServicesForm} handleSaveData={handleSaveData} data={allData?.services} setAllData={setAllData} />,
     experience: <AdminExperienceView formData={experienceForm} setFormData={setExperienceForm} handleSaveData={handleSaveData} data={allData?.experience} setAllData={setAllData} />,
     education: <AdminEducationView formData={educationForm} setFormData={setEducationForm} handleSaveData={handleSaveData} data={allData?.education} setAllData={setAllData} />,
-    projects: <AdminProjectView formData={projectForm} setFormData={setProjectForm} handleSaveData={handleSaveData} data={allData?.projects} setData={setAllData} />,
-    reviews: <AdminReviewsView formData={reviewsForm} setFormData={setReviewsForm} handleSaveData={handleSaveData} data={allData?.reviews} setAllData={setAllData} />,
+    projects: <AdminProjectView formData={projectForm} setFormData={setProjectForm} handleSaveData={handleSaveData} data={allData?.projects} setData={setAllData} setUpdate={setUpdate} />,
+    reviews: <AdminReviewsView formData={reviewsForm} setFormData={setReviewsForm} handleSaveData={handleSaveData} data={allData?.reviews} setAllData={setAllData} setUpdate={setUpdate} />,
     contact: <AdminContactView />,
   };
 
